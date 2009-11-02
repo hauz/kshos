@@ -29,7 +29,7 @@ public class UserManager {
      *
      * @return instance
      */
-    public UserManager instance() {
+    public static UserManager instance() {
 
         synchronized(UserManager.class) {
             if (instance == null) {
