@@ -2,9 +2,11 @@ package kshos.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import kshos.console.KshParser;
 
 
 /**
@@ -12,17 +14,18 @@ import javax.swing.JTextArea;
  * Draws console window.
  *
  * @author <a href="mailto:hauzi.m@gmail.com">Miroslav Hauser</a>
- * @version 0.01, 26.10.2009
+ * @version 0.02, 2.11.2009
  */
 public class UserInterface extends JFrame {
 
 	private JTextArea textArea;
-
+    private KshParser parsovac;
 	/**
 	 * Constructor. Creates console and sets all needed parameters of JFrame.
 	 * @param title
 	 */
 	public UserInterface(String title) {
+        this.parsovac = new KshParser();
 		this.setTitle(title);
 		this.setSize(new Dimension(640, 480));
 		this.setMinimumSize(new Dimension(640, 480));
@@ -42,6 +45,22 @@ public class UserInterface extends JFrame {
 		textArea.getCaret().setVisible(false);
 		Font font = new Font("Monospaced", Font.PLAIN, 14);
 		textArea.setFont(font);
+
+        //sysek 2.11.2009
+        textArea.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent keyEvent){
+                if(keyEvent.getKeyCode() == KeyEvent.VK_ENTER){
+                    String s = textArea.getText();
+                    try {
+                        parsovac.parsing(s);
+                    } catch (IOException ex) {
+                        //TODO
+                    }
+                }
+            }
+        });
+
 
 		setLayout(new BorderLayout());
 
