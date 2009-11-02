@@ -29,7 +29,7 @@ public class ProcessManager {
      *
      * @return instance
      */
-    public ProcessManager instance() {
+    public static ProcessManager instance() {
 
         synchronized(ProcessManager.class) {
             if (instance == null) {
