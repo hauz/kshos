@@ -1,13 +1,12 @@
 // $ANTLR 3.2 Sep 23, 2009 12:02:23 e:\\!OS\\gramatika\\OSVM_grammar.g 2009-10-27 14:46:04
 
-	package pokus;
+	package kshos.console;
 	
 	/* Cmd line parser for KIV/OS Virtual Machine Manager.
 	 * Automatically generated from OSVM_grammar.g with ANTLR-3.2
 	 * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
 	 * @version 0.1 27/10/2009
 	 */
-
 
 import org.antlr.runtime.*;
 import java.util.Stack;
