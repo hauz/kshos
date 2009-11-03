@@ -3,9 +3,14 @@ package kshos.ui;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.text.BadLocationException;
 import kshos.console.KshParser;
 
 
@@ -19,13 +24,16 @@ import kshos.console.KshParser;
 public class UserInterface extends JFrame {
 
 	private JTextArea textArea;
-    private KshParser parsovac;
-	/**
+    private KshParser kshParser;
+    private int caretOffs =0;
+    private int caretPosition = 0;
+
+    /**
 	 * Constructor. Creates console and sets all needed parameters of JFrame.
 	 * @param title
 	 */
-	public UserInterface(String title) {
-        this.parsovac = new KshParser();
+	public UserInterface(String title) {        
+        this.kshParser = new KshParser();
 		this.setTitle(title);
 		this.setSize(new Dimension(640, 480));
 		this.setMinimumSize(new Dimension(640, 480));
@@ -46,21 +54,36 @@ public class UserInterface extends JFrame {
 		Font font = new Font("Monospaced", Font.PLAIN, 14);
 		textArea.setFont(font);
 
-        //sysek 2.11.2009
+        // if user press key
         textArea.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent keyEvent){
+
+                // if user press enter
                 if(keyEvent.getKeyCode() == KeyEvent.VK_ENTER){
-                    String s = textArea.getText();
-                    try {
-                        parsovac.parsing(s);
+                    String s ="";
+                    try {                  
+                        s = textArea.getText(caretOffs, caretPosition - caretOffs);
+                        caretOffs = caretPosition + 1;
+                        kshParser.parsing(s);
+                    } catch (BadLocationException ex) {
+                        System.out.println(ex);
                     } catch (IOException ex) {
-                        //TODO
+                        System.out.println(ex);
                     }
                 }
             }
         });
 
+        //control caret position
+        textArea.addCaretListener(new CaretListener() {
+            public void caretUpdate(CaretEvent e) {
+                caretPosition = textArea.getCaretPosition();
+                if(caretPosition < caretOffs){
+                    textArea.setCaretPosition(caretOffs);
+                }
+            }
+        });
 
 		setLayout(new BorderLayout());
 
