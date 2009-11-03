@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JButton;
@@ -92,8 +93,19 @@ public class Login extends JFrame {
         LUser = new JLabel("User name: ");
         upperLeftPanel.add(LUser);
 
-        TFUser = new JTextField();
-        TFUser.setText("                            ");
+        // k4chn1k 4.11.09
+        TFUser = new JTextField(10);
+        TFUser.setText("");
+        TFUser.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    performLogin();
+                } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE){
+                    close();
+                }
+            }
+        });
         upperRightPanel.add(TFUser);
 
         BTok = new JButton("  OK  ");
