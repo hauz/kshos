@@ -2,7 +2,6 @@ package kshos.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -100,12 +99,13 @@ public class UserInterface extends JFrame {
                         // s equals only new written line
                         s = textArea.getText(TAOff, textArea.getText().trim().length()-TAOff).trim();
                     } catch (BadLocationException ex) {
-                        ex.printStackTrace();
-                    }
-                    // sets new line header
-                    textArea.append("\n" + lineHead);
-                    // sets new textarea offset
-                    TAOff = textArea.getText().length();
+                        return;
+                    } finally {
+                        // sets new line header
+                        textArea.append("\n" + lineHead);
+                        // sets new textarea offset
+                        TAOff = textArea.getText().length();
+                    }                    
                     // add to old commands
                     oldCommands.add(s);
                     oldCommandIndex = oldCommands.size();
