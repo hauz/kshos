@@ -1,13 +1,15 @@
 package kshos.ui;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import kshos.core.Core;
 
@@ -20,25 +22,45 @@ import kshos.core.Core;
  */
 public class Login extends JFrame {
 
-    private JLabel Luser = null;        // Luser :-] ... label
-    private JTextField TFuser = null;   // Test field for user name
+    private JLabel LUser = null;        // Luser :-] ... label
+    private JTextField TFUser = null;   // Test field for user name
     private JButton BTok = null;        // OK button
-    private JButton BTstorno = null;    // Strono button
+    private JButton BTStorno = null;    // Strono button
 
+    private JPanel dataPanel = null;    // panel for user name
+    private JPanel buttonPanel = null;  // panel for buttons
+
+    private JPanel upperLeftPanel = null;
+    private JPanel upperRightPanel = null;
+    private JPanel lowerLeftPanel = null;
+    private JPanel lowerRightPanel = null;
+
+    /**
+     * Initial constructor
+     */
     public Login() {
-
-        initComponents();
+        init();
         setVisible(true);
     }
 
     /**
      * Initializes all window components.
      */
-    private void initComponents() {
+    private void init() {
+
+        initMainWindow();       // sets main window properties
+
+        initComponents();       // initializes all window components
+
+    }
+
+    private void initMainWindow() {
 
         this.setTitle("Login");
-        this.setSize(new Dimension(320, 240));
+        this.setSize(new Dimension(320, 130));
         this.setResizable(false);
+        this.setLayout(new GridLayout(2, 1));  // divide main window
+                                               // to upper and lower half
         this.addWindowListener(new WindowAdapter() {
 			// if user clicks on the closing cross
                         @Override
@@ -47,11 +69,36 @@ public class Login extends JFrame {
 			}
 		});
 
-        Luser = new JLabel("User name: ");
+    }
 
-        TFuser = new JTextField();
+    private void initComponents() {
 
-        BTok = new JButton("OK");
+        // divide both panels to left and right half
+        dataPanel = new JPanel(new GridLayout(1, 2, 1, 10));
+        buttonPanel = new JPanel(new GridLayout(1, 2, 1, 10));
+        this.add(dataPanel);
+        this.add(buttonPanel);
+
+        upperLeftPanel = new JPanel(new FlowLayout());
+        upperRightPanel = new JPanel(new FlowLayout());
+        dataPanel.add(upperLeftPanel);
+        dataPanel.add(upperRightPanel);
+
+        lowerLeftPanel = new JPanel(new FlowLayout());
+        lowerRightPanel = new JPanel(new FlowLayout());
+        buttonPanel.add(lowerLeftPanel);
+        buttonPanel.add(lowerRightPanel);
+
+        LUser = new JLabel("User name: ");
+        upperLeftPanel.add(LUser);
+
+        TFUser = new JTextField();
+        TFUser.setText("                            ");
+        upperRightPanel.add(TFUser);
+
+        BTok = new JButton("  OK  ");
+        BTok.setSize(70, 27);
+        lowerLeftPanel.add(BTok);
         BTok.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -59,8 +106,10 @@ public class Login extends JFrame {
             }
         });
 
-        BTstorno = new JButton("Storno");
-        BTstorno.addActionListener(new java.awt.event.ActionListener() {
+        BTStorno = new JButton("Storno");
+        lowerRightPanel.add(BTStorno);
+        BTStorno.setSize(70, 27);
+        BTStorno.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 close();
@@ -72,12 +121,16 @@ public class Login extends JFrame {
      * Close actual loggin window. It closes all consoles too.
      */
     public synchronized void close() {
-        this.dispose();
+        Core.instance().service(0, null);
     }
 
+    /**
+     * Maintains login process.
+     */
     public void performLogin() {
-        if (!TFuser.getText().trim().equals("")) {
-            Core.instance().service(1);
+        String userName = TFUser.getText().trim();
+        if (!userName.equals("")) {
+            Core.instance().service(1, userName);
         }
     }
 

@@ -11,6 +11,7 @@ import kshos.ui.*;
 public class Core {
 
     private static Core instance = null;
+    private Login loginWindow = null;
 
     /**
      * Main constructor.
@@ -31,7 +32,7 @@ public class Core {
      *
      * @return actual instance
      */
-    public static Core instance () {
+    public static Core instance() {
         synchronized(Core.class) {
             if (instance == null) {
                 instance = new Core();
@@ -45,21 +46,33 @@ public class Core {
      * Loads all necessary components and starts the OS.
      */
     private void initialize() {
-        new Login();
-        UIManager.getInstance().newConsole();
-        // TODO: add other managers
+        loginWindow = new Login();
         
     }
 
     /**
      * Offers services for other parts of OS.
      *
+     * List of services:
+     *      0       Halt OS
+     *      1       Login
+     * 
+     *
      * @param serviceNo
      * @return successfull [true/false]
      */
-    public boolean service(int serviceNo) {
-        if (serviceNo == 1)
-            System.out.print("Doslo k loginu!!!!");
+    public boolean service(int serviceNo, Object data) {
+        if ((serviceNo == 1) && (data instanceof String)) {
+            System.out.print("Successfull login...");
+            UIManager.instance().newConsole((String) data);
+        }
+
+        if (serviceNo == 0) {
+            // TODO: stop all consoles and all threads ...
+            System.out.println("System is going down!!!");
+            UIManager.instance().closeAllConsoles();
+            loginWindow.dispose();
+        }
 
         return false;
     }
