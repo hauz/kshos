@@ -1,5 +1,7 @@
 package kshos.ui;
 
+import java.util.ArrayList;
+
 /**
  * Class manages all user interfaces (consoles).
  * Design Pattern: Singleton
@@ -10,12 +12,13 @@ package kshos.ui;
 public class UIManager {
 
     private static UIManager instance = null;
+    private ArrayList<UserInterface> interfaces = null;
 
     /**
      * Main constructor
      */
     protected UIManager() {
-        // not necessary
+        interfaces = new ArrayList<UserInterface>();
     }
 
     /**
@@ -30,7 +33,7 @@ public class UIManager {
      *
      * @return Actual instance fo UIManager.
      */
-    public static UIManager getInstance() {
+    public static UIManager instance() {
         synchronized (UIManager.class) {
             if (instance == null) {
                 instance = new UIManager();
@@ -40,10 +43,30 @@ public class UIManager {
         return instance;
     }
 
-    public void newConsole() {
-        UserInterface ui = new UserInterface("Console window");
-        ui.setVisible(true);
+    /**
+     * Creates new console.
+     */
+    public void newConsole(String userName) {
+        UserInterface newUI = new UserInterface(userName);
+        interfaces.add(newUI);
+        newUI.setVisible(true);
     }
 
+    /**
+     * Closes all consoles.
+     */
+    public void closeAllConsoles() {
+        for (UserInterface ui: interfaces) {
+            closeConsole(ui);
+        }
+    }
 
+    /**
+     * Closes user interface.
+     *
+     * @param console
+     */
+    public void closeConsole(UserInterface console) {
+        console.close();
+    }
 }
