@@ -44,10 +44,10 @@ public class UserInterface extends JFrame {
 			}
 		});
 
-                lineHead = title + "> ";
+        lineHead = title + "> ";
 		textArea = new JTextArea(lineHead);
-                TAOff = lineHead.length();
-                textArea.setCaretPosition(TAOff);
+        TAOff = lineHead.length();
+        textArea.setCaretPosition(TAOff);
 		textArea.setBackground(Color.BLACK);
 		textArea.setForeground(Color.WHITE);
 		textArea.setCaretColor(Color.WHITE);
@@ -83,6 +83,14 @@ public class UserInterface extends JFrame {
             this.dispose();
         }
 
+    /**
+     *  Sets new line header and textarea offset
+     */
+    private void addNewLine(){
+         textArea.append("\n" + lineHead);
+         TAOff = textArea.getText().length();
+    }
+
         /**
          * Handling for console keyevents.
          * k4chn1k 4.11.09
@@ -96,16 +104,19 @@ public class UserInterface extends JFrame {
 
                     String s = null;
                     try {
+                        int commLength = textArea.getText().trim().length()-TAOff;
+                        System.out.println(commLength);
+                        if(commLength < 1){
+                            addNewLine();
+                            return;
+                        }
                         // s equals only new written line
-                        s = textArea.getText(TAOff, textArea.getText().trim().length()-TAOff).trim();
+                        s = textArea.getText(TAOff, commLength).trim();
                     } catch (BadLocationException ex) {
-                        return;
-                    } finally {
-                        // sets new line header
-                        textArea.append("\n" + lineHead);
-                        // sets new textarea offset
-                        TAOff = textArea.getText().length();
-                    }                    
+                        ex.printStackTrace();
+                    } 
+                    addNewLine();
+                                        
                     // add to old commands
                     oldCommands.add(s);
                     oldCommandIndex = oldCommands.size();
