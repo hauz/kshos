@@ -1,7 +1,7 @@
-// $ANTLR 3.2 Sep 23, 2009 12:02:23 D:\\!OS\\gramatika\\OSVM_grammar.g 2009-11-04 17:26:49
+// $ANTLR 3.2 Sep 23, 2009 12:02:23 D:\\!OS\\gramatika\\OSVM_grammar.g 2009-11-05 18:16:32
 
 	package kshos.console;
-
+	
 	/* Lexer for KIV/OS Virtual Machine Manager.
 	 * Automatically generated from OSVM_grammar.g with ANTLR-3.2
 	 * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
@@ -15,27 +15,27 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class OSVM_grammarLexer extends Lexer {
-    public static final int WORD=9;
+    public static final int WORD=11;
     public static final int UND=17;
     public static final int STIN=6;
     public static final int WS=14;
-    public static final int PDIR=13;
+    public static final int PDIR=10;
     public static final int SEP=16;
     public static final int STOUT=7;
     public static final int SP=5;
-    public static final int CHAR=10;
+    public static final int CHAR=12;
     public static final int BG=18;
     public static final int PIPE=8;
     public static final int PARAM=15;
     public static final int NL=4;
     public static final int EOF=-1;
-    public static final int NUM=11;
-    public static final int TDIR=12;
+    public static final int TDIR=9;
+    public static final int NUM=13;
 
     // delegates
     // delegators
 
-    public OSVM_grammarLexer() {;}
+    public OSVM_grammarLexer() {;} 
     public OSVM_grammarLexer(CharStream input) {
         this(input, new RecognizerSharedState());
     }
@@ -84,7 +84,7 @@ public class OSVM_grammarLexer extends Lexer {
             // D:\\!OS\\gramatika\\OSVM_grammar.g:76:7: ( '0' .. '9' )
             // D:\\!OS\\gramatika\\OSVM_grammar.g:76:8: '0' .. '9'
             {
-            matchRange('0','9');
+            matchRange('0','9'); 
 
             }
 
@@ -110,7 +110,7 @@ public class OSVM_grammarLexer extends Lexer {
             // D:\\!OS\\gramatika\\OSVM_grammar.g:77:6: ( '\\t' )
             // D:\\!OS\\gramatika\\OSVM_grammar.g:77:7: '\\t'
             {
-            match('\t');
+            match('\t'); 
 
             }
 
@@ -134,7 +134,7 @@ public class OSVM_grammarLexer extends Lexer {
             // D:\\!OS\\gramatika\\OSVM_grammar.g:78:7: ( '\\|' )
             // D:\\!OS\\gramatika\\OSVM_grammar.g:78:9: '\\|'
             {
-            match('|');
+            match('|'); 
 
             }
 
@@ -154,7 +154,7 @@ public class OSVM_grammarLexer extends Lexer {
             // D:\\!OS\\gramatika\\OSVM_grammar.g:79:6: ( '<' )
             // D:\\!OS\\gramatika\\OSVM_grammar.g:79:8: '<'
             {
-            match('<');
+            match('<'); 
 
             }
 
@@ -174,7 +174,7 @@ public class OSVM_grammarLexer extends Lexer {
             // D:\\!OS\\gramatika\\OSVM_grammar.g:80:7: ( '>' )
             // D:\\!OS\\gramatika\\OSVM_grammar.g:80:9: '>'
             {
-            match('>');
+            match('>'); 
 
             }
 
@@ -194,7 +194,7 @@ public class OSVM_grammarLexer extends Lexer {
             // D:\\!OS\\gramatika\\OSVM_grammar.g:81:4: ( ' ' )
             // D:\\!OS\\gramatika\\OSVM_grammar.g:81:6: ' '
             {
-            match(' ');
+            match(' '); 
 
             }
 
@@ -237,7 +237,7 @@ public class OSVM_grammarLexer extends Lexer {
                 case 1 :
                     // D:\\!OS\\gramatika\\OSVM_grammar.g:82:6: '\\r\\n'
                     {
-                    match("\r\n");
+                    match("\r\n"); 
 
 
                     }
@@ -245,14 +245,14 @@ public class OSVM_grammarLexer extends Lexer {
                 case 2 :
                     // D:\\!OS\\gramatika\\OSVM_grammar.g:82:15: '\\r'
                     {
-                    match('\r');
+                    match('\r'); 
 
                     }
                     break;
                 case 3 :
                     // D:\\!OS\\gramatika\\OSVM_grammar.g:82:22: '\\n'
                     {
-                    match('\n');
+                    match('\n'); 
 
                     }
                     break;
@@ -274,7 +274,7 @@ public class OSVM_grammarLexer extends Lexer {
             // D:\\!OS\\gramatika\\OSVM_grammar.g:83:7: ( '-' )
             // D:\\!OS\\gramatika\\OSVM_grammar.g:83:9: '-'
             {
-            match('-');
+            match('-'); 
 
             }
 
@@ -294,7 +294,7 @@ public class OSVM_grammarLexer extends Lexer {
             // D:\\!OS\\gramatika\\OSVM_grammar.g:84:6: ( '.' )
             // D:\\!OS\\gramatika\\OSVM_grammar.g:84:8: '.'
             {
-            match('.');
+            match('.'); 
 
             }
 
@@ -314,7 +314,7 @@ public class OSVM_grammarLexer extends Lexer {
             // D:\\!OS\\gramatika\\OSVM_grammar.g:85:6: ( '..' )
             // D:\\!OS\\gramatika\\OSVM_grammar.g:85:8: '..'
             {
-            match("..");
+            match(".."); 
 
 
             }
@@ -335,7 +335,7 @@ public class OSVM_grammarLexer extends Lexer {
             // D:\\!OS\\gramatika\\OSVM_grammar.g:86:5: ( '/' )
             // D:\\!OS\\gramatika\\OSVM_grammar.g:86:7: '/'
             {
-            match('/');
+            match('/'); 
 
             }
 
@@ -355,7 +355,7 @@ public class OSVM_grammarLexer extends Lexer {
             // D:\\!OS\\gramatika\\OSVM_grammar.g:87:5: ( '_' )
             // D:\\!OS\\gramatika\\OSVM_grammar.g:87:7: '_'
             {
-            match('_');
+            match('_'); 
 
             }
 
@@ -375,7 +375,7 @@ public class OSVM_grammarLexer extends Lexer {
             // D:\\!OS\\gramatika\\OSVM_grammar.g:88:4: ( '&' )
             // D:\\!OS\\gramatika\\OSVM_grammar.g:88:6: '&'
             {
-            match('&');
+            match('&'); 
 
             }
 
@@ -497,42 +497,42 @@ public class OSVM_grammarLexer extends Lexer {
             	case 1 :
             	    // D:\\!OS\\gramatika\\OSVM_grammar.g:89:9: CHAR
             	    {
-            	    mCHAR();
+            	    mCHAR(); 
 
             	    }
             	    break;
             	case 2 :
             	    // D:\\!OS\\gramatika\\OSVM_grammar.g:89:16: NUM
             	    {
-            	    mNUM();
+            	    mNUM(); 
 
             	    }
             	    break;
             	case 3 :
             	    // D:\\!OS\\gramatika\\OSVM_grammar.g:89:22: UND
             	    {
-            	    mUND();
+            	    mUND(); 
 
             	    }
             	    break;
             	case 4 :
             	    // D:\\!OS\\gramatika\\OSVM_grammar.g:89:28: SEP
             	    {
-            	    mSEP();
+            	    mSEP(); 
 
             	    }
             	    break;
             	case 5 :
             	    // D:\\!OS\\gramatika\\OSVM_grammar.g:89:34: TDIR
             	    {
-            	    mTDIR();
+            	    mTDIR(); 
 
             	    }
             	    break;
             	case 6 :
             	    // D:\\!OS\\gramatika\\OSVM_grammar.g:89:41: PARAM
             	    {
-            	    mPARAM();
+            	    mPARAM(); 
 
             	    }
             	    break;
@@ -561,105 +561,105 @@ public class OSVM_grammarLexer extends Lexer {
             case 1 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:10: CHAR
                 {
-                mCHAR();
+                mCHAR(); 
 
                 }
                 break;
             case 2 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:15: NUM
                 {
-                mNUM();
+                mNUM(); 
 
                 }
                 break;
             case 3 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:19: WS
                 {
-                mWS();
+                mWS(); 
 
                 }
                 break;
             case 4 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:22: PIPE
                 {
-                mPIPE();
+                mPIPE(); 
 
                 }
                 break;
             case 5 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:27: STIN
                 {
-                mSTIN();
+                mSTIN(); 
 
                 }
                 break;
             case 6 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:32: STOUT
                 {
-                mSTOUT();
+                mSTOUT(); 
 
                 }
                 break;
             case 7 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:38: SP
                 {
-                mSP();
+                mSP(); 
 
                 }
                 break;
             case 8 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:41: NL
                 {
-                mNL();
+                mNL(); 
 
                 }
                 break;
             case 9 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:44: PARAM
                 {
-                mPARAM();
+                mPARAM(); 
 
                 }
                 break;
             case 10 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:50: TDIR
                 {
-                mTDIR();
+                mTDIR(); 
 
                 }
                 break;
             case 11 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:55: PDIR
                 {
-                mPDIR();
+                mPDIR(); 
 
                 }
                 break;
             case 12 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:60: SEP
                 {
-                mSEP();
+                mSEP(); 
 
                 }
                 break;
             case 13 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:64: UND
                 {
-                mUND();
+                mUND(); 
 
                 }
                 break;
             case 14 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:68: BG
                 {
-                mBG();
+                mBG(); 
 
                 }
                 break;
             case 15 :
                 // D:\\!OS\\gramatika\\OSVM_grammar.g:1:71: WORD
                 {
-                mWORD();
+                mWORD(); 
 
                 }
                 break;
@@ -744,6 +744,6 @@ public class OSVM_grammarLexer extends Lexer {
             return "1:1: Tokens : ( CHAR | NUM | WS | PIPE | STIN | STOUT | SP | NL | PARAM | TDIR | PDIR | SEP | UND | BG | WORD );";
         }
     }
-
+ 
 
 }

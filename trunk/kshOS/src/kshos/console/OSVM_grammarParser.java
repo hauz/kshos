@@ -1,7 +1,7 @@
-// $ANTLR 3.2 Sep 23, 2009 12:02:23 D:\\!OS\\gramatika\\OSVM_grammar.g 2009-11-04 17:26:49
+// $ANTLR 3.2 Sep 23, 2009 12:02:23 D:\\!OS\\gramatika\\OSVM_grammar.g 2009-11-05 18:16:32
 
 	package kshos.console;
-
+	
 	/* Cmd line parser for KIV/OS Virtual Machine Manager.
 	 * Automatically generated from OSVM_grammar.g with ANTLR-3.2
 	 * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
@@ -16,24 +16,24 @@ import java.util.ArrayList;
 
 public class OSVM_grammarParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "NL", "SP", "STIN", "STOUT", "PIPE", "WORD", "CHAR", "NUM", "TDIR", "PDIR", "WS", "PARAM", "SEP", "UND", "BG"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "NL", "SP", "STIN", "STOUT", "PIPE", "TDIR", "PDIR", "WORD", "CHAR", "NUM", "WS", "PARAM", "SEP", "UND", "BG"
     };
-    public static final int WORD=9;
+    public static final int WORD=11;
     public static final int UND=17;
     public static final int STIN=6;
     public static final int WS=14;
-    public static final int PDIR=13;
+    public static final int PDIR=10;
     public static final int SEP=16;
     public static final int SP=5;
     public static final int STOUT=7;
-    public static final int CHAR=10;
+    public static final int CHAR=12;
     public static final int BG=18;
     public static final int PARAM=15;
     public static final int PIPE=8;
     public static final int NL=4;
     public static final int EOF=-1;
-    public static final int TDIR=12;
-    public static final int NUM=11;
+    public static final int NUM=13;
+    public static final int TDIR=9;
 
     // delegates
     // delegators
@@ -44,9 +44,9 @@ public class OSVM_grammarParser extends Parser {
         }
         public OSVM_grammarParser(TokenStream input, RecognizerSharedState state) {
             super(input, state);
-
+             
         }
-
+        
 
     public String[] getTokenNames() { return OSVM_grammarParser.tokenNames; }
     public String getGrammarFileName() { return "D:\\!OS\\gramatika\\OSVM_grammar.g"; }
@@ -61,7 +61,7 @@ public class OSVM_grammarParser extends Parser {
         private ArrayList<ArrayList<String>> proc = new ArrayList<ArrayList<String>>();
         /* Parsed one comman with parameters */
         private ArrayList<String> param = new ArrayList<String>();
-
+        
         /** Getter for out.
          *  @return null when stdout
          *          name of output file
@@ -69,15 +69,15 @@ public class OSVM_grammarParser extends Parser {
         public String getOut() {
             return out;
         }
-
-        /** Getter for in.
+        
+        /** Getter for in. 
          *  @return null when stdin
          *          name of input file
          */
         public String getIn() {
             return in;
         }
-
+        
         /** Getter for parsed line.
          *  @return ArrayList of String ArrayLists
          *          first contains tokens from cmd line separated with PIPE
@@ -107,7 +107,7 @@ public class OSVM_grammarParser extends Parser {
                 case 1 :
                     // D:\\!OS\\gramatika\\OSVM_grammar.g:64:10: NL
                     {
-                    match(input,NL,FOLLOW_NL_in_parse43);
+                    match(input,NL,FOLLOW_NL_in_parse43); 
 
                     }
                     break;
@@ -134,7 +134,7 @@ public class OSVM_grammarParser extends Parser {
             	case 1 :
             	    // D:\\!OS\\gramatika\\OSVM_grammar.g:64:20: SP
             	    {
-            	    match(input,SP,FOLLOW_SP_in_parse49);
+            	    match(input,SP,FOLLOW_SP_in_parse49); 
 
             	    }
             	    break;
@@ -155,7 +155,7 @@ public class OSVM_grammarParser extends Parser {
                 case 1 :
                     // D:\\!OS\\gramatika\\OSVM_grammar.g:64:25: NL
                     {
-                    match(input,NL,FOLLOW_NL_in_parse53);
+                    match(input,NL,FOLLOW_NL_in_parse53); 
 
                     }
                     break;
@@ -211,7 +211,7 @@ public class OSVM_grammarParser extends Parser {
                     	case 1 :
                     	    // D:\\!OS\\gramatika\\OSVM_grammar.g:65:16: SP
                     	    {
-                    	    match(input,SP,FOLLOW_SP_in_line67);
+                    	    match(input,SP,FOLLOW_SP_in_line67); 
 
                     	    }
                     	    break;
@@ -221,7 +221,7 @@ public class OSVM_grammarParser extends Parser {
                         }
                     } while (true);
 
-                    match(input,STIN,FOLLOW_STIN_in_line70);
+                    match(input,STIN,FOLLOW_STIN_in_line70); 
                     pushFollow(FOLLOW_in_in_line72);
                     in();
 
@@ -278,7 +278,7 @@ public class OSVM_grammarParser extends Parser {
                     	case 1 :
                     	    // D:\\!OS\\gramatika\\OSVM_grammar.g:65:39: SP
                     	    {
-                    	    match(input,SP,FOLLOW_SP_in_line82);
+                    	    match(input,SP,FOLLOW_SP_in_line82); 
 
                     	    }
                     	    break;
@@ -288,7 +288,7 @@ public class OSVM_grammarParser extends Parser {
                         }
                     } while (true);
 
-                    match(input,STOUT,FOLLOW_STOUT_in_line85);
+                    match(input,STOUT,FOLLOW_STOUT_in_line85); 
                     pushFollow(FOLLOW_out_in_line87);
                     out();
 
@@ -365,7 +365,7 @@ public class OSVM_grammarParser extends Parser {
             	case 1 :
             	    // D:\\!OS\\gramatika\\OSVM_grammar.g:67:8: SP
             	    {
-            	    match(input,SP,FOLLOW_SP_in_next105);
+            	    match(input,SP,FOLLOW_SP_in_next105); 
 
             	    }
             	    break;
@@ -375,7 +375,7 @@ public class OSVM_grammarParser extends Parser {
                 }
             } while (true);
 
-            match(input,PIPE,FOLLOW_PIPE_in_next108);
+            match(input,PIPE,FOLLOW_PIPE_in_next108); 
             // D:\\!OS\\gramatika\\OSVM_grammar.g:67:17: ( SP )*
             loop10:
             do {
@@ -391,7 +391,7 @@ public class OSVM_grammarParser extends Parser {
             	case 1 :
             	    // D:\\!OS\\gramatika\\OSVM_grammar.g:67:17: SP
             	    {
-            	    match(input,SP,FOLLOW_SP_in_next110);
+            	    match(input,SP,FOLLOW_SP_in_next110); 
 
             	    }
             	    break;
@@ -446,7 +446,7 @@ public class OSVM_grammarParser extends Parser {
                 if ( (LA11_0==SP) ) {
                     int LA11_1 = input.LA(2);
 
-                    if ( ((LA11_1>=WORD && LA11_1<=NUM)) ) {
+                    if ( ((LA11_1>=TDIR && LA11_1<=NUM)) ) {
                         alt11=1;
                     }
 
@@ -498,7 +498,7 @@ public class OSVM_grammarParser extends Parser {
             // D:\\!OS\\gramatika\\OSVM_grammar.g:69:6: ( SP par )
             // D:\\!OS\\gramatika\\OSVM_grammar.g:69:8: SP par
             {
-            match(input,SP,FOLLOW_SP_in_args137);
+            match(input,SP,FOLLOW_SP_in_args137); 
             pushFollow(FOLLOW_par_in_args139);
             par2=par();
 
@@ -545,7 +545,7 @@ public class OSVM_grammarParser extends Parser {
             	case 1 :
             	    // D:\\!OS\\gramatika\\OSVM_grammar.g:70:7: SP
             	    {
-            	    match(input,SP,FOLLOW_SP_in_out148);
+            	    match(input,SP,FOLLOW_SP_in_out148); 
 
             	    }
             	    break;
@@ -601,7 +601,7 @@ public class OSVM_grammarParser extends Parser {
             	case 1 :
             	    // D:\\!OS\\gramatika\\OSVM_grammar.g:71:6: SP
             	    {
-            	    match(input,SP,FOLLOW_SP_in_in160);
+            	    match(input,SP,FOLLOW_SP_in_in160); 
 
             	    }
             	    break;
@@ -635,51 +635,13 @@ public class OSVM_grammarParser extends Parser {
     };
 
     // $ANTLR start "par"
-    // D:\\!OS\\gramatika\\OSVM_grammar.g:72:1: par : ( WORD | CHAR | NUM );
+    // D:\\!OS\\gramatika\\OSVM_grammar.g:72:1: par : ( ( TDIR | PDIR ) | ( TDIR | PDIR ) WORD | WORD | CHAR | NUM );
     public final OSVM_grammarParser.par_return par() throws RecognitionException {
         OSVM_grammarParser.par_return retval = new OSVM_grammarParser.par_return();
         retval.start = input.LT(1);
 
         try {
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:72:5: ( WORD | CHAR | NUM )
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:
-            {
-            if ( (input.LA(1)>=WORD && input.LA(1)<=NUM) ) {
-                input.consume();
-                state.errorRecovery=false;
-            }
-            else {
-                MismatchedSetException mse = new MismatchedSetException(null,input);
-                throw mse;
-            }
-
-
-            }
-
-            retval.stop = input.LT(-1);
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-        }
-        return retval;
-    }
-    // $ANTLR end "par"
-
-    public static class file_return extends ParserRuleReturnScope {
-    };
-
-    // $ANTLR start "file"
-    // D:\\!OS\\gramatika\\OSVM_grammar.g:73:1: file : ( ( TDIR | PDIR ) | ( TDIR | PDIR ) WORD | WORD | CHAR | NUM );
-    public final OSVM_grammarParser.file_return file() throws RecognitionException {
-        OSVM_grammarParser.file_return retval = new OSVM_grammarParser.file_return();
-        retval.start = input.LT(1);
-
-        try {
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:73:6: ( ( TDIR | PDIR ) | ( TDIR | PDIR ) WORD | WORD | CHAR | NUM )
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:72:5: ( ( TDIR | PDIR ) | ( TDIR | PDIR ) WORD | WORD | CHAR | NUM )
             int alt14=5;
             switch ( input.LA(1) ) {
             case TDIR:
@@ -690,7 +652,7 @@ public class OSVM_grammarParser extends Parser {
                 if ( (LA14_1==WORD) ) {
                     alt14=2;
                 }
-                else if ( (LA14_1==EOF||(LA14_1>=NL && LA14_1<=SP)||(LA14_1>=STOUT && LA14_1<=PIPE)) ) {
+                else if ( (LA14_1==EOF||(LA14_1>=NL && LA14_1<=PIPE)) ) {
                     alt14=1;
                 }
                 else {
@@ -725,6 +687,128 @@ public class OSVM_grammarParser extends Parser {
 
             switch (alt14) {
                 case 1 :
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:72:7: ( TDIR | PDIR )
+                    {
+                    if ( (input.LA(1)>=TDIR && input.LA(1)<=PDIR) ) {
+                        input.consume();
+                        state.errorRecovery=false;
+                    }
+                    else {
+                        MismatchedSetException mse = new MismatchedSetException(null,input);
+                        throw mse;
+                    }
+
+
+                    }
+                    break;
+                case 2 :
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:72:23: ( TDIR | PDIR ) WORD
+                    {
+                    if ( (input.LA(1)>=TDIR && input.LA(1)<=PDIR) ) {
+                        input.consume();
+                        state.errorRecovery=false;
+                    }
+                    else {
+                        MismatchedSetException mse = new MismatchedSetException(null,input);
+                        throw mse;
+                    }
+
+                    match(input,WORD,FOLLOW_WORD_in_par190); 
+
+                    }
+                    break;
+                case 3 :
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:72:44: WORD
+                    {
+                    match(input,WORD,FOLLOW_WORD_in_par194); 
+
+                    }
+                    break;
+                case 4 :
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:72:51: CHAR
+                    {
+                    match(input,CHAR,FOLLOW_CHAR_in_par198); 
+
+                    }
+                    break;
+                case 5 :
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:72:58: NUM
+                    {
+                    match(input,NUM,FOLLOW_NUM_in_par202); 
+
+                    }
+                    break;
+
+            }
+            retval.stop = input.LT(-1);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "par"
+
+    public static class file_return extends ParserRuleReturnScope {
+    };
+
+    // $ANTLR start "file"
+    // D:\\!OS\\gramatika\\OSVM_grammar.g:73:1: file : ( ( TDIR | PDIR ) | ( TDIR | PDIR ) WORD | WORD | CHAR | NUM );
+    public final OSVM_grammarParser.file_return file() throws RecognitionException {
+        OSVM_grammarParser.file_return retval = new OSVM_grammarParser.file_return();
+        retval.start = input.LT(1);
+
+        try {
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:73:6: ( ( TDIR | PDIR ) | ( TDIR | PDIR ) WORD | WORD | CHAR | NUM )
+            int alt15=5;
+            switch ( input.LA(1) ) {
+            case TDIR:
+            case PDIR:
+                {
+                int LA15_1 = input.LA(2);
+
+                if ( (LA15_1==WORD) ) {
+                    alt15=2;
+                }
+                else if ( (LA15_1==EOF||(LA15_1>=NL && LA15_1<=SP)||(LA15_1>=STOUT && LA15_1<=PIPE)) ) {
+                    alt15=1;
+                }
+                else {
+                    NoViableAltException nvae =
+                        new NoViableAltException("", 15, 1, input);
+
+                    throw nvae;
+                }
+                }
+                break;
+            case WORD:
+                {
+                alt15=3;
+                }
+                break;
+            case CHAR:
+                {
+                alt15=4;
+                }
+                break;
+            case NUM:
+                {
+                alt15=5;
+                }
+                break;
+            default:
+                NoViableAltException nvae =
+                    new NoViableAltException("", 15, 0, input);
+
+                throw nvae;
+            }
+
+            switch (alt15) {
+                case 1 :
                     // D:\\!OS\\gramatika\\OSVM_grammar.g:73:8: ( TDIR | PDIR )
                     {
                     if ( (input.LA(1)>=TDIR && input.LA(1)<=PDIR) ) {
@@ -751,28 +835,28 @@ public class OSVM_grammarParser extends Parser {
                         throw mse;
                     }
 
-                    match(input,WORD,FOLLOW_WORD_in_file205);
+                    match(input,WORD,FOLLOW_WORD_in_file227); 
 
                     }
                     break;
                 case 3 :
                     // D:\\!OS\\gramatika\\OSVM_grammar.g:73:45: WORD
                     {
-                    match(input,WORD,FOLLOW_WORD_in_file209);
+                    match(input,WORD,FOLLOW_WORD_in_file231); 
 
                     }
                     break;
                 case 4 :
                     // D:\\!OS\\gramatika\\OSVM_grammar.g:73:52: CHAR
                     {
-                    match(input,CHAR,FOLLOW_CHAR_in_file213);
+                    match(input,CHAR,FOLLOW_CHAR_in_file235); 
 
                     }
                     break;
                 case 5 :
                     // D:\\!OS\\gramatika\\OSVM_grammar.g:73:59: NUM
                     {
-                    match(input,NUM,FOLLOW_NUM_in_file217);
+                    match(input,NUM,FOLLOW_NUM_in_file239); 
 
                     }
                     break;
@@ -953,9 +1037,9 @@ public class OSVM_grammarParser extends Parser {
             return "65:38: ( ( SP )* STOUT out )?";
         }
     }
+ 
 
-
-    public static final BitSet FOLLOW_NL_in_parse43 = new BitSet(new long[]{0x0000000000000E00L});
+    public static final BitSet FOLLOW_NL_in_parse43 = new BitSet(new long[]{0x0000000000003E00L});
     public static final BitSet FOLLOW_line_in_parse47 = new BitSet(new long[]{0x0000000000000032L});
     public static final BitSet FOLLOW_SP_in_parse49 = new BitSet(new long[]{0x0000000000000032L});
     public static final BitSet FOLLOW_NL_in_parse53 = new BitSet(new long[]{0x0000000000000002L});
@@ -969,23 +1053,28 @@ public class OSVM_grammarParser extends Parser {
     public static final BitSet FOLLOW_out_in_line87 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_cmd_in_first96 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_SP_in_next105 = new BitSet(new long[]{0x0000000000000120L});
-    public static final BitSet FOLLOW_PIPE_in_next108 = new BitSet(new long[]{0x0000000000000E20L});
-    public static final BitSet FOLLOW_SP_in_next110 = new BitSet(new long[]{0x0000000000000E20L});
+    public static final BitSet FOLLOW_PIPE_in_next108 = new BitSet(new long[]{0x0000000000003E20L});
+    public static final BitSet FOLLOW_SP_in_next110 = new BitSet(new long[]{0x0000000000003E20L});
     public static final BitSet FOLLOW_cmd_in_next113 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_par_in_cmd123 = new BitSet(new long[]{0x0000000000000022L});
     public static final BitSet FOLLOW_args_in_cmd126 = new BitSet(new long[]{0x0000000000000022L});
-    public static final BitSet FOLLOW_SP_in_args137 = new BitSet(new long[]{0x0000000000000E00L});
+    public static final BitSet FOLLOW_SP_in_args137 = new BitSet(new long[]{0x0000000000003E00L});
     public static final BitSet FOLLOW_par_in_args139 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_SP_in_out148 = new BitSet(new long[]{0x0000000000003E20L});
     public static final BitSet FOLLOW_file_in_out151 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_SP_in_in160 = new BitSet(new long[]{0x0000000000003E20L});
     public static final BitSet FOLLOW_file_in_in163 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_set_in_par0 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_set_in_file187 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_set_in_file197 = new BitSet(new long[]{0x0000000000000200L});
-    public static final BitSet FOLLOW_WORD_in_file205 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_WORD_in_file209 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_CHAR_in_file213 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NUM_in_file217 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_set_in_par172 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_set_in_par182 = new BitSet(new long[]{0x0000000000000800L});
+    public static final BitSet FOLLOW_WORD_in_par190 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_WORD_in_par194 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_CHAR_in_par198 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NUM_in_par202 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_set_in_file209 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_set_in_file219 = new BitSet(new long[]{0x0000000000000800L});
+    public static final BitSet FOLLOW_WORD_in_file227 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_WORD_in_file231 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_CHAR_in_file235 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NUM_in_file239 = new BitSet(new long[]{0x0000000000000002L});
 
 }
