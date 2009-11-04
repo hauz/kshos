@@ -18,7 +18,7 @@ import org.antlr.runtime.RecognitionException;
  * Draws console window.
  *
  * @author <a href="mailto:hauzi.m@gmail.com">Miroslav Hauser</a>
- * @version 0.03, 4.11.2009
+ * @version 0.04, 5.11.2009
  */
 public class UserInterface extends JFrame {
 
@@ -44,10 +44,10 @@ public class UserInterface extends JFrame {
 			}
 		});
 
-        lineHead = title + "> ";
+                lineHead = title + "> ";
 		textArea = new JTextArea(lineHead);
-        TAOff = lineHead.length();
-        textArea.setCaretPosition(TAOff);
+                TAOff = lineHead.length();
+                textArea.setCaretPosition(TAOff);
 		textArea.setBackground(Color.BLACK);
 		textArea.setForeground(Color.WHITE);
 		textArea.setCaretColor(Color.WHITE);
@@ -58,7 +58,7 @@ public class UserInterface extends JFrame {
                 //sysek 2.11.2009 k4chn1k 4.11.09
                 textArea.addKeyListener(new KeyAdapter() {
                     @Override
-                    public void keyPressed(KeyEvent keyEvent){
+                    public void keyPressed(KeyEvent keyEvent) {
                         consoleKeyActions(keyEvent);
                     }
                 });
@@ -83,17 +83,17 @@ public class UserInterface extends JFrame {
             this.dispose();
         }
 
-    /**
-     *  Sets new line header and textarea offset
-     */
-    private void addNewLine(){
-         textArea.append("\n" + lineHead);
-         TAOff = textArea.getText().length();
-    }
+        /**
+         *  Sets new line header and textarea offset
+         */
+        private void addNewLine(){
+            textArea.append("\n" + lineHead);
+            TAOff = textArea.getText().length();
+        }
 
         /**
          * Handling for console keyevents.
-         * k4chn1k 4.11.09
+         * k4chn1k 5.11.09
          * @param keyEvent keyevent
          */
         private void consoleKeyActions(KeyEvent keyEvent) {
@@ -104,8 +104,8 @@ public class UserInterface extends JFrame {
 
                     String s = null;
                     try {
-                        int commLength = textArea.getText().trim().length()-TAOff;
-                        System.out.println(commLength);
+                        int commLength = textArea.getText().trim().length() - TAOff;
+                        // System.out.println(commLength);
                         if(commLength < 1){
                             addNewLine();
                             return;
@@ -117,9 +117,11 @@ public class UserInterface extends JFrame {
                     } 
                     addNewLine();
                                         
-                    // add to old commands
-                    oldCommands.add(s);
-                    oldCommandIndex = oldCommands.size();
+                    // k4chn1k 5.11.09 skip empty commands
+                    if (!s.equals("")) {
+                        oldCommands.add(s);
+                        oldCommandIndex = oldCommands.size();
+                    }
 
                     int procCnt, paramCnt;
                     OSVM_grammarLexer lex = new OSVM_grammarLexer(new ANTLRStringStream(s));
@@ -160,7 +162,7 @@ public class UserInterface extends JFrame {
                     keyEvent.consume();
                     if (oldCommandIndex > 0 && oldCommandIndex <= oldCommands.size()) {
                         textArea.setText(textArea.getText().substring(0, TAOff) + oldCommands.get(oldCommandIndex - 1));
-                        oldCommandIndex--;
+                        if (oldCommands.size() > 1) oldCommandIndex--;
                     }
                     break;
                 case KeyEvent.VK_DOWN:
@@ -171,7 +173,14 @@ public class UserInterface extends JFrame {
                     } else textArea.setText(textArea.getText().substring(0, TAOff));
                     break;
                 case KeyEvent.VK_RIGHT:
-                    // TODO: load last command by chars
+                    if (oldCommands.isEmpty()) return;
+                    int pos = textArea.getText().length() - TAOff;
+                    int last = oldCommands.size() - 1;
+                    if (pos < oldCommands.get(last).length()) {
+                        keyEvent.consume();
+                        textArea.append("" + oldCommands.get(last).charAt(pos));
+                        textArea.setCaretPosition(textArea.getText().length());
+                    }
                     break;
                 case KeyEvent.VK_BACK_SPACE:
                     // avoid backspacing while nothing written

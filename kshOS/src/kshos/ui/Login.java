@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import kshos.core.Core;
@@ -19,7 +20,7 @@ import kshos.core.Core;
  * Offers only user name selection, no password validation.
  *
  * @author <a href="mailto:hauzi.m@gmail.com">Miroslav Hauser</a>
- * @version 0.01, 1.11.2009
+ * @version 0.03, 5.11.2009
  */
 public class Login extends JFrame {
 
@@ -93,13 +94,14 @@ public class Login extends JFrame {
         LUser = new JLabel("User name: ");
         upperLeftPanel.add(LUser);
 
-        // k4chn1k 4.11.09
+        // k4chn1k 4.11.09 enter & esc reaction + legth w/o spaces
         TFUser = new JTextField(10);
         TFUser.setText("");
         TFUser.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent evt) {
                 if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    evt.consume();
                     performLogin();
                 } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE){
                     close();
@@ -141,9 +143,14 @@ public class Login extends JFrame {
      */
     public void performLogin() {
         String userName = TFUser.getText().trim();
-        if (!userName.equals("")) {
+        // k4chn1k 5.11.09 prints help for user help
+        // TODO: add more details for login help ?
+        if (userName.equalsIgnoreCase("help")) {
+            JOptionPane.showMessageDialog(rootPane, "Help for KIV/OS Virtual Machine Manager - Login\nChoose your login name and press enter or click OK.", "--- HELP ---", JOptionPane.QUESTION_MESSAGE);
+        } else if (!userName.equals("")) {
             Core.instance().service(1, userName);
         }
+        TFUser.setText("");
     }
 
 }
