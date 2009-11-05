@@ -1,6 +1,6 @@
 // $ANTLR 3.2 Sep 23, 2009 12:02:23 D:\\!OS\\gramatika\\OSVM_grammar.g 2009-11-05 18:16:32
 
-	package kshos.console;
+	package kshos.shell;
 	
 	/* Lexer for KIV/OS Virtual Machine Manager.
 	 * Automatically generated from OSVM_grammar.g with ANTLR-3.2
