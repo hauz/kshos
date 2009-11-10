@@ -70,7 +70,8 @@ public class KSHell extends KSHprocess {
         // run last command
         String command = g.getCmdTable().get(g.getCmdTable().size() - 1).get(g.getCmdTable().get(0).size() - 1);
 
-        if (command.equals("kshell") && !UserInterface.MORE_SHELLS) console.append("\nKSHell already running!");
+        // TODO: more shells
+        if (command.equals("kshell")) console.append("\nKSHell already running!");
         else if (command.equals("exit")) {
             // TODO: kill shell & close console
             console.append("\nGood bye :-)");
