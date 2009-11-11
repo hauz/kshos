@@ -9,15 +9,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import kshos.command.KSHell;
+import kshos.io.StdIn;
+import kshos.io.StdOut;
 
 /**
  * Simple Command Line Interface.
  * Draws console window.
  *
  * @author <a href="mailto:hauzi.m@gmail.com">Miroslav Hauser</a>
- * @version 0.05, 8.11.2009
+ * @version 0.06, 11.11.2009
  */
-public class UserInterface extends JFrame {
+public class UserInterface extends JFrame implements StdIn, StdOut {
 
     public static final boolean MORE_SHELLS = false;
     private JTextArea textArea;
@@ -85,7 +87,7 @@ public class UserInterface extends JFrame {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        shell.setConsole(textArea);
+        shell.setUserInterface(this);
         shell.start();
     }
 
@@ -195,5 +197,41 @@ public class UserInterface extends JFrame {
                 break;
         }
 
+    }
+
+    public void stdOpenIn() {
+        System.out.println("Console");
+    }
+
+    public char stdRead() {
+        return 'a';
+    }
+
+    public String stdReadln() {
+        return "neco";
+    }
+
+    public void stdCloseIn() {
+        System.out.println("Console");
+    }
+
+    public void stdOpenOut() {
+        System.out.println("Console");
+    }
+
+    public void stdWrite(char c) {
+        System.out.println("Console");
+    }
+
+    public void stdWriteln(String s) {
+        System.out.println("Console");
+    }
+
+    public void stdCloseOut() {
+        System.out.println("Console");
+    }
+
+    public void stdAppend(String s) {
+        textArea.append(s);
     }
 }
