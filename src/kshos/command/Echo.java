@@ -24,7 +24,19 @@ public class Echo extends KSHprocess {
             s += getArgs()[i];
             if (i != len-1) s += " ";
         }
-        ((JTextArea)getOut()).append(s);
+        this.getOut().stdAppend(s);
+        this.getOut().stdCloseOut();
+        this.getParent().setChild(null);
+    }
+
+    @Override
+    public void processLine(String line) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void processSignal(int type) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

@@ -5,7 +5,6 @@
 
 package kshos.command;
 
-import javax.swing.JTextArea;
 import kshos.core.KSHprocess;
 
 /**
@@ -18,9 +17,19 @@ public class Pwd extends KSHprocess {
 
     @Override
     public void run () {
-        if (getOut() instanceof JTextArea) {
-            ((JTextArea) getOut()).append("\nWorking directory: " + getParent().getWorkingDir());
-        }
+        this.getOut().stdAppend("\nWorking directory: " + getParent().getWorkingDir());
+        this.getOut().stdCloseOut();
+        this.getParent().setChild(null);
+    }
+
+    @Override
+    public void processLine(String line) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void processSignal(int type) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

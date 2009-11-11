@@ -4,22 +4,25 @@ import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
 import java.net.URLClassLoader;
+import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
 import kshos.command.KSHell;
+import kshos.io.StdIn;
+import kshos.io.StdOut;
 
 /**
  * Simple Command Line Interface.
  * Draws console window.
  *
  * @author <a href="mailto:hauzi.m@gmail.com">Miroslav Hauser</a>
- * @version 0.05, 8.11.2009
+ * @version 0.06, 11.11.2009
  */
-public class UserInterface extends JFrame {
+public class UserInterface extends JFrame implements StdIn, StdOut {
 
-    public static final boolean MORE_SHELLS = false;
     private JTextArea textArea;
     private int TAOff;
     private String lineHead;
@@ -60,17 +63,31 @@ public class UserInterface extends JFrame {
             public void keyPressed(KeyEvent keyEvent) {
                 consoleKeyActions(keyEvent);
             }
+
         });
-        // k4chn1k 8.11.09
+        // k4chn1k 10.11.09
         textArea.addMouseListener(new MouseAdapter() {
 
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 textArea.setCaretPosition(TAOff);
             }
 
         });
+        // k4chn1k 11.11.09 send signal for ctrl+d
+        textArea.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK), new AbstractAction() {
 
+            public void actionPerformed(ActionEvent ev) {
+                if (shell.getChild() == null) close();
+                else {
+                    if (textArea.getText().length() != TAOff)
+                        consoleKeyActions(new KeyEvent(textArea, 0, (long) 0, 0, KeyEvent.VK_ENTER, (char) 0));
+                    shell.getChild().processSignal(0);
+                    addNewLine(2);
+                }
+            }
+
+        });
         setLayout(new BorderLayout());
 
         JScrollPane scrollPane = new JScrollPane(textArea);
@@ -85,7 +102,7 @@ public class UserInterface extends JFrame {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        shell.setConsole(textArea);
+        shell.setUserInterface(this);
         shell.start();
     }
 
@@ -98,11 +115,17 @@ public class UserInterface extends JFrame {
     }
 
     /**
-     *  Sets new line header and textarea offset
+     * Sets new line header and textarea offset
+     * @param type 0 - only \n
+     *             1 - \n + lineHead
+     *             2 - only lineHead
      */
-    private void addNewLine() {
-        textArea.append("\n" + lineHead);
+    private void addNewLine(int type) {
+        if (type == 0) textArea.append("\n");
+        else if (type == 1) textArea.append("\n" + lineHead);
+        else textArea.append(lineHead);
         TAOff = textArea.getText().length();
+        textArea.setCaretPosition(TAOff);
     }
 
     /**
@@ -128,7 +151,8 @@ public class UserInterface extends JFrame {
                 String s = null;
                 int commLength = textArea.getText().trim().length() - TAOff;
                 if (commLength < 1) {
-                    addNewLine();
+                    if (shell.getChild() == null) addNewLine(1);
+                    else addNewLine(0);
                     return;
                 }
                 try {
@@ -143,11 +167,18 @@ public class UserInterface extends JFrame {
                     return;
                 }
 
-                // k4chn1k 7.11.09 shell processing
-                shell.processLine(s);
-
-                addNewLine();
+                // k4chn1k 11.11.09
+                if (shell.getChild() == null) {
+                    shell.processLine(s);
+                    addNewLine(0);
+                } else {
+                    addNewLine(0);
+                    shell.getChild().processLine(s);
+                }
+                
+                if (shell.getChild() == null) addNewLine(2);
                 // sets cursor on new line
+                TAOff = textArea.getText().length();
                 textArea.setCaretPosition(TAOff);
                 break;
             case KeyEvent.VK_LEFT:
@@ -157,15 +188,20 @@ public class UserInterface extends JFrame {
                 }
                 break;
             case KeyEvent.VK_UP:
-                keyEvent.consume();
+                if (shell.getChild() != null) return;
+                else {
+                    keyEvent.consume();
                 if (shell.getCommandIndex() > 0 && shell.getCommandIndex() <= shell.getCommandHistory().size()) {
                     textArea.setText(textArea.getText().substring(0, TAOff) + shell.getCommandHistory().get(shell.getCommandIndex() - 1));
                     if (shell.getCommandHistory().size() > 1) {
                         shell.decCommandIndex();
                     }
                 }
+                }
                 break;
             case KeyEvent.VK_DOWN:
+                if (shell.getChild() != null) return;
+                else {
                 keyEvent.consume();
                 if (shell.getCommandIndex() < shell.getCommandHistory().size() - 1) {
                     shell.incCommandIndex();
@@ -173,8 +209,11 @@ public class UserInterface extends JFrame {
                 } else {
                     textArea.setText(textArea.getText().substring(0, TAOff));
                 }
+                }
                 break;
             case KeyEvent.VK_RIGHT:
+                if (shell.getChild() != null) return;
+                else {
                 if (shell.getCommandHistory().isEmpty()) {
                     return;
                 }
@@ -184,6 +223,7 @@ public class UserInterface extends JFrame {
                     keyEvent.consume();
                     textArea.append("" + shell.getCommandHistory().get(last).charAt(pos));
                 }
+                }
                 break;
             case KeyEvent.VK_BACK_SPACE:
                 // avoid backspacing while nothing written
@@ -191,9 +231,47 @@ public class UserInterface extends JFrame {
                     keyEvent.consume();
                 }
                 break;
+            
             default:
                 break;
         }
 
     }
+
+    public void stdOpenIn() {
+        System.out.println("Console");
+    }
+
+    public char stdRead() {
+        return 'a';
+    }
+
+    public String stdReadln() {
+        return "neco";
+    }
+
+    public void stdCloseIn() {
+        System.out.println("Console");
+    }
+
+    public void stdOpenOut() {
+        System.out.println("Console");
+    }
+
+    public void stdWrite(char c) {
+        System.out.println("Console");
+    }
+
+    public void stdWriteln(String s) {
+        System.out.println("Console");
+    }
+
+    public void stdCloseOut() {
+        System.out.println("Console");
+    }
+
+    public void stdAppend(String s) {
+        textArea.append(s);
+    }
+
 }

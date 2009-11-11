@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JTextArea;
+import javax.swing.text.BadLocationException;
 import kshos.core.KSHprocess;
 import kshos.io.KSHReader;
 
@@ -22,48 +23,56 @@ import kshos.io.KSHReader;
  */
 public class Sort extends KSHprocess {
 
-    
+    private ArrayList<String> lines = new ArrayList<String>();
 
     private String sort(Object[] array) {
         String file = "";
         Arrays.sort(array);
-        for (int j = 0; j < array.length; j++) {
-            file += "\n" + (String) array[j];
+        for (int j = 0; j < array.length - 1; j++) {
+            file += (String) array[j]  + "\n";
         }
+        file += (String) array[array.length - 1];
         return file;
+    }
+
+    private void fileIn(int fileCnt) {
+        String pom = "";
+        KSHReader read = null;
+
+        for (int i = 0; i < fileCnt; i++) {
+            read = new KSHReader(getParent().getWorkingDir() + File.separator + getArgs()[i]);
+            while ((pom = read.stdReadln()) != null)
+                lines.add(pom);
+            read.stdCloseIn();
+        }
     }
 
     @Override
     public void run () {
-        String[] linesA;
-        ArrayList<String> lines = new ArrayList<String>();
-        KSHReader read = null;
-        File f = null;
-        char[] buff = null;
         int len = getArgs().length;
+        if (len != 0) {
+            fileIn(len);
+            this.getOut().stdAppend("\n" + sort(lines.toArray()));
+            this.getOut().stdCloseOut();
+            this.getParent().setChild(null);
+        }
+    }
 
-        for (int i = 0; i < len; i++) {
-            try {
-                f = new File(getArgs()[i]);
-                buff = new char[(int)f.length()];
-                read = new KSHReader(f);
-                read.read(buff, 0, (int)f.length());
-                read.close();
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-            } catch (IOException iex) {
-                iex.printStackTrace();
-            }
-            linesA = (new String(buff)).split("\n");
-            for (int j = 0; j < linesA.length; j++) {
-                lines.add(linesA[j]);
-            }
+    @Override
+    public void processLine(String line) {
+        lines.add(line);
+    }
+
+    @Override
+    public void processSignal(int type) {
+        switch (type) {
+            case 0:
+                this.getOut().stdAppend(sort(lines.toArray()));
+                this.getParent().setChild(null);
+                break;
+            default:
+                break;
         }
-        if (len == 0) {
-            // TODO: keyboard input
-            lines.add("");
-        }
-        ((JTextArea)getOut()).append(sort(lines.toArray()));
     }
 
 }

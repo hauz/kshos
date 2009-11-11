@@ -5,7 +5,6 @@
 package kshos.command;
 
 import java.io.File;
-import javax.swing.JTextArea;
 import kshos.core.KSHprocess;
 
 /**
@@ -13,7 +12,7 @@ import kshos.core.KSHprocess;
  * Lists current/relative/absolute directory specified by last parameter.
  * Parameter -l prints full list. // not implemented yet
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
- * @version 0.01 8/11/2009
+ * @version 0.02 11/11/2009
  */
 public class Ls extends KSHprocess {
 
@@ -30,15 +29,25 @@ public class Ls extends KSHprocess {
                 thisDir = new File(getParent().getWorkingDir() + File.separator + path);
             }
             if (!thisDir.exists()) {
-                ((JTextArea) getOut()).append("\nNo such directory!");
+                this.getOut().stdAppend("\nNo such directory!");
                 return;
             }
         }
         // TODO: -l parameter
         for (int i = 0; i < thisDir.list().length; i++) {
-            if (getOut() instanceof JTextArea) {
-                ((JTextArea) getOut()).append("\n" + thisDir.list()[i]);
-            }
+            this.getOut().stdAppend("\n" + thisDir.list()[i]);
         }
+        this.getOut().stdCloseOut();
+        this.getParent().setChild(null);
+    }
+
+    @Override
+    public void processLine(String line) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void processSignal(int type) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
