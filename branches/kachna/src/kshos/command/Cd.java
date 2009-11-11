@@ -7,7 +7,6 @@ package kshos.command;
 
 import java.io.File;
 import java.io.IOException;
-import javax.swing.JTextArea;
 import kshos.core.KSHprocess;
 
 /**
@@ -21,12 +20,12 @@ public class Cd extends KSHprocess {
     @Override
     public void run () {
         File newDir = null;
-        if (getArgs() == null) ((JTextArea)getOut()).append("Invalid parameter!");
+        if (getArgs() == null) this.getOut().stdAppend("Invalid parameter!");
         else {
             if (getArgs()[0].charAt(0) == '/') newDir = new File(getArgs()[0]);
             else newDir = new File(getParent().getWorkingDir() + File.separator + getArgs()[0]);
             if (!newDir.exists()) {
-                ((JTextArea)getOut()).append("\nNo such directory!");
+                this.getOut().stdAppend("\nNo such directory!");
                 return;
             }
         }
@@ -34,7 +33,19 @@ public class Cd extends KSHprocess {
             getParent().setWorkingDir(newDir.getCanonicalFile());
         } catch (IOException ex) {
             ex.printStackTrace();
-            ((JTextArea)getOut()).append("\nNo such directory!");
+            this.getOut().stdAppend("\nNo such directory!");
         }
+        this.getOut().stdCloseOut();
+        this.getParent().setChild(null);
+    }
+
+    @Override
+    public void processLine(String line) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void processSignal(int type) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

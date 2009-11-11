@@ -8,8 +8,6 @@ package kshos.command;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JTextArea;
 import kshos.core.KSHprocess;
 import kshos.io.KSHReader;
@@ -24,32 +22,43 @@ public class Cat extends KSHprocess {
 
     String file = "";
 
+    private void fileIn(int fileCnt) {
+        KSHReader read = null;
+        String pom = "";
+
+        for (int i = 0; i < fileCnt; i++) {
+            read = new KSHReader(getParent().getWorkingDir() + File.separator + getArgs()[i]);
+            while ((pom = read.stdReadln()) != null)
+                file += "\n" + pom;
+            read.stdCloseIn();
+        }
+    }
+
     @Override
     public void run () {
-        KSHReader read = null;
-        File f = null;
-        char[] buff = null;
         int len = getArgs().length;
-        
-        for (int i = 0; i < len; i++) {
-            try {
-                f = new File(getArgs()[i]);
-                buff = new char[(int)f.length()];
-                read = new KSHReader(f);
-                read.read(buff, 0, (int)f.length());
-                read.close();
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-            } catch (IOException iex) {
-                iex.printStackTrace();
-            }
-            file += "\n" + new String(buff);
+        if (len != 0) {
+            fileIn(len);
+            this.getOut().stdAppend(file);
+            this.getOut().stdCloseOut();
+            this.getParent().setChild(null);
         }
-        if (len == 0) {
-            // TODO: keyboard input
-            file += "\nNo params!";
+    }
+
+    @Override
+    public void processLine(String line) {
+        this.getOut().stdAppend(line + "\n");
+    }
+
+    @Override
+    public void processSignal(int type) {
+        switch (type) {
+            case 0:
+                this.getParent().setChild(null);
+                break;
+            default:
+                break;
         }
-        ((JTextArea)getOut()).append(file);
     }
 
 }

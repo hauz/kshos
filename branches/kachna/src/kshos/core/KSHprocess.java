@@ -8,17 +8,18 @@ package kshos.core;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import kshos.io.*;
 
 /**
  * Simple process.
  * Replace by final version of process.
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
- * @version 0.01 8/11/2009
+ * @version 0.02 11/11/2009
  */
-public class KSHprocess extends Thread {
+public abstract class KSHprocess extends Thread {
 
-    private Object in;
-    private Object out;
+    private StdIn in;
+    private StdOut out;
     private File workingDir;
     private String[] args;
 
@@ -51,19 +52,19 @@ public class KSHprocess extends Thread {
         this.parent = parent;
     }
 
-    public Object getIn() {
+    public StdIn getIn() {
         return in;
     }
 
-    public void setIn(Object in) {
+    public void setIn(StdIn in) {
         this.in = in;
     }
 
-    public Object getOut() {
+    public StdOut getOut() {
         return out;
     }
 
-    public void setOut(Object out) {
+    public void setOut(StdOut out) {
         this.out = out;
     }
 
@@ -79,5 +80,9 @@ public class KSHprocess extends Thread {
     public void setWorkingDir(File dest) {
         this.workingDir = dest;
     }
+
+    public abstract void processLine(String line);
+
+    public abstract void processSignal(int type);
 
 }

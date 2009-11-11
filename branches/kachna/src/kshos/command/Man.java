@@ -28,7 +28,19 @@ public class Man extends KSHprocess {
     
     @Override
     public void run () {
-        ((JTextArea)getOut()).append(MAN);
+        this.getOut().stdAppend(MAN);
+        this.getOut().stdCloseOut();
+        this.getParent().setChild(null);
+    }
+
+    @Override
+    public void processLine(String line) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void processSignal(int type) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
