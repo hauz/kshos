@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
+import kshos.core.Core;
 import kshos.shell.*;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -27,12 +28,14 @@ public class UserInterface extends JFrame {
         private String lineHead;
         private int oldCommandIndex;
         private ArrayList<String> oldCommands;
+        private String title;
 
 	/**
 	 * Constructor. Creates console and sets all needed parameters of JFrame.
 	 * @param title - console title
 	 */
 	public UserInterface(String title) {
+                this.title = title;
 		this.setTitle(title);
 		this.setSize(new Dimension(640, 480));
 		this.setMinimumSize(new Dimension(640, 480));
@@ -80,6 +83,7 @@ public class UserInterface extends JFrame {
 	 * All waiting thread for input are notified.
 	 */
 	public synchronized void close() {
+            Core.instance().service(2, title);
             this.dispose();
         }
 

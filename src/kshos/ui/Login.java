@@ -143,8 +143,8 @@ public class Login extends JFrame {
      */
     public void performLogin() {
         String userName = TFUser.getText().trim();
+
         // k4chn1k 5.11.09 prints help for user help
-        // TODO: add more details for login help ?
         if (userName.equalsIgnoreCase("help")) {
             JOptionPane.showMessageDialog(rootPane, "Help for KIV/OS Virtual Machine Manager - Login\nChoose your login name and press enter or click OK.", "--- HELP ---", JOptionPane.QUESTION_MESSAGE);
         } else if (!userName.equals("")) {

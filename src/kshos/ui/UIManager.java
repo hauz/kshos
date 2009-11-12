@@ -11,14 +11,17 @@ import java.util.ArrayList;
  */
 public class UIManager {
 
-    private static UIManager instance = null;
     private ArrayList<UserInterface> interfaces = null;
+
+    // <editor-fold defaultstate="collapsed" desc="Singleton implementation.">
+
+    private static UIManager instance = null;
 
     /**
      * Main constructor
      */
     protected UIManager() {
-        interfaces = new ArrayList<UserInterface>();
+        initialize();
     }
 
     /**
@@ -43,13 +46,17 @@ public class UIManager {
         return instance;
     }
 
+    // </editor-fold>
+
     /**
      * Creates new console.
      */
-    public void newConsole(String userName) {
+    public UserInterface newConsole(String userName) {
         UserInterface newUI = new UserInterface(userName);
         interfaces.add(newUI);
         newUI.setVisible(true);
+
+        return newUI;
     }
 
     /**
@@ -68,5 +75,13 @@ public class UIManager {
      */
     public void closeConsole(UserInterface console) {
         console.close();
+    }
+
+    /**
+     * Initializes all necessary objects.
+     * Called from constructor.
+     */
+    private void initialize() {
+        interfaces = new ArrayList<UserInterface>();
     }
 }
