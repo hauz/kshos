@@ -1,5 +1,6 @@
 package kshos.core;
 
+import java.util.Properties;
 import kshos.ui.*;
 
 /**
@@ -13,8 +14,8 @@ public class Core {
     private Login loginWindow = null;
 
     private UserManager userMgr = null;
-    private ProcessManager procMrg = null;
     private UIManager UIMgr = null;
+    private Properties property = null;
 
     // <editor-fold defaultstate="collapsed" desc="Singleton implementation.">
 
@@ -59,14 +60,27 @@ public class Core {
 
         // get managers instances
         this.userMgr = UserManager.instance();
-        this.procMrg = ProcessManager.instance();
         this.UIMgr = UIManager.instance();
+        this.property = PropertyManager.loadProperties("kshos/config/kshOS.properties");
+
+        // system configuration file could not be loaded
+        if (this.property == null) {
+            return;
+        }
 
         // TODO: start INIT process
 
         // start login
         this.loginWindow = new Login();
-        
+    }
+
+    /**
+     * Returns property file with application configuration.
+     *
+     * @return properties
+     */
+    public Properties getProperties() {
+        return property;
     }
 
     /**
@@ -139,10 +153,13 @@ public class Core {
     public String getServiceError(int errorFlag) {
 
         switch (errorFlag) {
-            case -1 : return "";
+            case -1 : return getProperties().getProperty("UNSPEC_ERR");
+            case 0 : return getProperties().getProperty("LOGIN_OK");
+            case 1 : return getProperties().getProperty("ALREADY_IN");
+            case 2 : return getProperties().getProperty("LOGIN_NO");
         }
 
-        // TODO: finish error flag translating
+        // TODO: add all flags
         
         return "Unspecified error.";
     }
