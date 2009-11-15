@@ -19,7 +19,7 @@ import kshos.io.StdOut;
  * Draws console window.
  *
  * @author <a href="mailto:hauzi.m@gmail.com">Miroslav Hauser</a>
- * @version 0.06, 11.11.2009
+ * @version 0.07, 15.11.2009
  */
 public class UserInterface extends JFrame implements StdIn, StdOut {
 
@@ -238,36 +238,41 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
 
     }
 
-    public void stdOpenIn() {
-        System.out.println("Console");
-    }
-
-    public char stdRead() {
-        return 'a';
-    }
+    public boolean stdOpenIn() {
+        return true;
+    }  
 
     public String stdReadln() {
-        return "neco";
+        String s = "";
+        int commLength = textArea.getText().trim().length() - TAOff;
+        if (commLength < 1) {
+            if (shell.getChild() == null) addNewLine(1);
+            else addNewLine(0);
+            return s;
+        }
+        try {
+            // s equals only new written line
+            s = textArea.getText(TAOff, commLength).trim();
+        } catch (BadLocationException ex) {
+            ex.printStackTrace();
+        }
+        return s;
     }
 
     public void stdCloseIn() {
-        System.out.println("Console");
+        
     }
 
-    public void stdOpenOut() {
-        System.out.println("Console");
-    }
-
-    public void stdWrite(char c) {
-        System.out.println("Console");
-    }
+    public boolean stdOpenOut() {
+        return true;
+    }   
 
     public void stdWriteln(String s) {
-        System.out.println("Console");
+        textArea.append(s + "\n");
     }
 
     public void stdCloseOut() {
-        System.out.println("Console");
+        
     }
 
     public void stdAppend(String s) {

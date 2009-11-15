@@ -16,7 +16,7 @@ import kshos.io.KSHReader;
  * CAT command.
  * Reads and prints files specified by parameters.
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
- * @version 0.01 10/11/2009
+ * @version 0.02 15/11/2009
  */
 public class Cat extends KSHprocess {
 
@@ -28,9 +28,15 @@ public class Cat extends KSHprocess {
 
         for (int i = 0; i < fileCnt; i++) {
             read = new KSHReader(getParent().getWorkingDir() + File.separator + getArgs()[i]);
-            while ((pom = read.stdReadln()) != null)
+            if(read.stdOpenIn()){
+                while ((pom = read.stdReadln()) != null)
                 file += "\n" + pom;
-            read.stdCloseIn();
+                read.stdCloseIn();
+            }
+            else{
+                this.getOut().stdAppend("\nCannot read " + getArgs()[i]);
+            }
+            
         }
     }
 
