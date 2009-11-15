@@ -1,12 +1,5 @@
 package kshos.io;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
-
 /**
  * Standart input interface
  * Contains necessary methods for input stream.
@@ -19,13 +12,7 @@ public interface StdIn {
     /**
      * Open input stream.
      */
-    public void stdOpenIn();
-
-    /**
-     * Read char.
-     * @return Char or null if there is nothing to read.
-     */
-    public char stdRead();
+    public boolean stdOpenIn();
     
     /**
      * Read line.

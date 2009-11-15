@@ -9,93 +9,125 @@ import kshos.core.KSHprocess;
  * Provides file working.
  *
  * @author <a href="mailto:zdenek4@gmail.com">Zdenek Janda</a>
- * @version 0.02, 11.11.2009
+ * @version 0.03, 15.11.2009
  */
 public class Pipe implements StdIn, StdOut{
-    BufferedReader br;
-    BufferedWriter bw;
+    BufferedReader bufferedReader;
+    BufferedWriter bufferedWriter;
 
+    /**
+     * Create pipe between two KSHprocess
+     * @param from KSHprocess which is input of pipe
+     * @param to KSHprocess which is output of pipe
+     * @throws java.io.IOException
+     */
     Pipe(KSHprocess from, KSHprocess to) throws IOException{
          PipedWriter pipedWriter = new PipedWriter();
          PipedReader pipedReader = new PipedReader(pipedWriter);
-         br = new BufferedReader(pipedReader);
-         bw = new BufferedWriter(pipedWriter);
+         bufferedReader = new BufferedReader(pipedReader);
+         bufferedWriter = new BufferedWriter(pipedWriter);
          from.setOut(this);
          to.setIn(this);
     }
 
-    public void stdOpenIn() {
-        System.out.println("Opening");
+    /**
+     * Open or create file.
+     * Create file and buffered writer.
+     * @return if file open is succesfull
+     */
+    public boolean stdOpenOut() {
+        return true;
     }
 
-    public char stdRead() {
+    /**
+     * Writes a string.
+     * @param s - String to be written
+     */
+     public void stdWriteln(String s) {
         try {
-            return (char) br.read();
+            bufferedWriter.write(s);
+            bufferedWriter.newLine();
         } catch (IOException ex) {
-            System.out.println(ex);
-            return ' ';
+            System.err.println(ex);
         }
     }
 
+     /**
+     * Closes the stream, flushing it first.
+     * Once the stream has been closed, further stdWriteln() or stdFlush()
+     * invocations will cause an IOException to be thrown.
+     * Closing a previously closed stream has no effect.
+     */
+    public void stdCloseOut() {
+        try {
+            bufferedWriter.close();
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+    }
+
+    /**
+     * Flushes the stream.
+     */
+    public void stdFlush() {
+        try {
+            bufferedWriter.flush();
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+    }
+
+    /**
+     * Appends the specified string to this writer.
+     * @param s - The string to append. If s is null, then the four characters
+     * "null" are appended to this writer.
+     */
+    public void stdAppend(String s) {
+        try {
+            bufferedWriter.append(s);
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+    }
+
+    /**
+     * Open file.
+     * Create file and buffered reader.
+     * @return if file exists and open is succesfull
+     */
+    public boolean stdOpenIn() {
+        return true;
+    }
+
+    /**
+     * Reads a line of text.
+     * A line is considered to be terminated by any one of a line feed ('\n'),
+     * a carriage return ('\r'), or a carriage return followed immediately by
+     * a linefeed.
+     *
+     * @return A String containing the contents of the line, not including
+     * any line-termination characters, or null if the end of the stream
+     * has been reached or some IOException comes.
+     */
     public String stdReadln() {
         try {
-            return  br.readLine();
+            return  bufferedReader.readLine();
         } catch (IOException ex) {
-            System.out.println(ex);
+            System.err.println(ex);
             return null;
         }
     }
 
+    /**
+     * Closes the stream and releases any system resources associated with it.
+     * Once the stream has been closed, further stdReadln() invocations
+     * will throw an IOException. Closing a previously closed stream has no effect.
+     */
     public void stdCloseIn() {
         try {
-            br.close();
+            bufferedReader.close();
         } catch (IOException ex) {
-            System.out.println(ex);
-        }
-    }
-
-    public void stdOpenOut() {
-        System.out.println("Opening");
-    }
-
-    public void stdWrite(char c) {
-        try {
-            bw.write(c);
-        } catch (IOException ex) {
-            System.out.println(ex);
-        }
-    }
-
-    public void stdWriteln(String s) {
-        try {
-            bw.write(s);
-            bw.newLine();
-        } catch (IOException ex) {
-            System.out.println(ex);
-        }
-    }
-
-    public void stdCloseOut() {
-        try {
-            bw.close();            
-        } catch (IOException ex) {
-            System.out.println(ex);
-        }
-    }
-
-    public void stdFlush() {
-        try {
-            bw.flush();
-        } catch (IOException ex) {
-            System.out.println(ex);
-        }
-    }
-
-    public void stdAppend(String s) {
-        try {
-            bw.append(s);
-        } catch (IOException ex) {
-            System.out.println(ex);
+            System.err.println(ex);
         }
     }
 }

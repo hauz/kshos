@@ -17,7 +17,7 @@ import org.antlr.runtime.*;
 /**
  * Shell.
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
- * @version 0.02 8/11/2009
+ * @version 0.03 15/11/2009
  */
 public class KSHell extends KSHprocess {
 
@@ -61,7 +61,7 @@ public class KSHell extends KSHprocess {
         OSVM_grammarLexer lex = new OSVM_grammarLexer(new ANTLRStringStream(line));
         CommonTokenStream tokens = new CommonTokenStream(lex);
         OSVM_grammarParser g = new OSVM_grammarParser(tokens);
-
+        
         try {
             g.parse();
         } catch (RecognitionException e) {
@@ -93,8 +93,15 @@ public class KSHell extends KSHprocess {
         // process input
         if (g.getIn() == null) cmd.setIn(userInterface);
         else cmd.setIn(new KSHReader(g.getIn()));
+        if(!cmd.getIn().stdOpenIn()){
+            cmd.processSignal(0);
+            this.getOut().stdAppend("\nCannot read " + g.getIn());
+            return;
+        }
+        // process output
         if (g.getOut() == null) cmd.setOut(userInterface);
         else cmd.setOut(new KSHWriter(g.getOut()));
+        cmd.getOut().stdOpenOut();
         // process parameters
         cmd.setArgs(g.getCmdTable().get(g.getCmdTable().size() - 1));
         this.setChild(cmd);

@@ -1,28 +1,25 @@
 package kshos.io;
 
 
-
-
 import java.io.*;
 
 /**
  * Provides file working.
  *
  * @author <a href="mailto:zdenek4@gmail.com">Zdenek Janda</a>
- * @version 0.02, 11.11.2009
+ * @version 0.03, 15.11.2009
  */
 public class KSHWriter extends Writer implements StdOut {
     FileWriter fileWriter;
-    BufferedWriter bw;
+    BufferedWriter bufferedWriter;
+    String fileName;
 
+    /**
+     * Writer constructor
+     * @param fileName - name of file
+     */
     public KSHWriter(String fileName) {
-        File file = new File(fileName);
-        try {
-            fileWriter = new FileWriter(file);
-        } catch (IOException ex) {
-            System.out.println(ex);
-        }
-        bw = new BufferedWriter(this);
+       this.fileName = fileName;
     }
 
     @Override
@@ -40,49 +37,71 @@ public class KSHWriter extends Writer implements StdOut {
         fileWriter.close();
     }
 
-    public void stdOpenOut() {
-        System.out.println("Opening");
+    /**
+     * Open or create file.
+     * Create file and buffered writer.
+     * @return if file open is succesfull
+     */
+    public boolean stdOpenOut() {
+        File file = new File(fileName);
+        try {
+            fileWriter = new FileWriter(file);
+        } catch (IOException ex) {
+            System.err.println(ex);
+            return false;
+        }
+        bufferedWriter = new BufferedWriter(this);
+        return true;
     }
 
-    public void stdWrite(char c) {
+    /**
+     * Writes a string.
+     * @param s - String to be written
+     */
+     public void stdWriteln(String s) {
         try {
-            bw.write(c);
+            bufferedWriter.write(s);
+            bufferedWriter.newLine();
         } catch (IOException ex) {
-            System.out.println(ex);
+            System.err.println(ex);
         }
     }
 
-    public void stdWriteln(String s) {
-        try {
-            bw.write(s);            
-        } catch (IOException ex) {
-            System.out.println(ex);
-        }
-    }
-
+     /**
+     * Closes the stream, flushing it first.
+     * Once the stream has been closed, further stdWriteln() or stdFlush()
+     * invocations will cause an IOException to be thrown.
+     * Closing a previously closed stream has no effect.
+     */
     public void stdCloseOut() {
         try {
-            bw.close();            
+            bufferedWriter.close();
         } catch (IOException ex) {
-            System.out.println(ex);
+            System.err.println(ex);
         }
     }
 
+    /**
+     * Flushes the stream.
+     */
     public void stdFlush() {
         try {
-            bw.flush();
+            bufferedWriter.flush();
         } catch (IOException ex) {
-            System.out.println(ex);
+            System.err.println(ex);
         }
     }
 
+    /**
+     * Appends the specified string to this writer.
+     * @param s - The string to append. If s is null, then the four characters
+     * "null" are appended to this writer.
+     */
     public void stdAppend(String s) {
         try {
-            bw.append(s);
+            bufferedWriter.append(s);
         } catch (IOException ex) {
-            System.out.println(ex);
+            System.err.println(ex);
         }
     }
-
-
 }

@@ -1,12 +1,5 @@
 package kshos.io;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
-
 /**
  * Standart input interface
  * Contains necessary methods for ouput stream.
@@ -19,12 +12,7 @@ public interface StdOut {
     /**
      * Open ouput stream.
      */
-    public void stdOpenOut();
-
-    /**
-     * Write char.
-     */
-    public void stdWrite(char c);
+    public boolean stdOpenOut();
 
     /**
      * Write line.
