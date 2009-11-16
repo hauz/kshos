@@ -11,6 +11,7 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
 import kshos.command.KSHell;
+import kshos.core.Core;
 import kshos.io.StdIn;
 import kshos.io.StdOut;
 
@@ -27,12 +28,15 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
     private int TAOff;
     private String lineHead;
     private KSHell shell;
+    private String windowTitle = "";
 
     /**
      * Constructor. Creates console and sets all needed parameters of JFrame.
      * @param title - console title
      */
     public UserInterface(String title) {
+        this.windowTitle = title;
+
         this.setTitle(title);
         this.setSize(new Dimension(640, 480));
         this.setMinimumSize(new Dimension(640, 480));
@@ -111,6 +115,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
      * All waiting thread for input are notified.
      */
     public synchronized void close() {
+        Core.instance().service(2, this.windowTitle);
         this.dispose();
     }
 
