@@ -115,6 +115,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
      * All waiting thread for input are notified.
      */
     public synchronized void close() {
+        // logout user
         Core.instance().service(2, this.windowTitle);
         this.dispose();
     }
