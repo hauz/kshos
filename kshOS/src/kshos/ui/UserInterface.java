@@ -28,14 +28,12 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
     private int TAOff;
     private String lineHead;
     private KSHell shell;
-    private String windowTitle = "";
 
     /**
      * Constructor. Creates console and sets all needed parameters of JFrame.
      * @param title - console title
      */
     public UserInterface(String title) {
-        this.windowTitle = title;
 
         this.setTitle(title);
         this.setSize(new Dimension(640, 480));
@@ -67,7 +65,6 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
             public void keyPressed(KeyEvent keyEvent) {
                 consoleKeyActions(keyEvent);
             }
-
         });
         // k4chn1k 10.11.09
         textArea.addMouseListener(new MouseAdapter() {
@@ -76,21 +73,22 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 textArea.setCaretPosition(TAOff);
             }
-
         });
         // k4chn1k 11.11.09 send signal for ctrl+d
         textArea.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK), new AbstractAction() {
 
             public void actionPerformed(ActionEvent ev) {
-                if (shell.getChild() == null) close();
-                else {
-                    if (textArea.getText().length() != TAOff)
+                if (shell.getChild() == null) {
+                    close();
+                } else {
+                    // if last line wasn't entered
+                    if (textArea.getText().length() != TAOff) {
                         consoleKeyActions(new KeyEvent(textArea, 0, (long) 0, 0, KeyEvent.VK_ENTER, (char) 0));
+                    }
                     shell.getChild().processSignal(0);
                     addNewLine(2);
                 }
             }
-
         });
         setLayout(new BorderLayout());
 
@@ -116,7 +114,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
      */
     public synchronized void close() {
         // logout user
-        Core.instance().service(2, this.windowTitle);
+        Core.instance().service(2, this.getTitle());
         this.dispose();
     }
 
@@ -127,9 +125,13 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
      *             2 - only lineHead
      */
     private void addNewLine(int type) {
-        if (type == 0) textArea.append("\n");
-        else if (type == 1) textArea.append("\n" + lineHead);
-        else textArea.append(lineHead);
+        if (type == 0) {
+            textArea.append("\n");
+        } else if (type == 1) {
+            textArea.append("\n" + lineHead);
+        } else {
+            textArea.append(lineHead);
+        }
         TAOff = textArea.getText().length();
         textArea.setCaretPosition(TAOff);
     }
@@ -154,26 +156,16 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                 // removes pressed key
                 keyEvent.consume();
 
-                String s = null;
-                int commLength = textArea.getText().trim().length() - TAOff;
-                if (commLength < 1) {
-                    if (shell.getChild() == null) addNewLine(1);
-                    else addNewLine(0);
-                    return;
-                }
-                try {
-                    // s equals only new written line
-                    s = textArea.getText(TAOff, commLength).trim();
-                } catch (BadLocationException ex) {
-                    ex.printStackTrace();
-                }
+                // k4chn1k 16.11.09
+                String s = stdReadln();
+
                 // k4chn1k 6.11.09 clear console is not a shell command
                 if (s.equals("clr")) {
                     clearConsole();
                     return;
                 }
 
-                // k4chn1k 11.11.09
+                // k4chn1k 11.11.09 when shell has child then it becomes owner of console
                 if (shell.getChild() == null) {
                     shell.processLine(s);
                     addNewLine(0);
@@ -181,8 +173,10 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                     addNewLine(0);
                     shell.getChild().processLine(s);
                 }
-                
-                if (shell.getChild() == null) addNewLine(2);
+
+                if (shell.getChild() == null) {
+                    addNewLine(2);
+                }
                 // sets cursor on new line
                 TAOff = textArea.getText().length();
                 textArea.setCaretPosition(TAOff);
@@ -194,41 +188,47 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                 }
                 break;
             case KeyEvent.VK_UP:
-                if (shell.getChild() != null) return;
-                else {
+                // history available only in shell
+                if (shell.getChild() != null) {
+                    return;
+                } else {
                     keyEvent.consume();
-                if (shell.getCommandIndex() > 0 && shell.getCommandIndex() <= shell.getCommandHistory().size()) {
-                    textArea.setText(textArea.getText().substring(0, TAOff) + shell.getCommandHistory().get(shell.getCommandIndex() - 1));
-                    if (shell.getCommandHistory().size() > 1) {
-                        shell.decCommandIndex();
+                    if (shell.getCommandIndex() > 0 && shell.getCommandIndex() <= shell.getCommandHistory().size()) {
+                        textArea.setText(textArea.getText().substring(0, TAOff) + shell.getCommandHistory().get(shell.getCommandIndex() - 1));
+                        if (shell.getCommandHistory().size() > 1) {
+                            shell.decCommandIndex();
+                        }
                     }
-                }
                 }
                 break;
             case KeyEvent.VK_DOWN:
-                if (shell.getChild() != null) return;
-                else {
-                keyEvent.consume();
-                if (shell.getCommandIndex() < shell.getCommandHistory().size() - 1) {
-                    shell.incCommandIndex();
-                    textArea.setText(textArea.getText().substring(0, TAOff) + shell.getCommandHistory().get(shell.getCommandIndex()));
+                // history available only in shell
+                if (shell.getChild() != null) {
+                    return;
                 } else {
-                    textArea.setText(textArea.getText().substring(0, TAOff));
-                }
+                    keyEvent.consume();
+                    if (shell.getCommandIndex() < shell.getCommandHistory().size() - 1) {
+                        shell.incCommandIndex();
+                        textArea.setText(textArea.getText().substring(0, TAOff) + shell.getCommandHistory().get(shell.getCommandIndex()));
+                    } else {
+                        textArea.setText(textArea.getText().substring(0, TAOff));
+                    }
                 }
                 break;
             case KeyEvent.VK_RIGHT:
-                if (shell.getChild() != null) return;
-                else {
-                if (shell.getCommandHistory().isEmpty()) {
+                // history available only in shell
+                if (shell.getChild() != null) {
                     return;
-                }
-                int pos = textArea.getText().length() - TAOff;
-                int last = shell.getCommandHistory().size() - 1;
-                if (textArea.getCaretPosition() == textArea.getText().length() && pos < shell.getCommandHistory().get(last).length()) {
-                    keyEvent.consume();
-                    textArea.append("" + shell.getCommandHistory().get(last).charAt(pos));
-                }
+                } else {
+                    if (shell.getCommandHistory().isEmpty()) {
+                        return;
+                    }
+                    int pos = textArea.getText().length() - TAOff;
+                    int last = shell.getCommandHistory().size() - 1;
+                    if (textArea.getCaretPosition() == textArea.getText().length() && pos < shell.getCommandHistory().get(last).length()) {
+                        keyEvent.consume();
+                        textArea.append("" + shell.getCommandHistory().get(last).charAt(pos));
+                    }
                 }
                 break;
             case KeyEvent.VK_BACK_SPACE:
@@ -237,7 +237,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                     keyEvent.consume();
                 }
                 break;
-            
+
             default:
                 break;
         }
@@ -246,14 +246,17 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
 
     public boolean stdOpenIn() {
         return true;
-    }  
+    }
 
     public String stdReadln() {
         String s = "";
         int commLength = textArea.getText().trim().length() - TAOff;
         if (commLength < 1) {
-            if (shell.getChild() == null) addNewLine(1);
-            else addNewLine(0);
+            if (shell.getChild() == null) {
+                addNewLine(1);
+            } else {
+                addNewLine(0);
+            }
             return s;
         }
         try {
@@ -266,23 +269,20 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
     }
 
     public void stdCloseIn() {
-        
     }
 
     public boolean stdOpenOut() {
         return true;
-    }   
+    }
 
     public void stdWriteln(String s) {
         textArea.append(s + "\n");
     }
 
     public void stdCloseOut() {
-        
     }
 
     public void stdAppend(String s) {
         textArea.append(s);
     }
-
 }

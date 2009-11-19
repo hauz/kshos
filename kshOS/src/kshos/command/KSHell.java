@@ -77,10 +77,12 @@ public class KSHell extends KSHprocess {
         if (command.equals("kshell")) this.getOut().stdAppend("\nKSHell already running!");
         else if (command.equals("exit")) {
             this.getOut().stdAppend("\nGood bye :-)");
-            getUserInterface().close();
+            if (this.getParent() == null) getUserInterface().close();
+            else this.getParent().setChild(null);
         }
-        command = "" + (char)(command.charAt(0) - 32) + command.substring(1);
+        command = "" + (char) (command.charAt(0) - 32) + "" + command.substring(1);
 
+        // TODO: replace with create process
         URLClassLoader loader = new URLClassLoader(new URL[0]);
         KSHprocess cmd = null;
         try {
@@ -106,6 +108,8 @@ public class KSHell extends KSHprocess {
         cmd.setArgs(g.getCmdTable().get(g.getCmdTable().size() - 1));
         this.setChild(cmd);
         cmd.setParent(this);
+        // end replace
+
         cmd.start();
         try {
             cmd.join();

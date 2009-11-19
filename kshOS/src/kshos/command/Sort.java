@@ -6,12 +6,8 @@
 package kshos.command;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javax.swing.JTextArea;
-import javax.swing.text.BadLocationException;
 import kshos.core.KSHprocess;
 import kshos.io.KSHReader;
 
@@ -19,7 +15,7 @@ import kshos.io.KSHReader;
  * SORT command.
  * Sort file or entered lines.
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
- * @version 0.01 10/11/2009
+ * @version 0.02 16/11/2009
  */
 public class Sort extends KSHprocess {
 
@@ -40,7 +36,10 @@ public class Sort extends KSHprocess {
         KSHReader read = null;
 
         for (int i = 0; i < fileCnt; i++) {
-            read = new KSHReader(getParent().getWorkingDir() + File.separator + getArgs()[i]);
+            // absolute/relative path
+            if (getArgs()[i].charAt(0) == '/') pom = getArgs()[i];
+            else pom = getParent().getWorkingDir() + File.separator + getArgs()[i];
+            read = new KSHReader(pom);
             while ((pom = read.stdReadln()) != null)
                 lines.add(pom);
             read.stdCloseIn();
@@ -52,7 +51,7 @@ public class Sort extends KSHprocess {
         int len = getArgs().length;
         if (len != 0) {
             fileIn(len);
-            this.getOut().stdAppend("\n" + sort(lines.toArray()));
+            this.getOut().stdAppend("\n" + sort(lines.toArray()) + "\n");
             this.getOut().stdCloseOut();
             this.getParent().setChild(null);
         }
@@ -68,6 +67,7 @@ public class Sort extends KSHprocess {
         switch (type) {
             case 0:
                 this.getOut().stdAppend(sort(lines.toArray()));
+                this.getOut().stdCloseOut();
                 this.getParent().setChild(null);
                 break;
             default:
