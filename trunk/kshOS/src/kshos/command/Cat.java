@@ -6,9 +6,6 @@
 package kshos.command;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import javax.swing.JTextArea;
 import kshos.core.KSHprocess;
 import kshos.io.KSHReader;
 
@@ -16,7 +13,7 @@ import kshos.io.KSHReader;
  * CAT command.
  * Reads and prints files specified by parameters.
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
- * @version 0.02 15/11/2009
+ * @version 0.03 16/11/2009
  */
 public class Cat extends KSHprocess {
 
@@ -27,14 +24,18 @@ public class Cat extends KSHprocess {
         String pom = "";
 
         for (int i = 0; i < fileCnt; i++) {
-            read = new KSHReader(getParent().getWorkingDir() + File.separator + getArgs()[i]);
+            // absolute/relative path
+            if (getArgs()[i].charAt(0) == '/') pom = getArgs()[i];
+            else pom = getParent().getWorkingDir() + File.separator + getArgs()[i];
+            read = new KSHReader(pom);
             if(read.stdOpenIn()){
                 while ((pom = read.stdReadln()) != null)
-                file += "\n" + pom;
+                    // moved EOL for file
+                    file += pom + "\n";
                 read.stdCloseIn();
             }
             else{
-                this.getOut().stdAppend("\nCannot read " + getArgs()[i]);
+                file = "Cannot read " + getArgs()[i];
             }
             
         }
@@ -45,7 +46,8 @@ public class Cat extends KSHprocess {
         int len = getArgs().length;
         if (len != 0) {
             fileIn(len);
-            this.getOut().stdAppend(file);
+            // added EOL for console
+            this.getOut().stdAppend("\n" + file);
             this.getOut().stdCloseOut();
             this.getParent().setChild(null);
         }
@@ -60,6 +62,7 @@ public class Cat extends KSHprocess {
     public void processSignal(int type) {
         switch (type) {
             case 0:
+                this.getOut().stdCloseOut();
                 this.getParent().setChild(null);
                 break;
             default:
