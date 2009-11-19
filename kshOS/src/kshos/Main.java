@@ -1,3 +1,8 @@
+/**
+ * The main entry point of whole application.
+ * This class is substitute for boot loader.
+ */
+
 package kshos;
 
 import kshos.core.*;
@@ -14,7 +19,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Core.instance();
+        Core.instance();    // initiate the core
     }
 
 }
