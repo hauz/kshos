@@ -24,10 +24,7 @@ public class Cat extends KSHprocess {
         String pom = "";
 
         for (int i = 0; i < fileCnt; i++) {
-            // absolute/relative path
-            if (getArgs()[i].charAt(0) == '/') pom = getArgs()[i];
-            else pom = getParent().getWorkingDir() + File.separator + getArgs()[i];
-            read = new KSHReader(pom);
+            read = new KSHReader(getArgs()[i], getParent().getWorkingDir());
             if(read.stdOpenIn()){
                 while ((pom = read.stdReadln()) != null)
                     // moved EOL for file
