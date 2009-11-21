@@ -32,17 +32,20 @@ public class Sort extends KSHprocess {
     }
 
     private void fileIn(int fileCnt) {
-        String pom = "";
+        String line = "";
         KSHReader read = null;
 
         for (int i = 0; i < fileCnt; i++) {
-            // absolute/relative path
-            if (getArgs()[i].charAt(0) == '/') pom = getArgs()[i];
-            else pom = getParent().getWorkingDir() + File.separator + getArgs()[i];
-            read = new KSHReader(pom);
-            while ((pom = read.stdReadln()) != null)
-                lines.add(pom);
-            read.stdCloseIn();
+            read = new KSHReader(getArgs()[i], getParent().getWorkingDir());
+            if(read.stdOpenIn()){
+                while ((line = read.stdReadln()) != null)
+                    lines.add(line);
+                read.stdCloseIn();
+            }
+            else{
+                this.getOut().stdWriteln("\nCannot read " + getArgs()[i]);
+                //TODO: terminate this process
+            }
         }
     }
 

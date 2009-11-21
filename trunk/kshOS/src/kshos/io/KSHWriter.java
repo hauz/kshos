@@ -11,15 +11,20 @@ import java.io.*;
  */
 public class KSHWriter extends Writer implements StdOut {
     FileWriter fileWriter;
-    BufferedWriter bufferedWriter;
-    String fileName;
+    BufferedWriter bufferedWriter;   
+    String path;
 
     /**
      * Writer constructor
      * @param fileName - name of file
      */
-    public KSHWriter(String fileName) {
-       this.fileName = fileName;
+    public KSHWriter(String path, String workingDirectory) {
+        //set absolute path
+        if (path.charAt(0) == '/') this.path = path;
+        //set relative path
+		else this.path = workingDirectory + File.separator + path;
+
+       
     }
 
     @Override
@@ -43,7 +48,7 @@ public class KSHWriter extends Writer implements StdOut {
      * @return if file open is succesfull
      */
     public boolean stdOpenOut() {
-        File file = new File(fileName);
+        File file = new File(path);
         try {
             fileWriter = new FileWriter(file);
         } catch (IOException ex) {

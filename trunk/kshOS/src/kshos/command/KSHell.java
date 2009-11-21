@@ -94,7 +94,7 @@ public class KSHell extends KSHprocess {
 
         // process input
         if (g.getIn() == null) cmd.setIn(userInterface);
-        else cmd.setIn(new KSHReader(g.getIn()));
+        else cmd.setIn(new KSHReader(g.getIn(), this.getWorkingDir()));
         if(!cmd.getIn().stdOpenIn()){
             cmd.processSignal(0);
             this.getOut().stdAppend("\nCannot read " + g.getIn());
@@ -102,7 +102,7 @@ public class KSHell extends KSHprocess {
         }
         // process output
         if (g.getOut() == null) cmd.setOut(userInterface);
-        else cmd.setOut(new KSHWriter(g.getOut()));
+        else cmd.setOut(new KSHWriter(g.getOut(), this.getWorkingDir()));
         cmd.getOut().stdOpenOut();
         // process parameters
         cmd.setArgs(g.getCmdTable().get(g.getCmdTable().size() - 1));

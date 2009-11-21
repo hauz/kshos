@@ -13,14 +13,17 @@ import java.io.*;
 public class KSHReader extends Reader implements StdIn {
     FileReader fileReader;
     BufferedReader bufferedReader;
-    String fileName;
+    String path;
 
      /**
      * Reader constructor
      * @param fileName - name of file
      */
-    public KSHReader(String fileName) {
-        this.fileName = fileName;
+    public KSHReader(String path, String workingDirectory) {
+        //set absolute path
+        if (path.charAt(0) == '/') this.path = path;
+        //set relative path
+		else this.path = workingDirectory + File.separator + path;
     }
 
     @Override
@@ -39,8 +42,9 @@ public class KSHReader extends Reader implements StdIn {
      * @return if file exists and open is succesfull
      */
     public boolean stdOpenIn() {
-        File file = new File(fileName);
+        File file = new File(path);
         if(!file.exists()) return false;
+        if(!file.isFile()) return false;
         try {
             this.fileReader = new FileReader(file);
         } catch (FileNotFoundException ex) {
