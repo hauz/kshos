@@ -2,6 +2,7 @@ package kshos.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import javax.swing.AbstractAction;
@@ -237,7 +238,25 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                     keyEvent.consume();
                 }
                 break;
-
+            case KeyEvent.VK_TAB:
+                // completes name of file from current directory
+                keyEvent.consume();
+                String[] writted = stdReadln().toString().split(" ");
+                String partOfName = writted[writted.length-1];
+                if(partOfName.length() > 0){
+                    File thisDir = new File(".");
+                    String[] files = thisDir.list();
+                    for(int i=0; i < files.length; i++){
+                        if(files[i].startsWith(partOfName)){
+                           int start = textArea.getText().trim().length() - partOfName.length();
+                           int end = start + partOfName.length();
+                           textArea.replaceRange("", start, end);
+                           textArea.append(files[i]);
+                           break;
+                        }
+                    }
+                }
+                break;
             default:
                 break;
         }
