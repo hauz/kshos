@@ -18,7 +18,8 @@ public class Shutdown extends Process {
 
     @Override
     public void tick () {
-         Core.instance().service(0, null);
+        System.exit(0);     // disgusting thing ...
+        //         Core.instance().service(0, null);
     }
 
     @Override
