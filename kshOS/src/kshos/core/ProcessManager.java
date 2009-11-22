@@ -208,7 +208,11 @@ public class ProcessManager {
         } else {
             cmd.setOut(new KSHWriter(g.getOut(), parent.getWorkingDir()));
         }
-        cmd.getOut().stdOpenOut();
+        if(!cmd.getOut().stdOpenOut()) {
+//            cmd.processSignal(0);
+            parent.getOut().stdAppend("\nCannot write " + g.getOut());
+            return;
+        }
         
         cmd.setArgs(g.getCmdTable().get(g.getCmdTable().size() - 1)); // set process parameters
         parent.addChild(cmd);           // add this process as parents child
