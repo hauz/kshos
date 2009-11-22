@@ -18,7 +18,7 @@ public class Echo extends Process {
 
     @Override
     public void tick () {
-        String s = "\n";
+        String s = "";
         int len = getArgs().length;
         for (int i = 0; i < len; i++) {
             s += getArgs()[i];

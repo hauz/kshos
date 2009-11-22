@@ -23,7 +23,7 @@ public class KSHReader extends Reader implements StdIn {
         //set absolute path
         if (path.charAt(0) == '/') this.path = path;
         //set relative path
-		else this.path = workingDirectory + File.separator + path;
+        else this.path = workingDirectory + File.separator + path;
     }
 
     @Override

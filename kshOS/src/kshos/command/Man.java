@@ -15,7 +15,7 @@ import kshos.core.objects.Process;
  */
 public class Man extends Process {
 
-    private static final String MAN = "\nMAN page for kshOS Virtual Machine Manager\n" +
+    private static final String MAN = "MAN page for kshOS Virtual Machine Manager\n" +
             "Usage: command [ params ] [ < file_input ] [ | command params ] [ > file_output ]" +
             "\nImplemanted commands:\n" +
             "man - this help\n" +

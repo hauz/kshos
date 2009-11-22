@@ -68,10 +68,10 @@ public class KSHell extends Process {
             g.parse();
         } catch (RecognitionException e) {
             e.printStackTrace();
-            this.getOut().stdAppend("\nWarning: Mismatched input!");
+            this.getOut().stdAppend("Warning: Mismatched input!");
         }
         if (lex.containsInvalid()) {            // test for invalid characters
-            this.getOut().stdAppend("\nWarning: Command contains invalid symbols!");
+            this.getOut().stdAppend("Warning: Command contains invalid symbols!");
         }
 
         // run last command
@@ -80,18 +80,11 @@ public class KSHell extends Process {
 
         // TODO: more shells
         if (command.equals("kshell")) {
-            this.getOut().stdAppend("\nKSHell already running!");
+            this.getOut().stdAppend("KSHell already running!");
         }
         else {
             if (command.equals("exit")) {
-                this.getOut().stdAppend("\nGood bye :-)");
-                if (this.getParent() == null) {
-                    getUserInterface().close();
-                }
-            }
-            else {
-                // FIXME: ???
-//                this.getParent().setChild(null);
+                processSignal(0);
             }
         }
         
@@ -120,6 +113,14 @@ public class KSHell extends Process {
 
     @Override
     public void processSignal(int type) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        switch (type) {
+            case 0:
+                this.getOut().stdAppend("Good bye :-)");
+                if (this.getParent() == null) getUserInterface().close();
+                else this.getParent().removeChild(this.getPID());
+                break;
+            default:
+                break;
+        }
     }
 }
