@@ -8,7 +8,7 @@ package kshos.command;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import kshos.core.KSHprocess;
+import kshos.core.objects.Process;
 import kshos.io.KSHReader;
 
 /**
@@ -17,7 +17,7 @@ import kshos.io.KSHReader;
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
  * @version 0.02 16/11/2009
  */
-public class Sort extends KSHprocess {
+public class Sort extends Process {
 
     private ArrayList<String> lines = new ArrayList<String>();
 
@@ -50,13 +50,13 @@ public class Sort extends KSHprocess {
     }
 
     @Override
-    public void run () {
+    public void tick () {
         int len = getArgs().length;
         if (len != 0) {
             fileIn(len);
             this.getOut().stdAppend("\n" + sort(lines.toArray()) + "\n");
             this.getOut().stdCloseOut();
-            this.getParent().setChild(null);
+            this.getParent().removeChild(this.getPID());
         }
     }
 
@@ -71,7 +71,7 @@ public class Sort extends KSHprocess {
             case 0:
                 this.getOut().stdAppend(sort(lines.toArray()));
                 this.getOut().stdCloseOut();
-                this.getParent().setChild(null);
+                this.getParent().removeChild(this.getPID());
                 break;
             default:
                 break;

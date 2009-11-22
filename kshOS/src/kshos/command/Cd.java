@@ -7,7 +7,7 @@ package kshos.command;
 
 import java.io.File;
 import java.io.IOException;
-import kshos.core.KSHprocess;
+import kshos.core.objects.Process;
 
 /**
  * CD process.
@@ -15,10 +15,10 @@ import kshos.core.KSHprocess;
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
  * @version 0.01 8/11/2009
  */
-public class Cd extends KSHprocess {
+public class Cd extends Process {
 
     @Override
-    public void run () {
+    public void tick () {
         File newDir = null;
         if (getArgs() == null) this.getOut().stdAppend("Invalid parameter!");
         else {
@@ -36,7 +36,7 @@ public class Cd extends KSHprocess {
             this.getOut().stdAppend("\nNo such directory!");
         }
         this.getOut().stdCloseOut();
-        this.getParent().setChild(null);
+        this.getParent().removeChild(this.getPID());
     }
 
     @Override

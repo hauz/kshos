@@ -1,6 +1,8 @@
 package kshos.core;
 
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import kshos.core.objects.Process;
 import kshos.ui.*;
 
 /**
@@ -68,7 +70,9 @@ public class Core {
             return;
         }
 
-        // TODO: start INIT process
+        // start INIT process
+        Process init = ProcessManager.instance().createInitProcess();
+        init.start();
 
         // start login
         this.loginWindow = new Login();
@@ -110,7 +114,7 @@ public class Core {
             int validationStatus = userMgr.validateAndLoginUser((String) data);
 
             if (validationStatus == 0) {
-                UIMgr.newConsole((String) data);
+                UIMgr.newConsole(userMgr.getUserByName((String) data));
             }
 
             return validationStatus;
@@ -120,12 +124,30 @@ public class Core {
         // service no. 0 - Halt OS
         // <editor-fold defaultstate="collapsed">
         if (serviceNo == 0) {
-            System.out.println("System is going down!!!");
+            System.out.println("[INFO]: System is going down!!!");
 
             // TODO: stop all processes ...
-            UIMgr.closeAllConsoles();    // close all consoles
-            loginWindow.dispose();                  // close login window
-            return 0;
+
+            // stop INIT process ...
+            Process init = ProcessManager.instance().getProcess(1);
+            if (init != null) {
+
+                try {
+                    System.out.println("[INFO]: Waiting for INIT process to stop.");
+                    init.join();
+                    System.out.println("[INFO]: INIT process halted.");
+                }
+                catch (InterruptedException ex) {
+                    System.out.println("[ERR]: Can not terminate INIT process!!!");
+                }
+                UIMgr.closeAllConsoles();        // close all consoles
+                loginWindow.dispose();                  // close login window
+                return 0;
+            } else {
+                System.out.println("[ERR]: Can not terminate INIT process!!!");
+                return -1;
+            }
+
         }
         // </editor-fold>
 
@@ -139,7 +161,7 @@ public class Core {
         // </editor-fold>
 
         // in case of error
-        System.err.println("Core service error.\nService no.: " + serviceNo +
+        System.err.println("[ERR]: Core service error.\nService no.: " + serviceNo +
                 "\nService data: " + data);
         return -1;
     }

@@ -5,8 +5,7 @@
 
 package kshos.command;
 
-import javax.swing.JTextArea;
-import kshos.core.KSHprocess;
+import kshos.core.objects.Process;
 
 /**
  * MAN command.
@@ -14,7 +13,7 @@ import kshos.core.KSHprocess;
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
  * @version 0.01 10/11/2009
  */
-public class Man extends KSHprocess {
+public class Man extends Process {
 
     private static final String MAN = "\nMAN page for kshOS Virtual Machine Manager\n" +
             "Usage: command [ params ] [ < file_input ] [ | command params ] [ > file_output ]" +
@@ -27,10 +26,10 @@ public class Man extends KSHprocess {
             "cat [params] - reads params specified files, merge this files";
     
     @Override
-    public void run () {
+    public void tick () {
         this.getOut().stdAppend(MAN);
         this.getOut().stdCloseOut();
-        this.getParent().setChild(null);
+        this.getParent().removeChild(this.getPID());
     }
 
     @Override

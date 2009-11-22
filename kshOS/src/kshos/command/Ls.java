@@ -5,7 +5,8 @@
 package kshos.command;
 
 import java.io.File;
-import kshos.core.KSHprocess;
+import kshos.core.ProcessManager;
+import kshos.core.objects.Process;
 
 /**
  * LS process.
@@ -14,10 +15,10 @@ import kshos.core.KSHprocess;
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
  * @version 0.02 11/11/2009
  */
-public class Ls extends KSHprocess {
+public class Ls extends Process {
 
     @Override
-    public void run() {
+    public void tick() {
         File thisDir = null;
         if (getArgs().length == 0 || getArgs()[0].equals("-l")) {
             thisDir = new File(getParent().getWorkingDir());
@@ -38,7 +39,7 @@ public class Ls extends KSHprocess {
             this.getOut().stdAppend("\n" + thisDir.list()[i]);
         }
         this.getOut().stdCloseOut();
-        this.getParent().setChild(null);
+        this.getParent().removeChild(this.getPID());
     }
 
     @Override

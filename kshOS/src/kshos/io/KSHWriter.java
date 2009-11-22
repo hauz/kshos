@@ -84,6 +84,9 @@ public class KSHWriter extends Writer implements StdOut {
         } catch (IOException ex) {
             System.err.println(ex);
         }
+        finally {
+            return;
+        }
     }
 
     /**
@@ -107,6 +110,9 @@ public class KSHWriter extends Writer implements StdOut {
             bufferedWriter.append(s);
         } catch (IOException ex) {
             System.err.println(ex);
+        }
+        finally {
+            return;
         }
     }
 }

@@ -1,6 +1,7 @@
 package kshos.ui;
 
 import java.util.ArrayList;
+import kshos.core.objects.User;
 
 /**
  * Class manages all user interfaces (consoles).
@@ -51,8 +52,8 @@ public class UIManager {
     /**
      * Creates new console.
      */
-    public UserInterface newConsole(String userName) {
-        UserInterface newUI = new UserInterface(userName);
+    public UserInterface newConsole(User user) {
+        UserInterface newUI = new UserInterface(user);
         interfaces.add(newUI);
         newUI.setVisible(true);
 
