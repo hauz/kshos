@@ -190,6 +190,10 @@ public class ProcessManager {
             return;
         }
 
+        cmd.setArgs(g.getCmdTable().get(g.getCmdTable().size() - 1)); // set process parameters
+        parent.addChild(cmd);           // add this process as parents child
+        cmd.setParent(parent);          // set this process's parent
+
         // set process input
         if (g.getIn() == null) {
             cmd.setIn(userInterface);
@@ -209,15 +213,11 @@ public class ProcessManager {
             cmd.setOut(new KSHWriter(g.getOut(), parent.getWorkingDir()));
         }
         if(!cmd.getOut().stdOpenOut()) {
-//            cmd.processSignal(0);
+            cmd.processSignal(0);
             parent.getOut().stdAppend("\nCannot write " + g.getOut());
             return;
         }
         
-        cmd.setArgs(g.getCmdTable().get(g.getCmdTable().size() - 1)); // set process parameters
-        parent.addChild(cmd);           // add this process as parents child
-        cmd.setParent(parent);          // set this process's parent
-
         // start process and waait for its execution
         cmd.start();
         try {
