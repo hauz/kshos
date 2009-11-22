@@ -46,7 +46,7 @@ public class Cat extends Process {
             // added EOL for console
             this.getOut().stdAppend("\n" + file);
             this.getOut().stdCloseOut();
-        this.getParent().removeChild(this.getPID());
+            this.getParent().removeChild(this.getPID());
         }
     }
 

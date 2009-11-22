@@ -123,6 +123,8 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
     public synchronized void close() {
         // logout user
         Core.instance().service(2, this.getTitle());
+        this.setFocusable(false);
+        this.setEnabled(false);
         this.dispose();
     }
 
