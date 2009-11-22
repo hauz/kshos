@@ -49,6 +49,9 @@ public class KSHWriter extends Writer implements StdOut {
      */
     public boolean stdOpenOut() {
         File file = new File(path);
+        if(file.exists()){
+            if(!file.isFile()) return false;
+        }
         try {
             fileWriter = new FileWriter(file);
         } catch (IOException ex) {
