@@ -30,13 +30,12 @@ public class Ls extends Process {
                 thisDir = new File(getParent().getWorkingDir() + File.separator + path);
             }
             if (!thisDir.exists()) {
-                this.getOut().stdAppend("\nNo such directory!");
+                this.getOut().stdAppend("No such directory!");
                 return;
             }
         }
-        // TODO: -l parameter
         for (int i = 0; i < thisDir.list().length; i++) {
-            this.getOut().stdAppend("\n" + thisDir.list()[i]);
+            this.getOut().stdAppend(thisDir.list()[i] + "\n");
         }
         this.getOut().stdCloseOut();
         this.getParent().removeChild(this.getPID());

@@ -17,7 +17,7 @@ public class Pwd extends Process {
 
     @Override
     public void tick () {
-        this.getOut().stdAppend("\nWorking directory: " + getParent().getWorkingDir());
+        this.getOut().stdAppend("Working directory: " + getParent().getWorkingDir());
         this.getOut().stdCloseOut();
         this.getParent().removeChild(this.getPID());
     }

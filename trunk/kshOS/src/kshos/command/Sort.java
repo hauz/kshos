@@ -43,7 +43,7 @@ public class Sort extends Process {
                 read.stdCloseIn();
             }
             else{
-                this.getOut().stdWriteln("\nCannot read " + getArgs()[i]);
+                this.getOut().stdWriteln("Cannot read " + getArgs()[i]);
                 //TODO: terminate this process
             }
         }
@@ -54,7 +54,16 @@ public class Sort extends Process {
         int len = getArgs().length;
         if (len != 0) {
             fileIn(len);
-            this.getOut().stdAppend("\n" + sort(lines.toArray()) + "\n");
+            this.getOut().stdAppend(sort(lines.toArray()) + "\n");
+            this.getOut().stdCloseOut();
+            this.getParent().removeChild(this.getPID());
+        }
+        if (getIn().toString().indexOf("UserInterface") < 0) {
+            String pom = "";
+            lines = new ArrayList<String>();
+            while ((pom = getIn().stdReadln()) != null)
+                    lines.add(pom);
+            this.getOut().stdAppend(sort(lines.toArray()) + "\n");
             this.getOut().stdCloseOut();
             this.getParent().removeChild(this.getPID());
         }

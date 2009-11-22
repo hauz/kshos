@@ -84,9 +84,8 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
         textArea.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK), new AbstractAction() {
 
             public void actionPerformed(ActionEvent ev) {
-                if (shell.getAllChilds().size() == 0) {
-                    close();
-                } else {
+                if (shell.getAllChilds().size() == 0) shell.processSignal(0);
+                else {
                     // if last line wasn't entered
                     if (textArea.getText().length() != TAOff) {
                         consoleKeyActions(new KeyEvent(textArea, 0, (long) 0, 0, KeyEvent.VK_ENTER, (char) 0));
@@ -177,12 +176,11 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
 
                 // k4chn1k 11.11.09 when shell has child then it becomes owner of console
                 // hauz 22.11.09
+                addNewLine(0);
                 if (shell.getAllChilds().size() == 0) {
                     shell.processLine(s);
-                    addNewLine(0);
                 }
                 else {
-                    addNewLine(0);
                     long firstKey = shell.getAllChilds().firstKey(); // get the lowest key in child-list
                     shell.getChild(firstKey).processLine(s);
                 }
@@ -191,17 +189,6 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                     addNewLine(2);
                 }
 
-                /*if (shell.getChild() == null) {
-                    shell.processLine(s);
-                    addNewLine(0);
-                } else {
-                    addNewLine(0);
-                    shell.getChild().processLine(s);
-                }
-
-                if (shell.getChild() == null) {
-                    addNewLine(2);
-                }*/
                 // sets cursor on new line
                 TAOff = textArea.getText().length();
                 textArea.setCaretPosition(TAOff);
@@ -295,11 +282,6 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
         String s = "";
         int commLength = textArea.getText().trim().length() - TAOff;
         if (commLength < 1) {
-            if (shell.getAllChilds().size() == 0) {
-                addNewLine(1);
-            } else {
-                addNewLine(0);
-            }
             return s;
         }
         try {

@@ -22,7 +22,7 @@ public class Ps extends Process {
         // TODO: uncomment when getProcessList() implemented
         ArrayList<Process> list = null;// = ProcessManager.instance().getProcessList();
         for (int i = 0; i < list.size(); i++) {
-            this.getOut().stdAppend(list.get(i).getPID() + "\t" + list.get(i).getName());
+            this.getOut().stdWriteln(list.get(i).getPID() + "\t" + list.get(i).getName());
         }
     }
 
