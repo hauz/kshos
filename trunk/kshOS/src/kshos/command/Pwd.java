@@ -5,7 +5,7 @@
 
 package kshos.command;
 
-import kshos.core.KSHprocess;
+import kshos.core.objects.Process;
 
 /**
  * PWD process.
@@ -13,13 +13,13 @@ import kshos.core.KSHprocess;
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
  * @version 0.01 8/11/2009
  */
-public class Pwd extends KSHprocess {
+public class Pwd extends Process {
 
     @Override
-    public void run () {
+    public void tick () {
         this.getOut().stdAppend("\nWorking directory: " + getParent().getWorkingDir());
         this.getOut().stdCloseOut();
-        this.getParent().setChild(null);
+        this.getParent().removeChild(this.getPID());
     }
 
     @Override

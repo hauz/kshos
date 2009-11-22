@@ -6,7 +6,7 @@
 package kshos.command;
 
 import java.util.ArrayList;
-import kshos.core.KSHprocess;
+import kshos.core.objects.Process;
 import kshos.core.ProcessManager;
 
 /**
@@ -15,12 +15,12 @@ import kshos.core.ProcessManager;
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
  * @version 0.01 19/11/2009
  */
-public class Ps extends KSHprocess {
+public class Ps extends Process {
 
     @Override
-    public void run () {
+    public void tick () {
         // TODO: uncomment when getProcessList() implemented
-        ArrayList<KSHprocess> list = null;// = ProcessManager.instance().getProcessList();
+        ArrayList<Process> list = null;// = ProcessManager.instance().getProcessList();
         for (int i = 0; i < list.size(); i++) {
             this.getOut().stdAppend(list.get(i).getPID() + "\t" + list.get(i).getName());
         }

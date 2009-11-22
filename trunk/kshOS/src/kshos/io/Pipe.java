@@ -2,7 +2,7 @@ package kshos.io;
 
 
 import java.io.*;
-import kshos.core.KSHprocess;
+import kshos.core.objects.Process;
 
 
 /**
@@ -21,7 +21,7 @@ public class Pipe implements StdIn, StdOut{
      * @param to KSHprocess which is output of pipe
      * @throws java.io.IOException
      */
-    Pipe(KSHprocess from, KSHprocess to) throws IOException{
+    Pipe(Process from, Process to) throws IOException{
          PipedWriter pipedWriter = new PipedWriter();
          PipedReader pipedReader = new PipedReader(pipedWriter);
          bufferedReader = new BufferedReader(pipedReader);

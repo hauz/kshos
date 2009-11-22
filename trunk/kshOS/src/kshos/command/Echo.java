@@ -6,7 +6,7 @@
 package kshos.command;
 
 import javax.swing.JTextArea;
-import kshos.core.KSHprocess;
+import kshos.core.objects.Process;
 
 /**
  * ECHO command.
@@ -14,10 +14,10 @@ import kshos.core.KSHprocess;
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
  * @version 0.01 10/11/2009
  */
-public class Echo extends KSHprocess {
+public class Echo extends Process {
 
     @Override
-    public void run () {
+    public void tick () {
         String s = "\n";
         int len = getArgs().length;
         for (int i = 0; i < len; i++) {
@@ -26,7 +26,7 @@ public class Echo extends KSHprocess {
         }
         this.getOut().stdAppend(s);
         this.getOut().stdCloseOut();
-        this.getParent().setChild(null);
+        this.getParent().removeChild(this.getPID());
     }
 
     @Override

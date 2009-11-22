@@ -5,7 +5,7 @@
 
 package kshos.command;
 
-import kshos.core.KSHprocess;
+import kshos.core.objects.Process;
 import kshos.core.ProcessManager;
 
 /**
@@ -14,16 +14,16 @@ import kshos.core.ProcessManager;
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
  * @version 0.01 19/11/2009
  */
-public class Kill extends KSHprocess {
+public class Kill extends Process {
     
     @Override
-    public void run () {
+    public void tick () {
         int pid = -1;
         try {
             pid = Integer.parseInt(this.getArgs()[0]);
         } catch (NumberFormatException a) {
             this.getOut().stdWriteln("Invalid PID!");
-            this.getParent().setChild(null);
+        this.getParent().removeChild(this.getPID());
             return;
         }
         // TODO: uncomment when 'int killProcess(long PID)' implemented

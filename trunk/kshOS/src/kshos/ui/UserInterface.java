@@ -13,6 +13,7 @@ import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
 import kshos.command.KSHell;
 import kshos.core.Core;
+import kshos.core.objects.User;
 import kshos.io.StdIn;
 import kshos.io.StdOut;
 
@@ -34,9 +35,9 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
      * Constructor. Creates console and sets all needed parameters of JFrame.
      * @param title - console title
      */
-    public UserInterface(String title) {
-
-        this.setTitle(title);
+    public UserInterface(User user) {
+        // set main window properties
+        this.setTitle(user.getUserName());
         this.setSize(new Dimension(640, 480));
         this.setMinimumSize(new Dimension(640, 480));
         this.addWindowListener(new WindowAdapter() {
@@ -48,7 +49,8 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
             }
         });
 
-        lineHead = title + "> ";
+        // set colors
+        lineHead = user.getUserName() + "> ";
         textArea = new JTextArea(lineHead);
         TAOff = lineHead.length();
         textArea.setCaretPosition(TAOff);
@@ -57,8 +59,11 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
         textArea.setCaretColor(Color.WHITE);
         textArea.setEditable(true);
         textArea.getCaret().setVisible(false);
+
+        // set font
         Font font = new Font("Monospaced", Font.PLAIN, 14);
         textArea.setFont(font);
+        
         //sysek 2.11.2009 k4chn1k 4.11.09
         textArea.addKeyListener(new KeyAdapter() {
 
@@ -79,14 +84,15 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
         textArea.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK), new AbstractAction() {
 
             public void actionPerformed(ActionEvent ev) {
-                if (shell.getChild() == null) {
+                if (shell.getAllChilds().size() == 0) {
                     close();
                 } else {
                     // if last line wasn't entered
                     if (textArea.getText().length() != TAOff) {
                         consoleKeyActions(new KeyEvent(textArea, 0, (long) 0, 0, KeyEvent.VK_ENTER, (char) 0));
                     }
-                    shell.getChild().processSignal(0);
+                    // send singal to first child
+                    shell.getChild(shell.getAllChilds().firstKey()).processSignal(0);
                     addNewLine(2);
                 }
             }
@@ -98,6 +104,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
         scrollPane.setAutoscrolls(true);
         add(scrollPane, BorderLayout.CENTER);
         setVisible(true);
+        
         // k4chn1k 7.11.09 after finishing console shell is turned on
         URLClassLoader loader = new URLClassLoader(new URL[0]);
         try {
@@ -167,7 +174,22 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                 }
 
                 // k4chn1k 11.11.09 when shell has child then it becomes owner of console
-                if (shell.getChild() == null) {
+                // hauz 22.11.09
+                if (shell.getAllChilds().size() == 0) {
+                    shell.processLine(s);
+                    addNewLine(0);
+                }
+                else {
+                    addNewLine(0);
+                    long firstKey = shell.getAllChilds().firstKey(); // get the lowest key in child-list
+                    shell.getChild(firstKey).processLine(s);
+                }
+
+                if (shell.getAllChilds().size() == 0) {
+                    addNewLine(2);
+                }
+
+                /*if (shell.getChild() == null) {
                     shell.processLine(s);
                     addNewLine(0);
                 } else {
@@ -177,7 +199,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
 
                 if (shell.getChild() == null) {
                     addNewLine(2);
-                }
+                }*/
                 // sets cursor on new line
                 TAOff = textArea.getText().length();
                 textArea.setCaretPosition(TAOff);
@@ -190,7 +212,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                 break;
             case KeyEvent.VK_UP:
                 // history available only in shell
-                if (shell.getChild() != null) {
+                if (shell.getAllChilds().size() != 0) {
                     return;
                 } else {
                     keyEvent.consume();
@@ -204,7 +226,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                 break;
             case KeyEvent.VK_DOWN:
                 // history available only in shell
-                if (shell.getChild() != null) {
+                if (shell.getAllChilds().size() != 0) {
                     return;
                 } else {
                     keyEvent.consume();
@@ -218,7 +240,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                 break;
             case KeyEvent.VK_RIGHT:
                 // history available only in shell
-                if (shell.getChild() != null) {
+                if (shell.getAllChilds().size() != 0) {
                     return;
                 } else {
                     if (shell.getCommandHistory().isEmpty()) {
@@ -271,7 +293,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
         String s = "";
         int commLength = textArea.getText().trim().length() - TAOff;
         if (commLength < 1) {
-            if (shell.getChild() == null) {
+            if (shell.getAllChilds().size() == 0) {
                 addNewLine(1);
             } else {
                 addNewLine(0);

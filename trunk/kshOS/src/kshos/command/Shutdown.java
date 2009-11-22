@@ -6,7 +6,7 @@
 package kshos.command;
 
 import kshos.core.Core;
-import kshos.core.KSHprocess;
+import kshos.core.objects.Process;
 
 /**
  * SHUTDOWN command.
@@ -14,10 +14,10 @@ import kshos.core.KSHprocess;
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
  * @version 0.01 19/11/2009
  */
-public class Shutdown extends KSHprocess {
+public class Shutdown extends Process {
 
     @Override
-    public void run () {
+    public void tick () {
          Core.instance().service(0, null);
     }
 

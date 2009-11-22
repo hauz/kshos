@@ -111,6 +111,21 @@ public class UserManager {
     }
 
     /**
+     * Return object User defined by user name.
+     * 
+     * @return User or null when not exist
+     */
+    public User getUserByName(String userName) {
+        for (User user: activeList) {
+            if (user.getUserName().equals(userName)) {
+                return user;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Log the user out.
      * 
      * @param userName

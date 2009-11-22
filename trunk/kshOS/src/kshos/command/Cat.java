@@ -6,7 +6,7 @@
 package kshos.command;
 
 import java.io.File;
-import kshos.core.KSHprocess;
+import kshos.core.objects.Process;
 import kshos.io.KSHReader;
 
 /**
@@ -15,7 +15,7 @@ import kshos.io.KSHReader;
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
  * @version 0.03 16/11/2009
  */
-public class Cat extends KSHprocess {
+public class Cat extends Process {
 
     String file = "";
 
@@ -39,14 +39,14 @@ public class Cat extends KSHprocess {
     }
 
     @Override
-    public void run () {
+    public void tick () {
         int len = getArgs().length;
         if (len != 0) {
             fileIn(len);
             // added EOL for console
             this.getOut().stdAppend("\n" + file);
             this.getOut().stdCloseOut();
-            this.getParent().setChild(null);
+        this.getParent().removeChild(this.getPID());
         }
     }
 
@@ -60,7 +60,7 @@ public class Cat extends KSHprocess {
         switch (type) {
             case 0:
                 this.getOut().stdCloseOut();
-                this.getParent().setChild(null);
+                this.getParent().removeChild(this.getPID());
                 break;
             default:
                 break;
