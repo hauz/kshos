@@ -13,6 +13,7 @@ import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
 import kshos.command.KSHell;
 import kshos.core.Core;
+import kshos.core.ProcessManager;
 import kshos.core.objects.User;
 import kshos.io.StdIn;
 import kshos.io.StdOut;
@@ -26,13 +27,18 @@ import kshos.io.StdOut;
  */
 public class UserInterface extends JFrame implements StdIn, StdOut {
 
+    /* Console input textarea */
     private JTextArea textArea;
+    /* Textarea offset */
     private int TAOff;
+    /* Line header for console */
     private String lineHead;
+    // TODO: remove when createShell() & getCurrentShell() implemented
     private KSHell shell;
 
     /**
      * Constructor. Creates console and sets all needed parameters of JFrame.
+     * Runs first shell.
      * @param title - console title
      */
     public UserInterface(User user) {
@@ -75,6 +81,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
         // k4chn1k 10.11.09
         textArea.addMouseListener(new MouseAdapter() {
 
+            // when clicked to console or selected text then set cursor to the end
             @Override
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 textArea.setCaretPosition(TAOff);
@@ -105,6 +112,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
         setVisible(true);
         
         // k4chn1k 7.11.09 after finishing console shell is turned on
+        // TODO: replace with createShell()
         URLClassLoader loader = new URLClassLoader(new URL[0]);
         try {
             shell = (KSHell) loader.loadClass("kshos.command.KSHell").newInstance();
@@ -161,6 +169,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
      */
     private void consoleKeyActions(KeyEvent keyEvent) {
         switch (keyEvent.getKeyCode()) {
+            // <editor-fold defaultstate="collapsed" desc="ENTER">
             case KeyEvent.VK_ENTER:
                 // removes pressed key
                 keyEvent.consume();
@@ -185,6 +194,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                     shell.getChild(firstKey).processLine(s);
                 }
 
+                // when shell running place new line header
                 if (shell.getAllChilds().size() == 0) {
                     addNewLine(2);
                 }
@@ -193,12 +203,16 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                 TAOff = textArea.getText().length();
                 textArea.setCaretPosition(TAOff);
                 break;
+            // </editor-fold>
+            // <editor-fold defaultstate="collapsed" desc="LEFT">
             case KeyEvent.VK_LEFT:
                 // avoid left cursor move if nothing written
                 if (textArea.getCaretPosition() == TAOff) {
                     keyEvent.consume();
                 }
                 break;
+            // </editor-fold>
+            // <editor-fold defaultstate="collapsed" desc="UP">
             case KeyEvent.VK_UP:
                 // history available only in shell
                 if (shell.getAllChilds().size() != 0) {
@@ -213,6 +227,8 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                     }
                 }
                 break;
+            // </editor-fold>
+            // <editor-fold defaultstate="collapsed" desc="DOWN">
             case KeyEvent.VK_DOWN:
                 // history available only in shell
                 if (shell.getAllChilds().size() != 0) {
@@ -227,6 +243,8 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                     }
                 }
                 break;
+            // </editor-fold>
+            // <editor-fold defaultstate="collapsed" desc="RIGHT">
             case KeyEvent.VK_RIGHT:
                 // history available only in shell
                 if (shell.getAllChilds().size() != 0) {
@@ -243,20 +261,46 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                     }
                 }
                 break;
+            // </editor-fold>
+            // <editor-fold defaultstate="collapsed" desc="HOME">
+            case KeyEvent.VK_HOME:
+                if (shell.getAllChilds().size() != 0) {
+                    return;
+                } else {
+                    keyEvent.consume();
+                    textArea.setCaretPosition(TAOff);
+                }
+                break;
+            // </editor-fold>
+            // <editor-fold defaultstate="collapsed" desc="HOME">
+            case KeyEvent.VK_PAGE_DOWN:
+                keyEvent.consume();
+                break;
+            // </editor-fold>
+            // <editor-fold defaultstate="collapsed" desc="HOME">
+            case KeyEvent.VK_PAGE_UP:
+                keyEvent.consume();
+                break;
+            // </editor-fold>
+            // <editor-fold defaultstate="collapsed" desc="BSP">
             case KeyEvent.VK_BACK_SPACE:
                 // avoid backspacing while nothing written
                 if (textArea.getCaretPosition() == TAOff) {
                     keyEvent.consume();
                 }
                 break;
+            // </editor-fold>
+            // <editor-fold defaultstate="collapsed" desc="TAB">
             case KeyEvent.VK_TAB:
                 // completes name of file from current directory
                 keyEvent.consume();
                 String[] writted = stdReadln().toString().split(" *");
                 String partOfName = writted[writted.length-1];
+                // completes command - no space on line
                 if(writted.length == 1){
-                     String[] prikaz = {"ls", "cat"};
-                     for(int i=0; i < prikaz.length; i++){
+                     String[] prikaz = {"cat", "cd", "echo", "exit", "kshell",
+                        "kill", "ls", "man", "ps", "pwd", "shutdown", "sort"};
+                     for(int i = 0; i < prikaz.length; i++){
                         if(prikaz[i].startsWith(partOfName)){
                            int start = textArea.getText().trim().length() - partOfName.length();
                            int end = start + partOfName.length();
@@ -266,6 +310,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                         }
                     }
                 }
+                // else completes path in current shell working dir
                 else if(partOfName.length() > 0){
                     File thisDir = new File(shell.getWorkingDir());
                     String[] files = thisDir.list();
@@ -280,16 +325,26 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
                     }
                 }
                 break;
+            // </editor-fold>
             default:
                 break;
         }
 
     }
 
+    // <editor-fold defaultstate="collapsed" desc="Std I/O">
+    /**
+     * Open input.
+     * @return true - console is allways open
+     */
     public boolean stdOpenIn() {
         return true;
     }
 
+    /**
+     * Console read line.
+     * @return new written string
+     */
     public String stdReadln() {
         String s = "";
         int commLength = textArea.getText().trim().length() - TAOff;
@@ -305,21 +360,42 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
         return s;
     }
 
+    /**
+     * Close input.
+     * Console closes input with close().
+     */
     public void stdCloseIn() {
     }
 
+    /**
+     * Open output.
+     * @return true - console is allways open
+     */
     public boolean stdOpenOut() {
         return true;
     }
 
+    /**
+     * Prints string to console with new line.
+     * @param s string for printing
+     */
     public void stdWriteln(String s) {
         textArea.append(s + "\n");
     }
 
-    public void stdCloseOut() {
-    }
-
+    /**
+     * Prints string to console without new line.
+     * @param s string for printing
+     */
     public void stdAppend(String s) {
         textArea.append(s);
     }
+
+    /**
+     * Close output.
+     * Console closes output with close().
+     */
+    public void stdCloseOut() {
+    }
+    // </editor-fold>
 }

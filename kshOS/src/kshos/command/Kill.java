@@ -15,32 +15,53 @@ import kshos.core.ProcessManager;
  * @version 0.01 19/11/2009
  */
 public class Kill extends Process {
-    
+
+    /**
+     * Process main function.
+     */
     @Override
     public void tick () {
-        int pid = -1;
+        long pid = -1;
         try {
             pid = Integer.parseInt(this.getArgs()[0]);
         } catch (NumberFormatException a) {
             this.getOut().stdWriteln("Invalid PID!");
-        this.getParent().removeChild(this.getPID());
+            this.getParent().removeChild(this.getPID());
             return;
         }
-        // TODO: uncomment when 'int killProcess(long PID)' implemented
-        /*
-        if (ProcessManager.instance().killProcess(pid) == 1) this.getOut().stdWriteln("No such process with PID " + pid + "!");
-        else if (ProcessManager.instance().killProcess(pid) == 2) this.getOut().stdWriteln("Unable to kill process " + pid + "!");
-        */
+
+        if (ProcessManager.instance().getProcess(pid) == null) {
+            this.getOut().stdWriteln("No such process with PID " + pid + "!");
+            this.getParent().removeChild(this.getPID());
+        }
+        else ProcessManager.instance().getProcess(pid).processSignal(0);
     }
 
+    /**
+     * Line processing.
+     * Doesnt have console input.
+     * @param line inputed line
+     */
     @Override
     public void processLine(String line) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.getOut().stdAppend("Cannot process line!");
+        this.getParent().removeChild(this.getPID());
     }
 
+    /**
+     * Signal processing.
+     * @param type signal type
+     */
     @Override
     public void processSignal(int type) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        switch (type) {
+            case 0:
+                this.getOut().stdCloseOut();
+                this.getParent().removeChild(this.getPID());
+                break;
+            default:
+                break;
+        }
     }
 
 }
