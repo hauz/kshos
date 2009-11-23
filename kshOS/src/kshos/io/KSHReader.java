@@ -8,12 +8,12 @@ import java.io.*;
  * Provides file working.
  *
  * @author <a href="mailto:zdenek4@gmail.com">Zdenek Janda</a>
- * @version 0.03, 15.11.2009
+ * @version 0.04, 23.11.2009
  */
 public class KSHReader extends Reader implements StdIn {
-    FileReader fileReader;
-    BufferedReader bufferedReader;
-    String path;
+    private FileReader fileReader;
+    private BufferedReader bufferedReader;
+    private String path;
 
      /**
      * Reader constructor
@@ -87,4 +87,11 @@ public class KSHReader extends Reader implements StdIn {
         }
     }
 
+    /**
+     * Getter
+     * @return path of file
+     */
+    public String getPath() {
+        return path;
+    }
 }

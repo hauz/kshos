@@ -7,12 +7,12 @@ import java.io.*;
  * Provides file working.
  *
  * @author <a href="mailto:zdenek4@gmail.com">Zdenek Janda</a>
- * @version 0.03, 15.11.2009
+ * @version 0.04, 23.11.2009
  */
 public class KSHWriter extends Writer implements StdOut {
-    FileWriter fileWriter;
-    BufferedWriter bufferedWriter;   
-    String path;
+    private FileWriter fileWriter;
+    private BufferedWriter bufferedWriter;
+    private String path;
 
     /**
      * Writer constructor
@@ -117,5 +117,13 @@ public class KSHWriter extends Writer implements StdOut {
         finally {
             return;
         }
+    }
+
+    /**
+     * Getter
+     * @return path of file
+     */
+    public String getPath() {
+        return path;
     }
 }
