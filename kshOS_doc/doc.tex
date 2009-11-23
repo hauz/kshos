@@ -28,13 +28,102 @@
 \setcounter{page}{1} 
 
 \section{Zadání}
-
+Navrhnìte a implementujte model správce virtuálních strojù. Shell tohoto správce bude obsahovat tyto pøíkazy: \textit{cat, cd, echo, exit, kill, kshell, ls, man, ps, pwd, shutdown, sort}. Shell bude dále uchovávat aktualní pracovní adresáø a historii použitých pøíkazù.
+K ovládání správce použijte vhodné rozhraní uživatel/stroj.\\
+Doporuèený postup:
+\begin{enumerate}
+\item Napište si terminálové okno.
+\item Navrhnìte gramatiku pro shell.
+\item Navrhnìte a implementujte syntaktický analyzátor.
+\item Navrhnìte strukturu správce virtuálních strojù.
+\item Udìlejte propojení na souborový systém, napište váš cat a ukažte jeho funkènost.
+\item Doplòte model o vykonávání pøíkazù shellu v hierarchii virtuálních strojù - init, login, shell, program xyz, ...
+\item Pøidejte pøesmìrování a roury.
+\item Napište další programy pro pøíkazy shellu, logout, shell, date, ...
+\item Model mùžete rozšíøit o send a receive mezi uživateli, vykonávání v pozadí, pøíkazy bg a fg.
+\item K historii pøíkazù uchovávejte i adresáøe, ve kterých byly použity
+\item Dokonèete detaily.
+\item Testujte.
+\end{enumerate}
+Bìhem práce dodržujte tyto konvence:
+\begin{itemize}
+\item identifikátory a komentáøe se píší anglicky
+\item názvy package pouze malými písmeny
+\item class soubory se generují do jiného adresáøe (ne k zdrojákùm)
+\item místo tøídy kolekce se používá rozhraní
+\end{itemize}
 \newpage
 
 \section{Analýza úlohy}
 
 
 \section{Popis implementace}
+\subsection{Konzole}
+Konzole se vytváøí jako objekt tøídy \textit{UserInterface}, která je oddìdìna od tøídy \textit{JFrame}. Tento frame obsahuje \textit{JTextAreu} jako jediný prvek. Jedná se o základní vstup a výstup správce virtuálních strojù.
+V rámci konstruktoru jsou nastaveny globální promìnné, vzhled okna konzole, namapování akcí a jako poslední je spuštìn první shell.
+Globální promìnné pøedstavují již zmínìnou \textit{JTextAreu}, dále hodnotu offsetu od zaèátku textu \textit{TAOff} a \textit{lineHead}, což je univerzální zaèátek každého øádku konzole tzv. line header.
+Namapování jednotlivých akcí je nejobsáhlejší èást vytváøení konzole a obsahuje jak reakce na klávesnici, tak na myš. Podrobnému popisu se vìnuje podkapitola o mapování akcí viz dále.
+Spuštìní shellu obstarává metoda \textit{createShell()}, která bude rozebrána v další èásti dokumentace.
+\subsubsection{Reakce na klávesnici}
+K namapování akcí klávesnice je použita metoda \textit{consoleKeyActions(keyEvt)}. Ta v sobì obsahuje switch na jednotlivé kódy stisklých kláves (\textit{getKeyCode()}). Vyhodnocované klávesy jsou: \textit{ENTER, LEFT, RIGHT, UP, DOWN, PAGE UP, PAGE DOWN, HOME, TAB a BACKSPACE}.
+Klávesa \textit{ENTER} umožnuje zpracování aktuální øádky zadané do konzole a už shellem nebo právì bìžící aplikací. Šipky slouží k práci s historii pøíkazù a pohybu v zadaném textu. Klávesa \textit{HOME} je pozmìnìna tak, aby v pøípadì bìhu shellu skákala pouze na konec vypsaneho textu (za line header), tedy na hodnotu \textit{TAOff}. V ostatních pøípadech skáèe až na zaèátek aktualního øádku. Klávesy \textit{PAGE UP} a \textit{PAGE DOWN} jsou zakázány úplnì, aby nebylo možné skoèit do již zpracované oblasti konzole. Klávesa \textit{TAB} doplòuje rozepsaný pøíkaz resp. cestu v zadávaném øádku a klávesa \textit{BACKSPACE} má opìt pøidáno omezení, aby nebylo možné mazat zpracované øádky konzole.
+Poslední akcí klávesnice je tzv. KeyStroke, tedy kombinace více kláves (klávesová zkratka). Je implementována reakce pouze \textbf{CTRL+D} urèená k zaslání signálu odebrání konzole a ukonèení aktualního procesu.
+
+\subsubsection{Reakce na myš}
+Odchytává se ve dvou pøípadech:
+\begin{enumerate}
+\item \textbf{Kliknutí na X okna} - Pøi kliknutí na zavírací X konzole se volá metoda UserInterface.close(), která nejprve odhlásí uživatele a poté bezpeènì ukonèí všechny procesy a konzoli.
+\item \textbf{Kliknutí nebo oznaèení textu v konzoli} - Pokud se uživatel pokusí kliknout jinam než na konec konzole (aktuální øádek) nebo v pøípadì oznaèení textu je potøeba zamezit zmìnì pozice kurzoru a tím i možnosti psaní mimo aktuální øádek. Oba problémy jsou øešeny metodou \textit{mouseReleased(MouseEvent evt)}. Tedy kdykoli je v konzoli uvolnìno tlaèítko myší (a po kliknutí nebo po oznaèení) je kurzor nastaven na aktuální øádek (na konec textu konzole, který dán hodnotou offsetu \textit{TAOff}).
+\end{enumerate}
+
+\subsection{Gramatika}
+\subsubsection{Návrh}
+Návrh gramatiky byl odvozen od LINUXu. Pro zápis návrhu jsou použity tyto regulární výrazy:
+\begin{itemize}
+\item (x)? - žádný nebo jeden výskyt
+\item (x)* - žádný nebo nìkolik výskytù
+\item xyz - pravidlo
+\item XYZ - lexikální výraz
+\end{itemize}
+Následnì bude návrh gramatiky vypadat takto:
+\begin{verbatim}
+parse   ->  line (bg)?
+line    ->  first ('<' in)? (next)* ('>' out)?
+first   ->  cmd
+next    ->  '|' cmd
+cmd     ->  par (args)*
+args    ->  par
+in      ->  par
+out     ->  par
+bg      ->  '&'
+par     ->  CHAR | STRING | ichar
+ichar   ->  ICHAR
+\end{verbatim}
+Na první pohled se mùže zdát návrch gramatiky zbyteènì složitý, ale takto detailní rozložení je dále použito pøi návrhu lexikálního resp. syntaktického analyzéru. Oba analýzéry jsou generovány pomocí nástroje ANTLR 3.2, který podle návrhu gramatiky vytvoøí kód v Javì. Ten je navíc doplnìn obslužným kódem pro jednotlivá pravidla tak, aby práci se zpracovanou øádkou co nejvíce ulehèil (proto je návrh tak podrobný).
+Celý návrh gramatiky s plnými pravidly pro lexikální i syntaktický analyzátor lze nalézt v souboru s gramatikou (OSVM\_grammar.g).
+\subsubsection{Lexikální analyzér}
+Pro lexikální analyzér jsou definovány základní øídící znaky (roura, pøesmìrování, ad.) a mnoužina povolených symbolù pro názvy pøíkazù resp. souborù (CHAR, STRING). Dále je definován i doplnìk obou množin ICHAR.  Veškeré bíle znaky a znaky z množiny ICHAR jsou pøeskakovány. 
+Použité množiny:
+\begin{itemize}
+\item CHAR \\('a'..'z' \textbar 'A'..'Z' \textbar '0'..'9' \textbar '/' \textbar '\_' \textbar '-' \textbar  '?' \textbar '.' \textbar '..' \textbar ':')
+\item STRING \\CHAR*
+\item ICHAR \\!(' ' \textbar '\textbar' \textbar '\textless' \textbar '\textgreater' \textbar '\textbackslash n' \textbar '\&')
+\end{itemize}
+\subsubsection{Syntaktický analyzér}
+Syntaktický analyzér rozdìlí øádek do struktury \textit{ArrayList}, který v sobì obsahuje další \textit{ArrayList\textless String\textgreater}. V nìm jsou uloženy jednotlivé argumenty pøíkazu a jako poslední položka je vždy název pøíkazu. Navíc ukládá cestu k vstupnímu resp. výstupnímu souboru do String promìnné \textit{in} resp. \textit{out} a poskytuje k nim pøístup pomocí metod \textit{getIn()} a \textit{getOut()}. V poslední øadì nastavuje vlajky \textit{bg} (pokud je pøíkaz spuštìn na pozadí) a \textit{invalid} (pokud øádka obsahuje nìjaký symbol z množiny ICHAR). Ty jsou po zpracování øádky pøístupné pøes metody \textit{isBackgrounded()} a \textit{containsInvalid()}.
+
+\subsection{Struktura VMM}
+\subsubsection{bla}
+
+\subsection{Vykonávání pøíkazù}
+\subsubsection{bla}
+
+\subsection{Pøesmìrování a roury}
+\subsubsection{bla}
+
+\subsection{Pøíkazy}
+\subsubsection{bla}
+
 
 \section{Uživatelská pøíruèka}
 \subsection{Pøeklad}
@@ -48,6 +137,46 @@ X:\app_path\>run.bat
 \end{verbatim}
 
 \subsection{Ovládání programu}
+Ovládání správce je intuitivní. Po spuštìní (viz pøedchozí èást) se objeví okno pøihlášení. Po zadání uživatelského jména a potvrzení dojde k pøihlášení uživatele k virtuálnímu stroji. Zde je možné používat základní pøíkazy shellu, vèetnì jejich argumentù a pøesmìrování vstupù resp. výstupù.
+Implementované pøíkazy: \textit{cat, cd, echo, exit, kill, kshell, ls, man, ps, pwd, shutdown, sort}. Více k jednolivým pøíkazùm v následující èásti.
+\subsubsection{cat}
+Použití: \textit{cat [file]* [\textless ifile] [\textgreater ofile]}\\
+Umožòuje vypsání žádného, jednoho nebo více souborù podle použití.
+Pokud se spustí cat bez argumenù nebo vstupu, pak používá vstup z konzole. Bez pøesmìrování výstupu vypisuje zadané øádky, v opaèném pøípadì je zapisuje do zadaného souboru a je možné ho využít jako jednoduchý textový editor. Ukonèení se provádí odebráním konzole procesu pomocí zkratky \textit{CTRL+D} Pokud se spustí s argumenty, pak za sebe vypíše jednotlivé soubory v zadaném poøadí. Poslední vypsaný je soubor z pøesmìrovaného vstupu. Cat nelze použít \textit{cat file \textgreater file} nebo \textit{cat \textless file \textgreater file}, kde je stejný vstupní a výstupní soubor.
+\subsubsection{cd}
+Použití: \textit{cd ..} nebo \textit{cd rel\_path} nebo \textit{cd abs\_path}\\
+Umožòuje zmìnit pracovní adresáø.
+\subsubsection{echo}
+Použití: \textit{echo [arg]*}\\
+Vypíše øádek odpovídající zadaným argumentùm.
+\subsubsection{exit}
+Použití: \textit{exit}\\
+Ukonèí stávající shell. Pokud se jedná o poslední bìžící shell, pak provede odhlášení uživatele a ukonèení konzole.
+\subsubsection{kill}
+Použití: \textit{kill pid}\\
+Ukonèí proces se zadaným PID.
+\subsubsection{kshell}
+Použití: \textit{kshell}\\
+Spustí další shell.
+\subsubsection{ls}
+Použití: \textit{ls} nebo \textit{ls rel\_path} nebo \textit{ls abs\_path}\\
+Vypíše aktualní resp. zadaný adresáø. Lze použít zástupný pøíkaz \textit{dir}.
+\subsubsection{man}
+Použití: \textit{man}\\
+Vypíše struènou nápovedu ke správci strojù, která zahrnuje i popis jednotlivých pøíkazù.
+\subsubsection{ps}
+Použití: \textit{ps} nebo \textit{ps -u}\\
+Vypíše všechny resp. uživatelovy bìžící procesy.
+\subsubsection{pwd}
+Použití: \textit{pwd}\\
+Vypíše aktuální pracovní adresáø.
+\subsubsection{shutdown}
+Použití: \textit{shutdown}\\
+Ukonèí celý správce virtuálních strojù.
+\subsubsection{sort}
+Použití: \textit{sort [file]* [\textless ifile] [\textgreater ofile]}\\
+Umožòuje seøazení øádkù vstupu. Pokud je spuštìn bez argumentù (s i bez pøesmìrování výstupu), pak naèítá øádky z konzole. Po odebrání konzole (pomocí zkratky \textit{CTRL+D}) vypíše na výstup seøazenou posloupnost zadaných øádkù. Pøi spuštìní s argumenty postupnì naète všechny øádky všech zadaných souborù (vèetnì souboru z pøesmìrovaného vstupu) a poté vypíše jejich seøazenou posloupnost na výstup.
+
 
 \section{Závìr}
 Dokumentace byla vygenerována pomocí nástroje \TeX.
