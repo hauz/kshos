@@ -252,10 +252,22 @@ public class UserInterface extends JFrame implements StdIn, StdOut {
             case KeyEvent.VK_TAB:
                 // completes name of file from current directory
                 keyEvent.consume();
-                String[] writted = stdReadln().toString().split(" ");
+                String[] writted = stdReadln().toString().split(" *");
                 String partOfName = writted[writted.length-1];
-                if(partOfName.length() > 0){
-                    File thisDir = new File(".");
+                if(writted.length == 1){
+                     String[] prikaz = {"ls", "cat"};
+                     for(int i=0; i < prikaz.length; i++){
+                        if(prikaz[i].startsWith(partOfName)){
+                           int start = textArea.getText().trim().length() - partOfName.length();
+                           int end = start + partOfName.length();
+                           textArea.replaceRange("", start, end);
+                           textArea.append(prikaz[i]);
+                           break;
+                        }
+                    }
+                }
+                else if(partOfName.length() > 0){
+                    File thisDir = new File(shell.getWorkingDir());
                     String[] files = thisDir.list();
                     for(int i=0; i < files.length; i++){
                         if(files[i].startsWith(partOfName)){

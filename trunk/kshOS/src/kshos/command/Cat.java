@@ -44,7 +44,7 @@ public class Cat extends Process {
         if (len != 0) {
             fileIn(len);
             // added EOL for console
-            this.getOut().stdWriteln(file.trim());
+            this.getOut().stdWriteln(file);
             this.getOut().stdCloseOut();
             this.getParent().removeChild(this.getPID());
         }
@@ -54,7 +54,7 @@ public class Cat extends Process {
             while ((pom = getIn().stdReadln()) != null)
                     // moved EOL for file
                     file += pom + "\n";
-            this.getOut().stdAppend(file.trim());
+            this.getOut().stdAppend(file);
             this.getOut().stdCloseOut();
             this.getParent().removeChild(this.getPID());
         }
