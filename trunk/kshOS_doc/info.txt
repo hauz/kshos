@@ -1,0 +1,6 @@
+dalam to v poslednim Miktexu 2.8, ktery si po instalaci jeste bude chtit stahnou podporu cestiny
+
+pro preklad 'cslatex doc'
+pro prevod do pdf 'dvipdfm doc'
+
+jinak prikladam i navod na TEX (TeXdoc.pdf) a rychly referencni prehled (latexsheet.pdf)
