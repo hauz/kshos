@@ -1,13 +1,13 @@
 package kshos.io;
 
 /**
- * Standart output interface
- * Contains necessary methods for ouput stream.
+ * Standart error interface
+ * Contains necessary methods for error stream.
  *
  * @author <a href="mailto:zdenek4@gmail.com">Zdenek Janda</a>
- * @version 0.02, 11.11.2009
+ * @version 0.01, 23.11.2009
  */
-public interface StdOut {
+public interface StdErr {
 
     /**
      * Open ouput stream.
@@ -20,7 +20,7 @@ public interface StdOut {
     public void stdWriteln(String s);
 
     /**
-     * Write line.
+     * Append string.
      */
     public void stdAppend(String s);
 
