@@ -1,0 +1,1 @@
+java -classpath build;lib\antlr-3.2.jar kshos.Main
