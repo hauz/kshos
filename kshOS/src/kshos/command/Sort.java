@@ -5,7 +5,6 @@
 
 package kshos.command;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import kshos.core.objects.Process;
