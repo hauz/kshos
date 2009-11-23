@@ -18,8 +18,18 @@ import kshos.io.KSHReader;
  */
 public class Sort extends Process {
 
+    /**
+     * Global arraylist 'lines'.
+     */
     private ArrayList<String> lines = new ArrayList<String>();
 
+    /**
+     * Sort function.
+     * Sorts array of objects using Arrays.sort.
+     * Puts result to String array
+     * @param array unsorted lines
+     * @return String array of sorted items
+     */
     private String sort(Object[] array) {
         String file = "";
         Arrays.sort(array);
@@ -30,6 +40,12 @@ public class Sort extends Process {
         return file;
     }
 
+    /**
+     * File input.
+     * Combines lines from all specified (as command arguments) input files
+     * to global arraylist 'lines'.
+     * @param fileCnt number of input files (argument count)
+     */
     private void fileIn(int fileCnt) {
         String line = "";
         KSHReader read = null;
@@ -48,6 +64,9 @@ public class Sort extends Process {
         }
     }
 
+    /**
+     * Process main function.
+     */
     @Override
     public void tick () {
         int len = getArgs().length;
@@ -68,11 +87,20 @@ public class Sort extends Process {
         }
     }
 
+    /**
+     * Line processing.
+     * Aplies for console input when no input file specified.
+     * @param line inputed line
+     */
     @Override
     public void processLine(String line) {
         lines.add(line);
     }
 
+    /**
+     * Signal processing.
+     * @param type signal type
+     */
     @Override
     public void processSignal(int type) {
         switch (type) {

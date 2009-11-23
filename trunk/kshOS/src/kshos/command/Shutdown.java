@@ -16,20 +16,46 @@ import kshos.core.objects.Process;
  */
 public class Shutdown extends Process {
 
+    /**
+     * Process main function.
+     */
     @Override
     public void tick () {
-        System.exit(0);     // disgusting thing ...
-        //         Core.instance().service(0, null);
+        Process p = this;
+        // ends all running processes up tu shell
+        while (p.getParent() != null) {
+            p.processSignal(0);
+            p = p.getParent();
+        }
+        //p.processSignal(0);
+        //Core.instance().service(0, null);
     }
 
+    /**
+     * Line processing.
+     * Doesnt have console input.
+     * @param line inputed line
+     */
     @Override
     public void processLine(String line) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.getOut().stdAppend("Cannot process line!");
+        this.getParent().removeChild(this.getPID());
     }
 
+    /**
+     * Signal processing.
+     * @param type signal type
+     */
     @Override
     public void processSignal(int type) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        switch (type) {
+            case 0:
+                this.getOut().stdCloseOut();
+                this.getParent().removeChild(this.getPID());
+                break;
+            default:
+                break;
+        }
     }
 
 }

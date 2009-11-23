@@ -186,7 +186,7 @@ public class ProcessManager {
         try {
             cmd = (Process) loader.loadClass("kshos.command." + command).newInstance();
         } catch (Exception ex) {
-            parent.getOut().stdAppend("\nInvalid command!");
+            parent.getOut().stdAppend("Invalid command!");
             return;
         }
 
@@ -202,7 +202,7 @@ public class ProcessManager {
         }
         if(!cmd.getIn().stdOpenIn()) {
             cmd.processSignal(0);
-            parent.getOut().stdAppend("\nCannot read " + g.getIn());
+            parent.getOut().stdAppend("Cannot read " + g.getIn());
             return;
         }
 
@@ -214,7 +214,7 @@ public class ProcessManager {
         }
         if(!cmd.getOut().stdOpenOut()) {
             cmd.processSignal(0);
-            parent.getOut().stdAppend("\nCannot write " + g.getOut());
+            parent.getOut().stdAppend("Cannot write " + g.getOut());
             return;
         }
         
