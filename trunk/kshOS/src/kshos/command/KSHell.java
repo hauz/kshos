@@ -147,7 +147,15 @@ public class KSHell extends Process {
                 if (this.getParent().getPID() == 1) getUserInterface().close();
                 // else exit last shell
                 // TODO: exit last shell in ProcessManager.processList
-                else this.getParent().removeChild(this.getPID());
+                else {
+                    // put all children to new parent
+                    while (this.getAllChilds().size() > 0) {
+                        this.getParent().addChild(this.getChild(this.getAllChilds().firstKey()));
+                        this.removeChild(this.getAllChilds().firstKey());
+                    }
+                    this.getParent().removeChild(this.getPID());
+                    //ProcessManager.instance().kill(this.getPID());
+                }
                 break;
             default:
                 break;
