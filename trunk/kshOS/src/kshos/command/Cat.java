@@ -8,6 +8,7 @@ package kshos.command;
 import java.io.File;
 import kshos.core.objects.Process;
 import kshos.io.KSHReader;
+import kshos.io.KSHWriter;
 
 /**
  * CAT command.
@@ -62,6 +63,17 @@ public class Cat extends Process {
         }
         // when gets another then console input 'cat < smth'
         if (getIn().toString().indexOf("UserInterface") < 0) {
+         
+            // check if output is the same as input
+            KSHWriter out = (KSHWriter)this.getOut();
+            KSHReader in = (KSHReader)this.getIn();
+            if(out.getPath().equals(in.getPath())){
+                this.getErr().stdWriteln("Input file is output file");
+                this.getOut().stdCloseOut();
+                this.getIn().stdCloseIn();
+                this.processSignal(0);
+            }
+
             String pom = "";
             file = "";
             while ((pom = getIn().stdReadln()) != null)
