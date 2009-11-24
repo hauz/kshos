@@ -3,8 +3,6 @@ package kshos.ui;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -24,7 +22,7 @@ import kshos.io.StdOut;
  * Draws console window.
  *
  * @author <a href="mailto:hauzi.m@gmail.com">Miroslav Hauser</a>
- * @version 0.07, 15.11.2009
+ * @version 0.08, 24.11.2009
  */
 public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
 
@@ -34,8 +32,6 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
     private int TAOff;
     /* Line header for console */
     private String lineHead;
-    // TODO: remove when createShell() & getCurrentShell() implemented
-    private KSHell shell;
     // user handler
     private User user;
 
@@ -75,7 +71,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
         // set font
         Font font = new Font("Monospaced", Font.PLAIN, 14);
         textArea.setFont(font);
-        
+
         //sysek 2.11.2009 k4chn1k 4.11.09
         textArea.addKeyListener(new KeyAdapter() {
 
@@ -97,14 +93,15 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
         textArea.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK), new AbstractAction() {
 
             public void actionPerformed(ActionEvent ev) {
-                if (shell.getAllChilds().size() == 0) shell.processSignal(0);
+                KSHell sh = ProcessManager.instance().getLastShell();
+                if (sh.getAllChilds().size() == 0) sh.processSignal(0);
                 else {
                     // if last line wasn't entered
                     if (textArea.getText().length() != TAOff) {
                         consoleKeyActions(new KeyEvent(textArea, 0, (long) 0, 0, KeyEvent.VK_ENTER, (char) 0));
                     }
                     // send singal to first child
-                    shell.getChild(shell.getAllChilds().firstKey()).processSignal(0);
+                    sh.getChild(sh.getAllChilds().firstKey()).processSignal(0);
                     addNewLine(2);
                 }
             }
@@ -116,10 +113,10 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
         scrollPane.setAutoscrolls(true);
         add(scrollPane, BorderLayout.CENTER);
         setVisible(true);
-        
+
         // k4chn1k 7.11.09 after finishing console shell is turned on
         // hauz 23.11.09
-        shell = ProcessManager.instance().createShell(this);
+        ProcessManager.instance().createShell(this, 1);
     }
 
     /**
@@ -177,6 +174,8 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
      * @param keyEvent keyevent
      */
     private void consoleKeyActions(KeyEvent keyEvent) {
+        // k4chn1k 24.11.09
+        KSHell shell = ProcessManager.instance().getLastShell();
         switch (keyEvent.getKeyCode()) {
             // <editor-fold defaultstate="collapsed" desc="ENTER">
             case KeyEvent.VK_ENTER:
@@ -204,7 +203,9 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
                 }
 
                 // when shell running place new line header
-                if (shell.getAllChilds().size() == 0) {
+                // here is ProcessManager.instance().getLastShell() because you can run new shell as
+                // child of current shell and then lastshell.getAllChilds().size() == 1
+                if (ProcessManager.instance().getLastShell().getAllChilds().size() == 0) {
                     addNewLine(2);
                 }
 
