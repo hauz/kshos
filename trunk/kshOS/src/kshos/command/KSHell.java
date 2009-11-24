@@ -106,17 +106,17 @@ public class KSHell extends Process {
             command = "KSHell";
             // uncomment & complete next line when createShell() implemented
             // createShell()
-            this.getOut().stdAppend("KSHell already running!");
-            return;
+            //this.getOut().stdAppend("KSHell already running!");
+            //return;
         }
         else {
             if (command.equals("exit")) {
                 processSignal(0);
             }
-        }
 
-        // set command first letter to upper case
-        command = "" + (char) (command.charAt(0) - 32) + "" + command.substring(1);
+            // set command first letter to upper case
+            command = "" + (char) (command.charAt(0) - 32) + "" + command.substring(1);
+        }
 
         // create new process and run it
         ProcessManager.instance().createProcess(command,
