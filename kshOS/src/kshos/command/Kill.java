@@ -25,16 +25,15 @@ public class Kill extends Process {
         try {
             pid = Integer.parseInt(this.getArgs()[0]);
         } catch (NumberFormatException a) {
-            this.getOut().stdWriteln("Invalid PID!");
+            this.getErr().stdWriteln("Invalid PID!");
             this.getParent().removeChild(this.getPID());
             return;
         }
 
         if (ProcessManager.instance().getProcess(pid) == null) {
-            this.getOut().stdWriteln("No such process with PID " + pid + "!");
-            this.getParent().removeChild(this.getPID());
-        }
-        else ProcessManager.instance().getProcess(pid).processSignal(0);
+            this.getErr().stdWriteln("No such process with PID " + pid + "!");
+        } else ProcessManager.instance().getProcess(pid).processSignal(0); // TODO: running
+        this.getParent().removeChild(this.getPID());
     }
 
     /**
@@ -44,7 +43,7 @@ public class Kill extends Process {
      */
     @Override
     public void processLine(String line) {
-        this.getOut().stdAppend("Cannot process line!");
+        this.getErr().stdWriteln("Cannot process line!");
         this.getParent().removeChild(this.getPID());
     }
 
@@ -57,6 +56,11 @@ public class Kill extends Process {
         switch (type) {
             case 0:
                 this.getOut().stdCloseOut();
+                // put all children to new parent
+                while (this.getAllChilds().size() > 0) {
+                    this.getParent().addChild(this.getChild(this.getAllChilds().firstKey()));
+                    this.removeChild(this.getAllChilds().firstKey());
+                }
                 this.getParent().removeChild(this.getPID());
                 break;
             default:

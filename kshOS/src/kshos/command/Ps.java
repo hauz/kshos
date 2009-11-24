@@ -59,6 +59,11 @@ public class Ps extends Process {
         switch (type) {
             case 0:
                 this.getOut().stdCloseOut();
+                // put all children to new parent
+                while (this.getAllChilds().size() > 0) {
+                    this.getParent().addChild(this.getChild(this.getAllChilds().firstKey()));
+                    this.removeChild(this.getAllChilds().firstKey());
+                }
                 this.getParent().removeChild(this.getPID());
                 break;
             default:
