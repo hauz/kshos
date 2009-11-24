@@ -101,7 +101,6 @@ public class KSHell extends Process {
         String command = g.getCmdTable().get(g.getCmdTable().size() - 1).get(
                 g.getCmdTable().get(0).size() - 1);
 
-        // TODO: more shells
         if (command.equals("kshell")) {
             ProcessManager.instance().createShell(getUserInterface(), this.getPID());
             return;

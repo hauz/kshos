@@ -304,8 +304,8 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
             case KeyEvent.VK_TAB:
                 // completes name of file from current directory
                 keyEvent.consume();
-                String[] writted = stdReadln().toString().split(" *");
-                String partOfName = writted[writted.length-1];
+                String[] writted = stdReadln().split("[ ]+");
+                String partOfName = writted[writted.length - 1];
                 // completes command - no space on line
                 if(writted.length == 1){
                      String[] prikaz = {"cat", "cd", "echo", "exit", "kshell",
