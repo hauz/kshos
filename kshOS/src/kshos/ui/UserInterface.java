@@ -15,6 +15,7 @@ import kshos.command.KSHell;
 import kshos.core.Core;
 import kshos.core.ProcessManager;
 import kshos.core.objects.User;
+import kshos.io.StdErr;
 import kshos.io.StdIn;
 import kshos.io.StdOut;
 
@@ -25,7 +26,7 @@ import kshos.io.StdOut;
  * @author <a href="mailto:hauzi.m@gmail.com">Miroslav Hauser</a>
  * @version 0.07, 15.11.2009
  */
-public class UserInterface extends JFrame implements StdIn, StdOut {
+public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
 
     /* Console input textarea */
     private JTextArea textArea;

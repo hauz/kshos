@@ -58,7 +58,7 @@ public class Sort extends Process {
                 read.stdCloseIn();
             }
             else{
-                this.getOut().stdWriteln("Cannot read " + getArgs()[i]);               
+                this.getErr().stdWriteln("Cannot read " + getArgs()[i]);
             }
         }
     }
