@@ -129,6 +129,22 @@ public class ProcessManager {
     }
 
     /**
+     * Method removes process from process list.
+     *
+     * @param PID
+     */
+    public void removeProcess(long PID) {
+
+        // removes process from process list
+        for (Process proc: this.processList) {
+            if (proc.getPID() == PID) {
+                this.processList.remove(proc);
+                return;
+            }
+        }
+    }
+
+    /**
      * Metods return the last created shell in process list.
      * We use the main presumption used during process creation. That says
      * we have simple growing function to count PID of new process. That means
