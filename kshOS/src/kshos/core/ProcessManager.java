@@ -275,7 +275,7 @@ public class ProcessManager {
         try {
             cmd = (Process) loader.loadClass("kshos.command." + command).newInstance();
         } catch (Exception ex) {
-            parent.getErr().stdWriteln("Invalid command!");
+            parent.getOut().stdWriteln("Invalid command!");
             return;
         }
 
