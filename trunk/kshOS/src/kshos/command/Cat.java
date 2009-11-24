@@ -41,7 +41,7 @@ public class Cat extends Process {
                 read.stdCloseIn();
             }
             else{
-                file = "Cannot read " + getArgs()[i];
+                this.getErr().stdWriteln("Cannot read " + getArgs()[i]);
             }
             
         }

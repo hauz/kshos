@@ -32,7 +32,7 @@ public class Ls extends Process {
                 thisDir = new File(getParent().getWorkingDir() + File.separator + path);
             }
             if (!thisDir.exists()) {
-                this.getOut().stdAppend("No such directory!");
+                this.getErr().stdAppend("No such directory!");
                 this.getParent().removeChild(this.getPID());
                 return;
             }
@@ -51,7 +51,7 @@ public class Ls extends Process {
      */
     @Override
     public void processLine(String line) {
-        this.getOut().stdAppend("Cannot process line!");
+        this.getErr().stdAppend("Cannot process line!");
         this.getParent().removeChild(this.getPID());
     }
 
