@@ -102,8 +102,8 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
                     }
                     // send singal to first child
                     sh.getChild(sh.getAllChilds().firstKey()).processSignal(0);
-                    addNewLine(2);
                 }
+                addNewLine(2);
             }
         });
         setLayout(new BorderLayout());
@@ -124,6 +124,9 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
      * All waiting thread for input are notified.
      */
     public synchronized void close() {
+        // exit users shell
+        if (ProcessManager.instance().getLastShell(user) != null)
+            ProcessManager.instance().removeProcess(ProcessManager.instance().getLastShell(user).getPID());
         // logout user
         Core.instance().service(2, this.getTitle());
         this.setFocusable(false);
@@ -205,7 +208,8 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
                 // when shell running place new line header
                 // here is ProcessManager.instance().getLastShell() because you can run new shell as
                 // child of current shell and then lastshell.getAllChilds().size() == 1
-                if (ProcessManager.instance().getLastShell(user).getAllChilds().size() == 0) {
+                if (ProcessManager.instance().getLastShell(user) != null &&
+                        ProcessManager.instance().getLastShell(user).getAllChilds().size() == 0) {
                     addNewLine(2);
                 }
 
