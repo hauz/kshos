@@ -4,7 +4,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import kshos.command.KSHell;
-import kshos.command.KSHell;
 import kshos.command.grammar.OSVM_grammarParser;
 import kshos.core.objects.MetaProcess;
 import kshos.core.objects.User;
@@ -284,6 +283,11 @@ public class ProcessManager {
         cmd.setPID(getPID());       // set process PID
         incPID();                   // count new PID
 
+        // set error input
+        
+        cmd.setErr(userInterface);
+        cmd.getErr().stdOpenOut();
+
         // set process input
         if (g.getIn() == null) {
             cmd.setIn(userInterface);
@@ -291,8 +295,8 @@ public class ProcessManager {
             cmd.setIn(new KSHReader(g.getIn(), parent.getWorkingDir()));
         }
         if (!cmd.getIn().stdOpenIn()) {
-            cmd.processSignal(0);
-            parent.getOut().stdAppend("Cannot read " + g.getIn());
+            cmd.getErr().stdAppend("Cannot read " + g.getIn());
+            cmd.processSignal(0);            
             return;
         }
 
@@ -303,8 +307,8 @@ public class ProcessManager {
             cmd.setOut(new KSHWriter(g.getOut(), parent.getWorkingDir()));
         }
         if (!cmd.getOut().stdOpenOut()) {
-            cmd.processSignal(0);
-            parent.getOut().stdAppend("Cannot write " + g.getOut());
+            cmd.getErr().stdAppend("Cannot write " + g.getOut());
+            cmd.processSignal(0);            
             return;
         }
 
