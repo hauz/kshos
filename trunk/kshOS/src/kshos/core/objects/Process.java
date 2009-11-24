@@ -10,7 +10,7 @@ import kshos.io.*;
  * Simple process.
  * Replace by final version of process.
  * @author <a href="mailto:novotny@students.zcu.cz">Jiri NOVOTNY A09N0032P</a>
- * @version 0.03 11/11/2009
+ * @version 0.04 11/11/2009
  *
  * Changelog:
  *      <b>0.03 - Miroslav Hauser</b>
@@ -18,6 +18,9 @@ import kshos.io.*;
  *          * methods updated
  *          * thread logic updated
  *          * nameID added
+ *      <b>0.04 - Miroslav Hauser</b>
+ *          * stdErr added
+ *          * getStdErr() and set stdErr() added
  */
 public abstract class Process extends Thread {
 
@@ -29,6 +32,7 @@ public abstract class Process extends Thread {
 
     private StdIn in;
     private StdOut out;
+    private StdErr err;
     private File workingDir;
     private String[] args;
 
@@ -83,6 +87,15 @@ public abstract class Process extends Thread {
      */
     public StdOut getOut() {
         return out;
+    }
+
+    /**
+     * Get standard error stream.
+     *
+     * @return error stream
+     */
+    public StdErr getErr() {
+        return err;
     }
 
     /**
@@ -163,6 +176,15 @@ public abstract class Process extends Thread {
      */
     public void setOut(StdOut out) {
         this.out = out;
+    }
+
+    /**
+     * Set standard error stream.
+     *
+     * @param err
+     */
+    public void setErr(StdErr err) {
+        this.err = err;
     }
 
     /**
