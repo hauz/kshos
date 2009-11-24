@@ -130,6 +130,44 @@ public class ProcessManager {
     }
 
     /**
+     * Metods return the last created shell in process list.
+     * We use the main presumption used during process creation. That says
+     * we have simple growing function to count PID of new process. That means
+     * that each new process will have PID bigger than the oder ones processes.
+     * That means we are looking for shell with biggest PID because this one
+     * is the last created.
+     *
+     * @return latest shell
+     */
+    public KSHell getLastShell() {
+        
+        ArrayList<Process> shellList = new ArrayList<Process>();
+        KSHell lastCreated = null;
+        
+        // find all shells in process list
+        for (Process proc: this.processList) {
+            if (proc instanceof KSHell) {
+                shellList.add(proc);
+            }
+        }
+
+        // If we have fount at least one shell in process list then
+        // find the shell with the biggest PID. We coudl presume that
+        // the biggest PID is the last one created.
+        if (shellList.size() != 0) {
+            lastCreated = (KSHell) shellList.get(0);
+
+            for (Process proc: shellList) {
+                if (lastCreated.getPID() < proc.getId()) {
+                    lastCreated = (KSHell) proc;
+                }
+            }
+        }
+
+        return lastCreated;
+    }
+
+    /**
      * Create new shell and sets its parameters.
      * Then after shell initializatio, the shell is started.
      *
