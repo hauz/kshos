@@ -119,7 +119,8 @@ public class KSHell extends Process {
         command = "" + (char) (command.charAt(0) - 32) + "" + command.substring(1);
 
         // create new process and run it
-        ProcessManager.instance().createProcess(command, null, this, userInterface, g);
+        ProcessManager.instance().createProcess(command,
+                userInterface.getUser(), this, userInterface, g);
     }
 
     /**

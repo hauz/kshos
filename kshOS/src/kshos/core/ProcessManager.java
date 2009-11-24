@@ -3,7 +3,10 @@ package kshos.core;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import kshos.command.KSHell;
+import kshos.command.KSHell;
 import kshos.command.grammar.OSVM_grammarParser;
+import kshos.core.objects.MetaProcess;
 import kshos.core.objects.User;
 import kshos.core.objects.Process;
 import kshos.io.KSHReader;
@@ -88,33 +91,67 @@ public class ProcessManager {
     }
 
     /**
-     * Create new shell window and window maintaninig process.
-     * All necessary objects are set and liked together.
+     * Collection with basic process information.
+     * This information could be used for ps or top command.
      *
-     * @param window label
-     * @return maintaining process
+     * Information returned via MetaProcess:
+     *      * PID
+     *      * User name
+     *      * Process name
+     *
+     * @return collection of metaprocesses
      */
-    public Process createShell(String label) {
-//        UserInterface console = UIManager.instance().newConsole(label);
-        // TODO: create new process
+    public ArrayList<MetaProcess> getProcessList() {
+        ArrayList<MetaProcess> metaProcesses = new ArrayList<MetaProcess>();
 
-        return null;        // TODO: add real value instead of MOCK
+        // transform process collection into metaprocess collection
+        for (Process proc : this.processList) {
+            metaProcesses.add(new MetaProcess(proc.getOwner().getUserName(),
+                    proc.getName(), proc.getPID()));
+        }
+
+        return metaProcesses;
     }
 
     /**
      * Return object Process with specifi PID
-     * 
+     *
      * @param PID
      * @return Process or null when not such a process
      */
     public Process getProcess(long PID) {
-        for (Process process: processList) {
+        for (Process process : processList) {
             if (process.getPID() == PID) {
                 return process;
             }
         }
 
         return null;
+    }
+
+    /**
+     * Create new shell and sets its parameters.
+     * Then after shell initializatio, the shell is started.
+     *
+     * @param user interface abowe the shell
+     * @return maintaining process
+     */
+    public KSHell createShell(UserInterface ui) {
+        URLClassLoader loader = new URLClassLoader(new URL[0]);
+        KSHell shell = null;
+
+        try {
+            // create new instance of shell
+            shell = (KSHell) loader.loadClass("kshos.command.KSHell").newInstance();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        // set shell parameters and start it
+        shell.setUserInterface(ui);
+        shell.start();
+
+        return shell;
     }
 
     /**
@@ -129,8 +166,8 @@ public class ProcessManager {
 
         // create new process
         Process init = new Process() {
-
             // running flag used for thread stoping
+
             private boolean running;
 
             @Override
@@ -139,7 +176,8 @@ public class ProcessManager {
             }
 
             @Override
-            public void tick() { }
+            public void tick() {
+            }
 
             /**
              * Singals for thread.
@@ -151,15 +189,19 @@ public class ProcessManager {
             public void processSignal(int type) {
                 switch (type) {
                     // thread stop
-                    case 0: this.running = false;
+                    case 0:
+                        this.running = false;
                         break;
                 }
             }
-
         };
-        
+
         // set process PID
         init.setPID(1);
+        // set user
+        init.setOwner(new User("Core"));
+        // set process name
+        init.setName("INIT");
         // add process into process list
         this.processList.add(init);
 
@@ -177,8 +219,14 @@ public class ProcessManager {
      * @param userInterface
      * @param g
      */
-    public synchronized void createProcess(String command, User owner, 
+    public synchronized void createProcess(String command, User owner,
             Process parent, UserInterface userInterface, OSVM_grammarParser g) {
+
+        // formal parameters test
+        if ((command == null) || command.trim().equals("") || (owner == null) ||
+                (parent == null) || (userInterface == null) || (g == null)) {
+            return;
+        }
 
         // create instance of new process
         URLClassLoader loader = new URLClassLoader(new URL[0]);
@@ -190,9 +238,13 @@ public class ProcessManager {
             return;
         }
 
+        // set process parameters
         cmd.setArgs(g.getCmdTable().get(g.getCmdTable().size() - 1)); // set process parameters
         parent.addChild(cmd);           // add this process as parents child
         cmd.setParent(parent);          // set this process's parent
+        cmd.setOwner(owner);            // set process owner (user)
+        cmd.setPID(getPID());       // set process PID
+        incPID();                   // count new PID
 
         // set process input
         if (g.getIn() == null) {
@@ -200,7 +252,7 @@ public class ProcessManager {
         } else {
             cmd.setIn(new KSHReader(g.getIn(), parent.getWorkingDir()));
         }
-        if(!cmd.getIn().stdOpenIn()) {
+        if (!cmd.getIn().stdOpenIn()) {
             cmd.processSignal(0);
             parent.getOut().stdAppend("Cannot read " + g.getIn());
             return;
@@ -212,18 +264,21 @@ public class ProcessManager {
         } else {
             cmd.setOut(new KSHWriter(g.getOut(), parent.getWorkingDir()));
         }
-        if(!cmd.getOut().stdOpenOut()) {
+        if (!cmd.getOut().stdOpenOut()) {
             cmd.processSignal(0);
             parent.getOut().stdAppend("Cannot write " + g.getOut());
             return;
         }
-        
+
         // start process and waait for its execution
         cmd.start();
         try {
             cmd.join();
         } catch (InterruptedException ex) {
             ex.printStackTrace();
+        }
+        finally {
+            processList.remove(cmd);
         }
     }
 }

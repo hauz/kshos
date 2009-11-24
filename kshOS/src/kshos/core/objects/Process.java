@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package kshos.core.objects;
 
 import java.io.File;
@@ -18,13 +13,18 @@ import kshos.io.*;
  * @version 0.03 11/11/2009
  *
  * Changelog:
- *      0.03 - Miroslav Hauser
- *          *
+ *      <b>0.03 - Miroslav Hauser</b>
+ *          * child collection updated
+ *          * methods updated
+ *          * thread logic updated
+ *          * nameID added
  */
 public abstract class Process extends Thread {
 
     private long PID = 0;
     private Process parent;
+    private String name = "";      // string representation; could be command, ...
+    private User owner = new User("");
     private TreeMap<Long, Process> childs = new TreeMap<Long, Process>();
 
     private StdIn in;
@@ -32,6 +32,7 @@ public abstract class Process extends Thread {
     private File workingDir;
     private String[] args;
 
+    // <editor-fold desc="getters" defaultstate="collapsed">
 
     /**
      * Get arguments.
@@ -39,17 +40,6 @@ public abstract class Process extends Thread {
      */
     public String[] getArgs() {
         return args;
-    }
-
-    /**
-     * Set arguments.
-     * @param arg arraylist from parser
-     */
-    public void setArgs(ArrayList<String> arg) {
-        args = new String[arg.size() - 1];
-        for (int i = 0; i < args.length; i++) {
-            args[i] = arg.get(i);
-        }
     }
 
     /**
@@ -71,39 +61,12 @@ public abstract class Process extends Thread {
     }
 
     /**
-     * Removes process from child list.
-     * 
-     * @param PID
-     */
-    public void removeChild(long PID) {
-        this.childs.remove(PID);
-    }
-
-    /**
-     * Set child for actual process.
-     *
-     * @param child
-     */
-    public void addChild(Process child) {
-        this.childs.put(child.getPID(), child);
-    }
-
-    /**
      * Return the parent of actual process.
      *
      * @return parent
      */
     public Process getParent() {
         return parent;
-    }
-
-    /**
-     * Set parent of actual process.
-     *
-     * @param parent
-     */
-    public void setParent(Process parent) {
-        this.parent = parent;
     }
 
     /**
@@ -115,27 +78,11 @@ public abstract class Process extends Thread {
     }
 
     /**
-     * Set process input.
-     * @param in - new input
-     */
-    public void setIn(StdIn in) {
-        this.in = in;
-    }
-
-    /**
      * Get process output.
      * @return output
      */
     public StdOut getOut() {
         return out;
-    }
-
-    /**
-     * Set process output.
-     * @param out - new output
-     */
-    public void setOut(StdOut out) {
-        this.out = out;
     }
 
     /**
@@ -152,11 +99,21 @@ public abstract class Process extends Thread {
     }
 
     /**
-     * Set new working directory.
-     * @param dest path for working directory
+     * Command or process name.
+     *
+     * @return process name
      */
-    public void setWorkingDir(File dest) {
-        this.workingDir = dest;
+    public String getNameID() {
+        return name ;
+    }
+
+    /**
+     * Process owner.
+     *
+     * @return owner
+     */
+    public User getOwner() {
+        return owner;
     }
 
     /**
@@ -168,6 +125,72 @@ public abstract class Process extends Thread {
         return PID;
     }
 
+    // </editor-fold>
+
+    // <editor-fold desc="setters" defaultstate="collapsed">
+
+    /**
+     * Set arguments.
+     * @param arg arraylist from parser
+     */
+    public void setArgs(ArrayList<String> arg) {
+        args = new String[arg.size() - 1];
+        for (int i = 0; i < args.length; i++) {
+            args[i] = arg.get(i);
+        }
+    }
+
+    /**
+     * Set parent of actual process.
+     *
+     * @param parent
+     */
+    public void setParent(Process parent) {
+        this.parent = parent;
+    }
+
+    /**
+     * Set process input.
+     * @param in - new input
+     */
+    public void setIn(StdIn in) {
+        this.in = in;
+    }
+
+    /**
+     * Set process output.
+     * @param out - new output
+     */
+    public void setOut(StdOut out) {
+        this.out = out;
+    }
+
+    /**
+     * Set new working directory.
+     * @param dest path for working directory
+     */
+    public void setWorkingDir(File dest) {
+        this.workingDir = dest;
+    }
+
+    /**
+     * Command or process name.
+     *
+     * @param process name
+     */
+    public void setNameID(String name) {
+        this.name  = name;
+    }
+
+    /**
+     * Owner of process.
+     *
+     * @param owner
+     */
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
     /**
      * Set process unique ID
      *
@@ -175,6 +198,28 @@ public abstract class Process extends Thread {
      */
     public void setPID(long pid) {
         this.PID = pid;
+    }
+
+    // </editor-fold>
+
+    // <editor-fold desc="other methods" defaultstate="collapsed">
+
+    /**
+     * Removes process from child list.
+     *
+     * @param PID
+     */
+    public void removeChild(long PID) {
+        this.childs.remove(PID);
+    }
+
+    /**
+     * Set child for actual process.
+     *
+     * @param child
+     */
+    public void addChild(Process child) {
+        this.childs.put(child.getPID(), child);
     }
 
     /**
@@ -233,6 +278,6 @@ public abstract class Process extends Thread {
         // release all allocated resources
         postTick();
     }
+
+    // </editor-fold>
 }
-
-
