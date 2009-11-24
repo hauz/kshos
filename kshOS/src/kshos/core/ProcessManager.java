@@ -139,9 +139,27 @@ public class ProcessManager {
         for (Process proc: this.processList) {
             if (proc.getPID() == PID) {
                 this.processList.remove(proc);
+                proc = null;
                 return;
             }
         }
+    }
+
+    /**
+     * Removes all processes created by specified user.
+     *
+     * @param user
+     */
+    public void removeAllUserProcesses(User user) {
+
+        // removes all processes where owner == user
+        for (Process proc: this.processList) {
+            if (proc.getOwner() == user) {
+                this.processList.remove(proc);
+                proc = null;
+            }
+        }
+
     }
 
     /**
