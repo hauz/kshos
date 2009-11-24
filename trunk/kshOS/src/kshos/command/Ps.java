@@ -8,6 +8,7 @@ package kshos.command;
 import java.util.ArrayList;
 import kshos.core.objects.Process;
 import kshos.core.ProcessManager;
+import kshos.core.objects.MetaProcess;
 
 /**
  * PS command.
@@ -22,10 +23,9 @@ public class Ps extends Process {
      */
     @Override
     public void tick () {
-        // TODO: uncomment when getProcessList() implemented
-        ArrayList<Process> list = null;// = ProcessManager.instance().getProcessList();
+        ArrayList<MetaProcess> list = ProcessManager.instance().getProcessList();
         for (int i = 0; i < list.size(); i++) {
-            this.getOut().stdWriteln(list.get(i).getPID() + "\t" + list.get(i).getName());
+            this.getOut().stdWriteln(list.get(i).toString());
         }
     }
 

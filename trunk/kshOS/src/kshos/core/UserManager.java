@@ -22,7 +22,7 @@ public class UserManager {
      * Initial constructor.
      */
     protected UserManager() {
-        this.allowedList = new ArrayList<User>(4);
+        this.allowedList = new ArrayList<User>(5);
         this.activeList = new ArrayList<User>();
 
         addUsers();
@@ -108,6 +108,7 @@ public class UserManager {
         allowedList.add(new User("k4chn1k"));
         allowedList.add(new User("sysek"));
         allowedList.add(new User("guest"));
+        allowedList.add(new User("a"));
     }
 
     /**
