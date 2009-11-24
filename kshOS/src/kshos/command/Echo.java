@@ -26,7 +26,7 @@ public class Echo extends Process {
             s += getArgs()[i];
             if (i != len-1) s += " ";
         }
-        this.getOut().stdAppend(s);
+        this.getOut().stdWriteln(s);
         this.getOut().stdCloseOut();
         this.getParent().removeChild(this.getPID());
     }
@@ -38,7 +38,7 @@ public class Echo extends Process {
      */
     @Override
     public void processLine(String line) {
-        this.getOut().stdAppend("Cannot process line!");
+        this.getErr().stdAppend("Cannot process line!");
         this.getParent().removeChild(this.getPID());
     }
 

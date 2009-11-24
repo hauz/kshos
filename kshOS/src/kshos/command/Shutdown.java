@@ -38,7 +38,7 @@ public class Shutdown extends Process {
      */
     @Override
     public void processLine(String line) {
-        this.getOut().stdAppend("Cannot process line!");
+        this.getErr().stdAppend("Cannot process line!");
         this.getParent().removeChild(this.getPID());
     }
 

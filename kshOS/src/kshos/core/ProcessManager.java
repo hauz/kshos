@@ -138,14 +138,14 @@ public class ProcessManager {
      *
      * @return latest shell
      */
-    public KSHell getLastShell() {
+    public KSHell getLastShell(User owner) {
         
         ArrayList<Process> shellList = new ArrayList<Process>();
         KSHell lastCreated = null;
         
         // find all shells in process list
         for (Process proc: this.processList) {
-            if (proc instanceof KSHell) {
+            if (proc instanceof KSHell && proc.getOwner().equals(owner)) {
                 shellList.add(proc);
             }
         }
@@ -275,7 +275,7 @@ public class ProcessManager {
         try {
             cmd = (Process) loader.loadClass("kshos.command." + command).newInstance();
         } catch (Exception ex) {
-            parent.getOut().stdAppend("Invalid command!");
+            parent.getErr().stdWriteln("Invalid command!");
             return;
         }
 
@@ -298,7 +298,7 @@ public class ProcessManager {
             cmd.setIn(new KSHReader(g.getIn(), parent.getWorkingDir()));
         }
         if (!cmd.getIn().stdOpenIn()) {
-            cmd.getErr().stdAppend("Cannot read " + g.getIn());
+            cmd.getErr().stdWriteln("Cannot read " + g.getIn());
             cmd.processSignal(0);            
             return;
         }
@@ -310,7 +310,7 @@ public class ProcessManager {
             cmd.setOut(new KSHWriter(g.getOut(), parent.getWorkingDir()));
         }
         if (!cmd.getOut().stdOpenOut()) {
-            cmd.getErr().stdAppend("Cannot write " + g.getOut());
+            cmd.getErr().stdWriteln("Cannot write " + g.getOut());
             cmd.processSignal(0);            
             return;
         }

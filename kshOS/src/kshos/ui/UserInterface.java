@@ -93,7 +93,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
         textArea.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK), new AbstractAction() {
 
             public void actionPerformed(ActionEvent ev) {
-                KSHell sh = ProcessManager.instance().getLastShell();
+                KSHell sh = ProcessManager.instance().getLastShell(getUser());
                 if (sh.getAllChilds().size() == 0) sh.processSignal(0);
                 else {
                     // if last line wasn't entered
@@ -175,7 +175,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
      */
     private void consoleKeyActions(KeyEvent keyEvent) {
         // k4chn1k 24.11.09
-        KSHell shell = ProcessManager.instance().getLastShell();
+        KSHell shell = ProcessManager.instance().getLastShell(user);
         switch (keyEvent.getKeyCode()) {
             // <editor-fold defaultstate="collapsed" desc="ENTER">
             case KeyEvent.VK_ENTER:
@@ -205,7 +205,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
                 // when shell running place new line header
                 // here is ProcessManager.instance().getLastShell() because you can run new shell as
                 // child of current shell and then lastshell.getAllChilds().size() == 1
-                if (ProcessManager.instance().getLastShell().getAllChilds().size() == 0) {
+                if (ProcessManager.instance().getLastShell(user).getAllChilds().size() == 0) {
                     addNewLine(2);
                 }
 

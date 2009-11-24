@@ -23,12 +23,12 @@ public class Cd extends Process {
     @Override
     public void tick () {
         File newDir = null;
-        if (getArgs().length == 0) this.getOut().stdAppend("Invalid parameter!");
+        if (getArgs().length == 0) this.getErr().stdAppend("Invalid parameter!");
         else {
             if (getArgs()[0].charAt(0) == '/') newDir = new File(getArgs()[0]);
             else newDir = new File(getParent().getWorkingDir() + File.separator + getArgs()[0]);
             if (!newDir.exists()) {
-                this.getOut().stdAppend("No such directory!");
+                this.getErr().stdAppend("No such directory!");
                 this.getParent().removeChild(this.getPID());
                 return;
             }
@@ -36,7 +36,7 @@ public class Cd extends Process {
                 getParent().setWorkingDir(newDir.getCanonicalFile());
             } catch (IOException ex) {
                 ex.printStackTrace();
-                this.getOut().stdAppend("No such directory!");
+                this.getErr().stdAppend("No such directory!");
             }
         }
         this.getOut().stdCloseOut();
@@ -50,7 +50,7 @@ public class Cd extends Process {
      */
     @Override
     public void processLine(String line) {
-        this.getOut().stdAppend("Cannot process line!");
+        this.getErr().stdAppend("Cannot process line!");
         this.getParent().removeChild(this.getPID());
     }
 
