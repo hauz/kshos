@@ -1,11 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package kshos.command;
 
-import java.io.File;
+import kshos.core.Core;
 import kshos.core.objects.Process;
 import kshos.io.KSHReader;
 import kshos.io.KSHWriter;
@@ -56,6 +51,16 @@ public class Cat extends Process {
         int len = getArgs().length;
         // when has arguments
         if (len != 0) {
+            // if has params
+            if (getArgs()[0].charAt(0) == '-') {
+                if (getArgs()[0].charAt(1) == 'h') {
+                    this.getOut().stdWriteln(Core.instance().getProperties().getProperty("LOGIN_HLP"));
+                } else {
+                    this.getErr().stdWriteln("Bad parameter!");
+                }
+                this.getParent().removeChild(this.getPID());
+                return;
+            }
             fileIn(len);
             this.getOut().stdWriteln(file);
             this.getOut().stdCloseOut();

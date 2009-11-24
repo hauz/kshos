@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package kshos.command;
 
 import kshos.core.Core;
@@ -21,6 +16,16 @@ public class Shutdown extends Process {
      */
     @Override
     public void tick () {
+        if (getArgs().length > 0 && getArgs()[0].charAt(0) == '-') {
+            if (getArgs()[0].charAt(1) == 'h') {
+                this.getOut().stdWriteln(Core.instance().getProperties().getProperty("SHUTDOWN_HLP"));
+            } else {
+                this.getErr().stdWriteln("Bad parameter!");
+            }
+            this.getParent().removeChild(this.getPID());
+            return;
+        }
+        // FIXME: fakt nevim :)
         Process p = this;
         // ends all running processes up tu shell
         while (p.getParent() != null) {

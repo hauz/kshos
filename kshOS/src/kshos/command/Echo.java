@@ -1,10 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package kshos.command;
 
+import kshos.core.Core;
 import kshos.core.objects.Process;
 
 /**
@@ -19,12 +15,23 @@ public class Echo extends Process {
      * Process main function.
      */
     @Override
-    public void tick () {
+    public void tick() {
         String s = "";
         int len = getArgs().length;
+        if (len > 0 && getArgs()[0].charAt(0) == '-') {
+            if (getArgs()[0].charAt(1) == 'h') {
+                this.getOut().stdWriteln(Core.instance().getProperties().getProperty("ECHO_HLP"));
+            } else {
+                this.getErr().stdWriteln("Bad parameter!");
+            }
+            this.getParent().removeChild(this.getPID());
+            return;
+        }
         for (int i = 0; i < len; i++) {
             s += getArgs()[i];
-            if (i != len-1) s += " ";
+            if (i != len - 1) {
+                s += " ";
+            }
         }
         this.getOut().stdWriteln(s);
         this.getOut().stdCloseOut();
@@ -62,5 +69,4 @@ public class Echo extends Process {
                 break;
         }
     }
-
 }

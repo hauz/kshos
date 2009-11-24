@@ -1,10 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package kshos.command;
 
+import kshos.core.Core;
 import kshos.core.objects.Process;
 import kshos.core.ProcessManager;
 
@@ -21,6 +17,15 @@ public class Kill extends Process {
      */
     @Override
     public void tick () {
+        if (getArgs().length > 0 && getArgs()[0].charAt(0) == '-') {
+            if (getArgs()[0].charAt(1) == 'h') {
+                this.getOut().stdWriteln(Core.instance().getProperties().getProperty("KILL_HLP"));
+            } else {
+                this.getErr().stdWriteln("Bad parameter!");
+            }
+            this.getParent().removeChild(this.getPID());
+            return;
+        }
         long pid = -1;
         try {
             pid = Integer.parseInt(this.getArgs()[0]);

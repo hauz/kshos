@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package kshos.command;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import kshos.core.Core;
 import kshos.core.objects.Process;
 import kshos.io.KSHReader;
 
@@ -70,6 +66,15 @@ public class Sort extends Process {
     public void tick () {
         int len = getArgs().length;
         if (len != 0) {
+            if (getArgs()[0].charAt(0) == '-') {
+                if (getArgs()[0].charAt(1) == 'h') {
+                    this.getOut().stdWriteln(Core.instance().getProperties().getProperty("LOGIN_HLP"));
+                } else {
+                    this.getErr().stdWriteln("Bad parameter!");
+                }
+                this.getParent().removeChild(this.getPID());
+                return;
+            }
             fileIn(len);
             this.getOut().stdAppend(sort(lines.toArray()) + "\n");
             this.getOut().stdCloseOut();

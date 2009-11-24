@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package kshos.command;
 
 import java.io.File;
 import java.io.IOException;
+import kshos.core.Core;
 import kshos.core.objects.Process;
 
 /**
@@ -21,12 +17,26 @@ public class Cd extends Process {
      * Process main function.
      */
     @Override
-    public void tick () {
+    public void tick() {
         File newDir = null;
-        if (getArgs().length == 0) this.getErr().stdAppend("Invalid parameter!");
-        else {
-            if (getArgs()[0].charAt(0) == '/') newDir = new File(getArgs()[0]);
-            else newDir = new File(getParent().getWorkingDir() + File.separator + getArgs()[0]);
+        if (getArgs().length == 0) {
+            this.getErr().stdAppend("Invalid parameter!");
+        } // if has params
+        else if (getArgs()[0].charAt(0) == '-') {
+            if (getArgs()[0].charAt(1) == 'h') {
+                this.getOut().stdWriteln(Core.instance().getProperties().getProperty("CD_HLP"));
+            } else {
+                this.getErr().stdWriteln("Bad parameter!");
+                this.getParent().removeChild(this.getPID());
+                return;
+
+            }
+        } else {
+            if (getArgs()[0].charAt(0) == '/') {
+                newDir = new File(getArgs()[0]);
+            } else {
+                newDir = new File(getParent().getWorkingDir() + File.separator + getArgs()[0]);
+            }
             if (!newDir.exists()) {
                 this.getErr().stdAppend("No such directory!");
                 this.getParent().removeChild(this.getPID());
