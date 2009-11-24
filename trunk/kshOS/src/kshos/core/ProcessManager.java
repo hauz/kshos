@@ -168,12 +168,12 @@ public class ProcessManager {
 
     /**
      * Create new shell and sets its parameters.
-     * Then after shell initializatio, the shell is started.
+     * Then after shell initialization, the shell is started.
      *
      * @param user interface abowe the shell
      * @return maintaining process
      */
-    public KSHell createShell(UserInterface ui) {
+    public void createShell(UserInterface ui, long parentPID) {
         URLClassLoader loader = new URLClassLoader(new URL[0]);
         KSHell shell = null;
 
@@ -186,9 +186,14 @@ public class ProcessManager {
 
         // set shell parameters and start it
         shell.setUserInterface(ui);
+        shell.setPID(getPID());
+        incPID();
+        shell.setName("kshell");
+        shell.setOwner(ui.getUser());
+        getProcess(parentPID).addChild(shell);
+        shell.setParent(getProcess(parentPID));
+        this.processList.add(shell);
         shell.start();
-
-        return shell;
     }
 
     /**
@@ -251,17 +256,16 @@ public class ProcessManager {
      * thread is waiting for its finish.
      *
      * @param command
-     * @param owner
      * @param parent
      * @param userInterface
      * @param g
      */
-    public synchronized void createProcess(String command, User owner,
-            Process parent, UserInterface userInterface, OSVM_grammarParser g) {
+    public synchronized void createProcess(String command, Process parent,
+            UserInterface ui, OSVM_grammarParser g) {
 
         // formal parameters test
-        if ((command == null) || command.trim().equals("") || (owner == null) ||
-                (parent == null) || (userInterface == null) || (g == null)) {
+        if ((command == null) || command.trim().equals("") || (ui.getUser() == null) ||
+                (parent == null) || (ui == null) || (g == null)) {
             return;
         }
 
@@ -277,20 +281,19 @@ public class ProcessManager {
 
         // set process parameters
         cmd.setArgs(g.getCmdTable().get(g.getCmdTable().size() - 1)); // set process parameters
-        parent.addChild(cmd);           // add this process as parents child
-        cmd.setParent(parent);          // set this process's parent
-        cmd.setOwner(owner);            // set process owner (user)
-        cmd.setPID(getPID());       // set process PID
-        incPID();                   // count new PID
+        cmd.setPID(getPID());                // set process PID
+        incPID();                            // count new PID
+        parent.addChild(cmd);                // add this process as parents child
+        cmd.setParent(parent);               // set this process's parent
+        cmd.setOwner(ui.getUser());                 // set process owner (user)
+        cmd.setName(command.toLowerCase());  // set process name
 
-        // set error input
-        
-        cmd.setErr(userInterface);
+        cmd.setErr(ui);                      // set error input
         cmd.getErr().stdOpenOut();
 
         // set process input
         if (g.getIn() == null) {
-            cmd.setIn(userInterface);
+            cmd.setIn(ui);
         } else {
             cmd.setIn(new KSHReader(g.getIn(), parent.getWorkingDir()));
         }
@@ -302,7 +305,7 @@ public class ProcessManager {
 
         // set process output
         if (g.getOut() == null) {
-            cmd.setOut(userInterface);
+            cmd.setOut(ui);
         } else {
             cmd.setOut(new KSHWriter(g.getOut(), parent.getWorkingDir()));
         }

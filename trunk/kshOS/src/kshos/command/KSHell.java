@@ -103,24 +103,18 @@ public class KSHell extends Process {
 
         // TODO: more shells
         if (command.equals("kshell")) {
-            command = "KSHell";
-            // uncomment & complete next line when createShell() implemented
-            // createShell()
-            //this.getOut().stdAppend("KSHell already running!");
-            //return;
-        }
-        else {
-            if (command.equals("exit")) {
+            ProcessManager.instance().createShell(getUserInterface(), this.getPID());
+            return;
+        } else if (command.equals("exit")) {
                 processSignal(0);
-            }
-
-            // set command first letter to upper case
-            command = "" + (char) (command.charAt(0) - 32) + "" + command.substring(1);
+                return;
         }
+
+        // set command first letter to upper case
+        command = "" + (char) (command.charAt(0) - 32) + "" + command.substring(1);
 
         // create new process and run it
-        ProcessManager.instance().createProcess(command,
-                userInterface.getUser(), this, userInterface, g);
+        ProcessManager.instance().createProcess(command, this, userInterface, g);
     }
 
     /**
@@ -148,8 +142,11 @@ public class KSHell extends Process {
     public void processSignal(int type) {
         switch (type) {
             case 0:
-                this.getOut().stdAppend("Good bye :-)");
-                if (this.getParent() == null) getUserInterface().close();
+                this.getOut().stdAppend("Good bye :-)\n");
+                // if parent is init then close
+                if (this.getParent().getPID() == 1) getUserInterface().close();
+                // else exit last shell
+                // TODO: exit last shell in ProcessManager.processList
                 else this.getParent().removeChild(this.getPID());
                 break;
             default:

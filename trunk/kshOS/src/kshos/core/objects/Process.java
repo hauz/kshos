@@ -24,7 +24,7 @@ import kshos.io.*;
  */
 public abstract class Process extends Thread {
 
-    private long PID = 0;
+    private long PID;
     private Process parent;
     private String name = "";      // string representation; could be command, ...
     private User owner = new User("");

@@ -22,7 +22,7 @@ public class Ls extends Process {
     @Override
     public void tick() {
         File thisDir = null;
-        if (getArgs().length == 0 || getArgs()[0].equals("-l")) {
+        if (getArgs().length == 0) {
             thisDir = new File(getParent().getWorkingDir());
         } else {
             String path = getArgs()[getArgs().length - 1];
@@ -33,6 +33,7 @@ public class Ls extends Process {
             }
             if (!thisDir.exists()) {
                 this.getOut().stdAppend("No such directory!");
+                this.getParent().removeChild(this.getPID());
                 return;
             }
         }

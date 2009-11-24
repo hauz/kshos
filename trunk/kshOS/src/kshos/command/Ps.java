@@ -24,9 +24,19 @@ public class Ps extends Process {
     @Override
     public void tick () {
         ArrayList<MetaProcess> list = ProcessManager.instance().getProcessList();
-        for (int i = 0; i < list.size(); i++) {
-            this.getOut().stdWriteln(list.get(i).toString());
+        if (this.getArgs().length != 0 && this.getArgs()[0].equals("-u")) {
+            this.getOut().stdWriteln("PID\tProcess");
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getUser().equals(this.getOwner().getUserName()))
+                    this.getOut().stdWriteln(list.get(i).getPID() + "\t" + list.get(i).getName());
+            }
+        } else {
+            this.getOut().stdWriteln("PID\tUser\tProcess");
+            for (int i = 0; i < list.size(); i++) {
+                this.getOut().stdWriteln(list.get(i).toString());
+            }
         }
+        this.getParent().removeChild(this.getPID());
     }
 
     /**
