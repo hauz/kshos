@@ -1,10 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package kshos.command;
 
 import java.io.File;
+import kshos.core.Core;
 import kshos.core.objects.Process;
 
 /**
@@ -21,6 +18,15 @@ public class Ls extends Process {
      */
     @Override
     public void tick() {
+        if (getArgs().length > 0 && getArgs()[0].charAt(0) == '-') {
+            if (getArgs()[0].charAt(1) == 'h') {
+                this.getOut().stdWriteln(Core.instance().getProperties().getProperty("LS_HLP"));
+            } else {
+                this.getErr().stdWriteln("Bad parameter!");
+            }
+            this.getParent().removeChild(this.getPID());
+            return;
+        }
         File thisDir = null;
         if (getArgs().length == 0) {
             thisDir = new File(getParent().getWorkingDir());

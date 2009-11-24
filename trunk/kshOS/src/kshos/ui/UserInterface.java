@@ -126,7 +126,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
     public synchronized void close() {
         // exit users shell
         if (ProcessManager.instance().getLastShell(user) != null)
-            ProcessManager.instance().removeProcess(ProcessManager.instance().getLastShell(user).getPID());
+            ProcessManager.instance().removeAllUserProcesses(user);
         // logout user
         Core.instance().service(2, this.getTitle());
         this.setFocusable(false);

@@ -1,10 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package kshos.command;
 
+import kshos.core.Core;
 import kshos.core.objects.Process;
 
 /**
@@ -20,6 +16,15 @@ public class Pwd extends Process {
      */
     @Override
     public void tick () {
+        if (getArgs().length > 0 && getArgs()[0].charAt(0) == '-') {
+            if (getArgs()[0].charAt(1) == 'h') {
+                this.getOut().stdWriteln(Core.instance().getProperties().getProperty("PWD_HLP"));
+            } else {
+                this.getErr().stdWriteln("Bad parameter!");
+            }
+            this.getParent().removeChild(this.getPID());
+            return;
+        }
         this.getOut().stdAppend("Working directory: " + getParent().getWorkingDir());
         this.getOut().stdCloseOut();
         this.getParent().removeChild(this.getPID());

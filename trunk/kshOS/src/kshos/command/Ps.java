@@ -1,11 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package kshos.command;
 
 import java.util.ArrayList;
+import kshos.core.Core;
 import kshos.core.objects.Process;
 import kshos.core.ProcessManager;
 import kshos.core.objects.MetaProcess;
@@ -22,13 +18,21 @@ public class Ps extends Process {
      * Process main function.
      */
     @Override
-    public void tick () {
+    public void tick() {
         ArrayList<MetaProcess> list = ProcessManager.instance().getProcessList();
-        if (this.getArgs().length != 0 && this.getArgs()[0].equals("-u")) {
-            this.getOut().stdWriteln("PID\tProcess");
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getUser().equals(this.getOwner().getUserName()))
-                    this.getOut().stdWriteln(list.get(i).getPID() + "\t" + list.get(i).getName());
+
+        if (getArgs().length > 0 && getArgs()[0].charAt(0) == '-') {
+            if (getArgs()[0].charAt(1) == 'h') {
+                this.getOut().stdWriteln(Core.instance().getProperties().getProperty("PS_HLP"));
+            } else if (getArgs()[0].charAt(1) == 'u') {
+                this.getOut().stdWriteln("PID\tProcess");
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getUser().equals(this.getOwner().getUserName())) {
+                        this.getOut().stdWriteln(list.get(i).getPID() + "\t" + list.get(i).getName());
+                    }
+                }
+            } else {
+                this.getErr().stdWriteln("Bad parameter!");
             }
         } else {
             this.getOut().stdWriteln("PID\tUser\tProcess");
@@ -64,11 +68,13 @@ public class Ps extends Process {
                     this.getParent().addChild(this.getChild(this.getAllChilds().firstKey()));
                     this.removeChild(this.getAllChilds().firstKey());
                 }
+
                 this.getParent().removeChild(this.getPID());
                 break;
+
             default:
+
                 break;
         }
     }
-
 }
