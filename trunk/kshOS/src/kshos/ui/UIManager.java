@@ -64,16 +64,21 @@ public class UIManager {
      * Closes all consoles.
      */
     public void closeAllConsoles() {
-        /*
         for (UserInterface ui: interfaces) {
             closeConsole(ui);
-        }*/
-        UserInterface ui;
-        for (int i = 0; i < interfaces.size();) {
-            ui = interfaces.get(i);
-            closeConsole(ui);
-            interfaces.remove(ui);
+            ui = null;  // remove reference
         }
+
+        this.interfaces.removeAll(interfaces);
+    }
+
+    /**
+     * Removes the console from the interfaces list.
+     *
+     * @param console
+     */
+    public void removeConsole(UserInterface console) {
+        this.interfaces.remove(console);
     }
 
     /**

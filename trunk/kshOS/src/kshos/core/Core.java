@@ -1,8 +1,8 @@
 package kshos.core;
 
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 import kshos.core.objects.Process;
+import kshos.core.objects.User;
 import kshos.ui.*;
 
 /**
@@ -126,7 +126,13 @@ public class Core {
         if (serviceNo == 0) {
             System.out.println("[INFO]: System is going down!!!");
 
-            // TODO: stop all processes ...
+            // close all consoles
+            UIMgr.closeAllConsoles();
+
+            // stop all remaining user processes ...
+            for (User user: UserManager.instance().getActiveUsers()) {
+                ProcessManager.instance().removeAllUserProcesses(user);
+            }
 
             // stop INIT process ...
             Process init = ProcessManager.instance().getProcess(1);
@@ -140,9 +146,16 @@ public class Core {
                 catch (InterruptedException ex) {
                     System.out.println("[ERR]: Can not terminate INIT process!!!");
                 }
-                UIMgr.closeAllConsoles();        // close all consoles
-                loginWindow.dispose();                  // close login window
-                return 0;
+                loginWindow.setEnabled(false);
+                loginWindow.setVisible(false);
+
+                // remove all references
+                loginWindow = null;
+                init = null;
+
+                System.gc();
+
+                System.exit(0);
             } else {
                 System.out.println("[ERR]: Can not terminate INIT process!!!");
                 return -1;
