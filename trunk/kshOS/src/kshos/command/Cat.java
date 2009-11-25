@@ -50,6 +50,7 @@ public class Cat extends Process {
     @Override
     public void tick () {
         int len = getArgs().length;
+        if(!checkIO()) return;
         // when has arguments
         if (len != 0) {
             // if has params
@@ -70,18 +71,7 @@ public class Cat extends Process {
             ProcessManager.instance().removeProcess(this.getPID());
         }
         // when gets another then console input 'cat < smth'
-        if (getIn().toString().indexOf("UserInterface") < 0) {
-         
-            // check if output is the same as input
-            KSHWriter out = (KSHWriter)this.getOut();
-            KSHReader in = (KSHReader)this.getIn();
-            if(out.getPath().equals(in.getPath())){
-                this.getErr().stdWriteln("Input file is output file");
-                this.getOut().stdCloseOut();
-                this.getIn().stdCloseIn();
-                this.processSignal(0);
-            }
-
+        if (getIn().toString().indexOf("UserInterface") < 0) { 
             String pom = "";
             file = "";
             while ((pom = getIn().stdReadln()) != null)
@@ -126,4 +116,24 @@ public class Cat extends Process {
         }
     }
 
+    /**
+     * Check if output is the same as input
+     */
+    private boolean checkIO(){
+        if (this.getIn().toString().indexOf("UserInterface") < 0 &&
+              this.getOut().toString().indexOf("UserInterface") < 0){
+
+            KSHWriter out = (KSHWriter)this.getOut();
+            KSHReader in = (KSHReader)this.getIn();
+            if(out.getPath().equals(in.getPath())){
+                this.getErr().stdWriteln("Input file is output file");
+                this.getOut().stdCloseOut();
+                this.getIn().stdCloseIn();
+                this.processSignal(0);
+                return false;
+            }
+            return true;
+        }
+        return true;
+    }
 }
