@@ -155,10 +155,10 @@ public class ProcessManager {
 
         // removes all processes where owner == user
         for (Process proc: this.processList) {
-        if (proc.getOwner() == user) {
-        this.processList.remove(proc);
-        proc = null;
-        }
+            if (proc.getOwner() == user) {
+                this.processList.remove(proc);
+                proc = null;
+            }
         }
 
         // Testing piece of code. It is not necessary any more.
