@@ -1,6 +1,7 @@
 package kshos.command;
 
 import kshos.core.Core;
+import kshos.core.ProcessManager;
 import kshos.core.objects.Process;
 
 /**
@@ -35,12 +36,11 @@ public class Man extends Process {
             } else {
                 this.getErr().stdWriteln("Bad parameter!");
             }
-            this.getParent().removeChild(this.getPID());
-            return;
-        }
-        this.getOut().stdAppend(MAN);
+        } else this.getOut().stdAppend(MAN);
+
         this.getOut().stdCloseOut();
         this.getParent().removeChild(this.getPID());
+        ProcessManager.instance().removeProcess(this.getPID());
     }
 
     /**
@@ -51,7 +51,7 @@ public class Man extends Process {
     @Override
     public void processLine(String line) {
         this.getErr().stdAppend("Cannot process line!");
-        this.getParent().removeChild(this.getPID());
+        processSignal(0);
     }
 
     /**
@@ -69,6 +69,7 @@ public class Man extends Process {
                     this.removeChild(this.getAllChilds().firstKey());
                 }
                 this.getParent().removeChild(this.getPID());
+                ProcessManager.instance().removeProcess(this.getPID());
                 break;
             default:
                 break;

@@ -1,6 +1,7 @@
 package kshos.command;
 
 import kshos.core.Core;
+import kshos.core.ProcessManager;
 import kshos.core.objects.Process;
 import kshos.io.KSHReader;
 import kshos.io.KSHWriter;
@@ -59,12 +60,14 @@ public class Cat extends Process {
                     this.getErr().stdWriteln("Bad parameter!");
                 }
                 this.getParent().removeChild(this.getPID());
+                ProcessManager.instance().removeProcess(this.getPID());
                 return;
             }
             fileIn(len);
             this.getOut().stdWriteln(file);
             this.getOut().stdCloseOut();
             this.getParent().removeChild(this.getPID());
+            ProcessManager.instance().removeProcess(this.getPID());
         }
         // when gets another then console input 'cat < smth'
         if (getIn().toString().indexOf("UserInterface") < 0) {
@@ -87,6 +90,7 @@ public class Cat extends Process {
             this.getOut().stdAppend(file);
             this.getOut().stdCloseOut();
             this.getParent().removeChild(this.getPID());
+            ProcessManager.instance().removeProcess(this.getPID());
         }
     }
 
@@ -115,6 +119,7 @@ public class Cat extends Process {
                     this.removeChild(this.getAllChilds().firstKey());
                 }
                 this.getParent().removeChild(this.getPID());
+                ProcessManager.instance().removeProcess(this.getPID());
                 break;
             default:
                 break;

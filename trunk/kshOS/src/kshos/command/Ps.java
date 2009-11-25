@@ -41,6 +41,7 @@ public class Ps extends Process {
             }
         }
         this.getParent().removeChild(this.getPID());
+        ProcessManager.instance().removeProcess(this.getPID());
     }
 
     /**
@@ -51,7 +52,7 @@ public class Ps extends Process {
     @Override
     public void processLine(String line) {
         this.getOut().stdAppend("Cannot process line!");
-        this.getParent().removeChild(this.getPID());
+        processSignal(0);
     }
 
     /**
@@ -70,6 +71,7 @@ public class Ps extends Process {
                 }
 
                 this.getParent().removeChild(this.getPID());
+                ProcessManager.instance().removeProcess(this.getPID());
                 break;
 
             default:

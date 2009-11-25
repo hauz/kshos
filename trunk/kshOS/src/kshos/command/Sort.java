@@ -3,6 +3,7 @@ package kshos.command;
 import java.util.ArrayList;
 import java.util.Arrays;
 import kshos.core.Core;
+import kshos.core.ProcessManager;
 import kshos.core.objects.Process;
 import kshos.io.KSHReader;
 
@@ -28,11 +29,13 @@ public class Sort extends Process {
      */
     private String sort(Object[] array) {
         String file = "";
-        Arrays.sort(array);
-        for (int j = 0; j < array.length - 1; j++) {
-            file += (String) array[j]  + "\n";
+        if (array.length > 0) {
+            Arrays.sort(array);
+            for (int j = 0; j < array.length - 1; j++) {
+                file += (String) array[j] + "\n";
+            }
+            file += (String) array[array.length - 1];
         }
-        file += (String) array[array.length - 1];
         return file;
     }
 
@@ -48,12 +51,12 @@ public class Sort extends Process {
 
         for (int i = 0; i < fileCnt; i++) {
             read = new KSHReader(getArgs()[i], getParent().getWorkingDir());
-            if(read.stdOpenIn()){
-                while ((line = read.stdReadln()) != null)
+            if (read.stdOpenIn()) {
+                while ((line = read.stdReadln()) != null) {
                     lines.add(line);
+                }
                 read.stdCloseIn();
-            }
-            else{
+            } else {
                 this.getErr().stdWriteln("Cannot read " + getArgs()[i]);
             }
         }
@@ -63,31 +66,35 @@ public class Sort extends Process {
      * Process main function.
      */
     @Override
-    public void tick () {
+    public void tick() {
         int len = getArgs().length;
         if (len != 0) {
             if (getArgs()[0].charAt(0) == '-') {
                 if (getArgs()[0].charAt(1) == 'h') {
-                    this.getOut().stdWriteln(Core.instance().getProperties().getProperty("LOGIN_HLP"));
+                    this.getOut().stdWriteln(Core.instance().getProperties().getProperty("SORT_HLP"));
                 } else {
                     this.getErr().stdWriteln("Bad parameter!");
                 }
                 this.getParent().removeChild(this.getPID());
+                ProcessManager.instance().removeProcess(this.getPID());
                 return;
             }
             fileIn(len);
             this.getOut().stdAppend(sort(lines.toArray()) + "\n");
             this.getOut().stdCloseOut();
             this.getParent().removeChild(this.getPID());
+            ProcessManager.instance().removeProcess(this.getPID());
         }
         if (getIn().toString().indexOf("UserInterface") < 0) {
             String pom = "";
             lines = new ArrayList<String>();
-            while ((pom = getIn().stdReadln()) != null)
-                    lines.add(pom);
+            while ((pom = getIn().stdReadln()) != null) {
+                lines.add(pom);
+            }
             this.getOut().stdAppend(sort(lines.toArray()) + "\n");
             this.getOut().stdCloseOut();
             this.getParent().removeChild(this.getPID());
+            ProcessManager.instance().removeProcess(this.getPID());
         }
     }
 
@@ -117,10 +124,10 @@ public class Sort extends Process {
                     this.removeChild(this.getAllChilds().firstKey());
                 }
                 this.getParent().removeChild(this.getPID());
+                ProcessManager.instance().removeProcess(this.getPID());
                 break;
             default:
                 break;
         }
     }
-
 }

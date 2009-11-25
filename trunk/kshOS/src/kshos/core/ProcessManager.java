@@ -153,10 +153,19 @@ public class ProcessManager {
     public void removeAllUserProcesses(User user) {
 
         // removes all processes where owner == user
-        for (Process proc: this.processList) {
+        /*for (Process proc: this.processList) {
             if (proc.getOwner() == user) {
                 this.processList.remove(proc);
                 proc = null;
+            }
+        }*/
+
+        Process proc = null;
+        for (int i = 0; i < processList.size(); i++) {
+            proc = processList.get(i);
+            if (proc.getOwner().equals(user)) {
+                processList.remove(proc);
+                i--;
             }
         }
 
@@ -349,15 +358,13 @@ public class ProcessManager {
             return;
         }
 
+        processList.add(cmd);
         // start process and waait for its execution
         cmd.start();
         try {
             cmd.join();
         } catch (InterruptedException ex) {
             ex.printStackTrace();
-        }
-        finally {
-            processList.remove(cmd);
         }
     }
 }

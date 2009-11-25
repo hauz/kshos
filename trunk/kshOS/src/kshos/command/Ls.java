@@ -2,6 +2,7 @@ package kshos.command;
 
 import java.io.File;
 import kshos.core.Core;
+import kshos.core.ProcessManager;
 import kshos.core.objects.Process;
 
 /**
@@ -24,30 +25,31 @@ public class Ls extends Process {
             } else {
                 this.getErr().stdWriteln("Bad parameter!");
             }
-            this.getParent().removeChild(this.getPID());
-            return;
-        }
-        File thisDir = null;
-        if (getArgs().length == 0) {
-            thisDir = new File(getParent().getWorkingDir());
         } else {
-            String path = getArgs()[getArgs().length - 1];
-            if (path.charAt(0) == '/') {
-                thisDir = new File(path);
+            File thisDir = null;
+            if (getArgs().length == 0) {
+                thisDir = new File(getParent().getWorkingDir());
             } else {
-                thisDir = new File(getParent().getWorkingDir() + File.separator + path);
+                String path = getArgs()[getArgs().length - 1];
+                if (path.charAt(0) == '/') {
+                    thisDir = new File(path);
+                } else {
+                    thisDir = new File(getParent().getWorkingDir() + File.separator + path);
+                }
+                if (!thisDir.exists()) {
+                    this.getErr().stdAppend("No such directory!");
+                    this.getParent().removeChild(this.getPID());
+                    ProcessManager.instance().removeProcess(this.getPID());
+                    return;
+                }
             }
-            if (!thisDir.exists()) {
-                this.getErr().stdAppend("No such directory!");
-                this.getParent().removeChild(this.getPID());
-                return;
+            for (int i = 0; i < thisDir.list().length; i++) {
+                this.getOut().stdAppend(thisDir.list()[i] + "\n");
             }
-        }
-        for (int i = 0; i < thisDir.list().length; i++) {
-            this.getOut().stdAppend(thisDir.list()[i] + "\n");
         }
         this.getOut().stdCloseOut();
         this.getParent().removeChild(this.getPID());
+        ProcessManager.instance().removeProcess(this.getPID());
     }
 
     /**
@@ -58,7 +60,7 @@ public class Ls extends Process {
     @Override
     public void processLine(String line) {
         this.getErr().stdAppend("Cannot process line!");
-        this.getParent().removeChild(this.getPID());
+        processSignal(0);
     }
 
     /**
@@ -76,6 +78,7 @@ public class Ls extends Process {
                     this.removeChild(this.getAllChilds().firstKey());
                 }
                 this.getParent().removeChild(this.getPID());
+                ProcessManager.instance().removeProcess(this.getPID());
                 break;
             default:
                 break;

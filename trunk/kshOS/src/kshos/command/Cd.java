@@ -3,6 +3,7 @@ package kshos.command;
 import java.io.File;
 import java.io.IOException;
 import kshos.core.Core;
+import kshos.core.ProcessManager;
 import kshos.core.objects.Process;
 
 /**
@@ -27,9 +28,6 @@ public class Cd extends Process {
                 this.getOut().stdWriteln(Core.instance().getProperties().getProperty("CD_HLP"));
             } else {
                 this.getErr().stdWriteln("Bad parameter!");
-                this.getParent().removeChild(this.getPID());
-                return;
-
             }
         } else {
             if (getArgs()[0].charAt(0) == '/') {
@@ -37,20 +35,20 @@ public class Cd extends Process {
             } else {
                 newDir = new File(getParent().getWorkingDir() + File.separator + getArgs()[0]);
             }
-            if (!newDir.exists()) {
-                this.getErr().stdAppend("No such directory!");
-                this.getParent().removeChild(this.getPID());
-                return;
-            }
-            try {
-                getParent().setWorkingDir(newDir.getCanonicalFile());
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            if (newDir.exists()) {
+                try {
+                    getParent().setWorkingDir(newDir.getCanonicalFile());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    this.getErr().stdAppend("No such directory!");
+                }
+            } else {
                 this.getErr().stdAppend("No such directory!");
             }
         }
         this.getOut().stdCloseOut();
         this.getParent().removeChild(this.getPID());
+        ProcessManager.instance().removeProcess(this.getPID());
     }
 
     /**
@@ -61,7 +59,7 @@ public class Cd extends Process {
     @Override
     public void processLine(String line) {
         this.getErr().stdAppend("Cannot process line!");
-        this.getParent().removeChild(this.getPID());
+        this.processSignal(0);
     }
 
     /**
@@ -79,6 +77,7 @@ public class Cd extends Process {
                     this.removeChild(this.getAllChilds().firstKey());
                 }
                 this.getParent().removeChild(this.getPID());
+                ProcessManager.instance().removeProcess(this.getPID());
                 break;
             default:
                 break;
