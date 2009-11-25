@@ -129,9 +129,8 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
             ProcessManager.instance().removeAllUserProcesses(user);
         // logout user
         Core.instance().service(2, this.getTitle());
-        this.setFocusable(false);
-        this.setEnabled(false);
-        this.dispose();
+        this.textArea.setEditable(false);
+        this.setVisible(false);
     }
 
     /**
@@ -395,6 +394,8 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
      */
     public void stdWriteln(String s) {
         textArea.append(s + "\n");
+        TAOff += s.length() + 1;
+        textArea.setCaretPosition(TAOff);
     }
 
     /**
@@ -403,6 +404,8 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
      */
     public void stdAppend(String s) {
         textArea.append(s);
+        TAOff += s.length();
+        textArea.setCaretPosition(TAOff);
     }
 
     /**
