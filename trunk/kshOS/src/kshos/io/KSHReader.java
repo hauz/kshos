@@ -2,6 +2,8 @@ package kshos.io;
 
 
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -89,9 +91,16 @@ public class KSHReader extends Reader implements StdIn {
 
     /**
      * Getter
-     * @return path of file
+     * @return canonical path of file
      */
-    public String getPath() {
-        return path;
+    public String getCanonicalPath() {
+        String canonicalPath = "";
+        File file = new File(this.path);
+        try {
+            canonicalPath = file.getCanonicalPath();
+        } catch (IOException ex) {
+
+        }
+        return canonicalPath;
     }
 }
