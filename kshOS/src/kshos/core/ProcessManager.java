@@ -10,6 +10,7 @@ import kshos.core.objects.User;
 import kshos.core.objects.Process;
 import kshos.io.KSHReader;
 import kshos.io.KSHWriter;
+import kshos.io.Pipe;
 import kshos.ui.UserInterface;
 
 /**
@@ -20,7 +21,7 @@ import kshos.ui.UserInterface;
  * This thesis is used in whole program and acts as simple "planning algorithm".
  *
  * @author <a href="mailto:hauzi.m@gmail.com">Miroslav Hauser</a>
- * @version 0.01, 1.11.2009
+ * @version 0.02, 25.11.2009
  */
 public class ProcessManager {
 
@@ -136,7 +137,7 @@ public class ProcessManager {
     public void removeProcess(long PID) {
 
         // removes process from process list
-        for (Process proc: this.processList) {
+        for (Process proc : this.processList) {
             if (proc.getPID() == PID) {
                 this.processList.remove(proc);
                 proc = null;
@@ -154,10 +155,10 @@ public class ProcessManager {
 
         // removes all processes where owner == user
         /*for (Process proc: this.processList) {
-            if (proc.getOwner() == user) {
-                this.processList.remove(proc);
-                proc = null;
-            }
+        if (proc.getOwner() == user) {
+        this.processList.remove(proc);
+        proc = null;
+        }
         }*/
 
         Process proc = null;
@@ -182,12 +183,12 @@ public class ProcessManager {
      * @return latest shell
      */
     public KSHell getLastShell(User owner) {
-        
+
         ArrayList<Process> shellList = new ArrayList<Process>();
         KSHell lastCreated = null;
-        
+
         // find all shells in process list
-        for (Process proc: this.processList) {
+        for (Process proc : this.processList) {
             if (proc instanceof KSHell && proc.getOwner().equals(owner)) {
                 shellList.add(proc);
             }
@@ -199,7 +200,7 @@ public class ProcessManager {
         if (shellList.size() != 0) {
             lastCreated = (KSHell) shellList.get(0);
 
-            for (Process proc: shellList) {
+            for (Process proc : shellList) {
                 if (lastCreated.getPID() < proc.getId()) {
                     lastCreated = (KSHell) proc;
                 }
@@ -303,23 +304,95 @@ public class ProcessManager {
      * @param userInterface
      * @param g
      */
-    public synchronized void createProcess(String command, Process parent,
+    public synchronized void createProcess(Process parent,
             UserInterface ui, OSVM_grammarParser g) {
 
         // formal parameters test
-        if ((command == null) || command.trim().equals("") || (ui.getUser() == null) ||
-                (parent == null) || (ui == null) || (g == null)) {
+        if ((ui.getUser() == null) || (parent == null) || (ui == null) || (g == null)) {
             return;
         }
 
         // create instance of new process
         URLClassLoader loader = new URLClassLoader(new URL[0]);
+        // start
+        int pr, pa;
+        String command;
+        pr = g.getCmdTable().size() - 1;
+        Process[] cmds = new Process[pr + 1];
+
+        for (int i = pr; i >= 0; i--) {
+            pa = g.getCmdTable().get(i).size() - 1;
+            command = g.getCmdTable().get(i).get(pa);
+            // set command first letter to upper case
+            command = "" + (char) (command.charAt(0) - 32) + "" + command.substring(1);
+
+            try {
+                cmds[i] = (Process) loader.loadClass("kshos.command." + command).newInstance();
+            } catch (Exception ex) {
+                parent.getOut().stdWriteln("Invalid command!");
+                return;
+            }
+            cmds[i].setArgs(g.getCmdTable().get(i)); // set process parameters
+            cmds[i].setPID(getPID());                // set process PID
+            incPID();                            // count new PID
+            cmds[i].setOwner(ui.getUser());                 // set process owner (user)
+            cmds[i].setName(command.toLowerCase());  // set process name
+            cmds[i].setErr(ui);                      // set error input
+            cmds[i].getErr().stdOpenOut();
+            if (i == pr) {
+                cmds[i].setParent(parent);
+                parent.addChild(cmds[i]);
+                // last command on line gets output >
+                if (g.getOut() == null) {
+                    cmds[i].setOut(ui);
+                } else {
+                    cmds[i].setOut(new KSHWriter(g.getOut(), parent.getWorkingDir()));
+                }
+                if (!cmds[i].getOut().stdOpenOut()) {
+                    cmds[i].getErr().stdWriteln("Cannot write " + g.getOut());
+                    cmds[i].processSignal(0);
+                    return;
+                }
+            } else {
+                cmds[i].setParent(cmds[i + 1]);
+                cmds[i + 1].addChild(cmds[i]);
+                // TODO: pipes
+            }
+            if (i == 0) {
+                // first command on line gets input <
+                if (g.getIn() == null) {
+                    cmds[i].setIn(ui);
+                } else {
+                    cmds[i].setIn(new KSHReader(g.getIn(), parent.getWorkingDir()));
+                }
+                if (!cmds[i].getIn().stdOpenIn()) {
+                    cmds[i].getErr().stdWriteln("Cannot read " + g.getIn());
+                    cmds[i].processSignal(0);
+                    return;
+                }
+            }
+            processList.add(cmds[i]);
+        }
+
+        // TODO: run all processes in right order
+        // run last
+        cmds[pr].start();
+        try {
+            cmds[pr].join();
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        // TODO: start join
+
+
+
+        /*
         Process cmd = null;
         try {
-            cmd = (Process) loader.loadClass("kshos.command." + command).newInstance();
+        cmd = (Process) loader.loadClass("kshos.command." + command).newInstance();
         } catch (Exception ex) {
-            parent.getOut().stdWriteln("Invalid command!");
-            return;
+        parent.getOut().stdWriteln("Invalid command!");
+        return;
         }
 
         // set process parameters
@@ -336,35 +409,35 @@ public class ProcessManager {
 
         // set process input
         if (g.getIn() == null) {
-            cmd.setIn(ui);
+        cmd.setIn(ui);
         } else {
-            cmd.setIn(new KSHReader(g.getIn(), parent.getWorkingDir()));
+        cmd.setIn(new KSHReader(g.getIn(), parent.getWorkingDir()));
         }
         if (!cmd.getIn().stdOpenIn()) {
-            cmd.getErr().stdWriteln("Cannot read " + g.getIn());
-            cmd.processSignal(0);            
-            return;
+        cmd.getErr().stdWriteln("Cannot read " + g.getIn());
+        cmd.processSignal(0);
+        return;
         }
 
         // set process output
         if (g.getOut() == null) {
-            cmd.setOut(ui);
+        cmd.setOut(ui);
         } else {
-            cmd.setOut(new KSHWriter(g.getOut(), parent.getWorkingDir()));
+        cmd.setOut(new KSHWriter(g.getOut(), parent.getWorkingDir()));
         }
         if (!cmd.getOut().stdOpenOut()) {
-            cmd.getErr().stdWriteln("Cannot write " + g.getOut());
-            cmd.processSignal(0);            
-            return;
+        cmd.getErr().stdWriteln("Cannot write " + g.getOut());
+        cmd.processSignal(0);
+        return;
         }
 
         processList.add(cmd);
         // start process and waait for its execution
         cmd.start();
         try {
-            cmd.join();
+        cmd.join();
         } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+        ex.printStackTrace();
+        }*/
     }
 }

@@ -91,15 +91,17 @@ public class KSHell extends Process {
             g.parse();
         } catch (RecognitionException e) {
             e.printStackTrace();
-            this.getOut().stdAppend("Warning: Mismatched input!");
+            this.getErr().stdWriteln("Warning: Mismatched input!");
         }
         if (lex.containsInvalid()) {            // test for invalid characters
-            this.getOut().stdAppend("Warning: Command contains invalid symbols!");
+            this.getErr().stdWriteln("Warning: Command contains invalid symbols!");
         }
 
+        int pr, pa;
+        pr = g.getCmdTable().size() - 1;
+        pa = g.getCmdTable().get(pr).size() - 1;
         // command is last command on console line
-        String command = g.getCmdTable().get(g.getCmdTable().size() - 1).get(
-                g.getCmdTable().get(0).size() - 1);
+        String command = g.getCmdTable().get(pr).get(pa);
 
         if (command.equals("kshell")) {
             ProcessManager.instance().createShell(getUserInterface(), this.getPID());
@@ -108,12 +110,12 @@ public class KSHell extends Process {
                 processSignal(0);
                 return;
         }
-
+        /* remove when createProcess() tested
         // set command first letter to upper case
         command = "" + (char) (command.charAt(0) - 32) + "" + command.substring(1);
-
-        // create new process and run it
-        ProcessManager.instance().createProcess(command, this, userInterface, g);
+         */
+        // create new process(es) and run it
+        ProcessManager.instance().createProcess(this, userInterface, g);
     }
 
     /**
@@ -141,13 +143,16 @@ public class KSHell extends Process {
     public void processSignal(int type) {
         switch (type) {
             case 0:
-                this.getOut().stdAppend("Good bye :-)\n");
+                this.getOut().stdWriteln("Good bye :-)");
                 // if parent is init then close
-                if (this.getParent().getPID() == 1) getUserInterface().close();
+                if (this.getParent().getPID() == 1 &&
+                        ProcessManager.instance().getLastShell(getUserInterface().getUser()).equals(this))
+                        getUserInterface().close();
                 // else exit last shell
                 else {
                     // put all children to new parent
                     while (this.getAllChilds().size() > 0) {
+                        this.getChild(this.getAllChilds().firstKey()).setParent(this.getParent());
                         this.getParent().addChild(this.getChild(this.getAllChilds().firstKey()));
                         this.removeChild(this.getAllChilds().firstKey());
                     }

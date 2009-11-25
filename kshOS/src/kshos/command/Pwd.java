@@ -24,7 +24,7 @@ public class Pwd extends Process {
                 this.getErr().stdWriteln("Bad parameter!");
             }
         } else {
-            this.getOut().stdAppend("Working directory: " + getParent().getWorkingDir());
+            this.getOut().stdWriteln("Working directory: " + getParent().getWorkingDir());
         }
         this.getOut().stdCloseOut();
         this.getParent().removeChild(this.getPID());

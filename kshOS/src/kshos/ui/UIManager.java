@@ -8,7 +8,7 @@ import kshos.core.objects.User;
  * Design Pattern: Singleton
  *
  * @author <a href="mailto:hauzi.m@gmail.com">Miroslav Hauser</a>
- * @version 0.01, 26.10.2009
+ * @version 0.02, 25.11.2009
  */
 public class UIManager {
 
@@ -64,8 +64,15 @@ public class UIManager {
      * Closes all consoles.
      */
     public void closeAllConsoles() {
+        /*
         for (UserInterface ui: interfaces) {
             closeConsole(ui);
+        }*/
+        UserInterface ui;
+        for (int i = 0; i < interfaces.size();) {
+            ui = interfaces.get(i);
+            closeConsole(ui);
+            interfaces.remove(ui);
         }
     }
 
@@ -75,6 +82,7 @@ public class UIManager {
      * @param console
      */
     public void closeConsole(UserInterface console) {
+        interfaces.remove(console);
         console.close();
     }
 
