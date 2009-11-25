@@ -125,7 +125,7 @@ public class Cat extends Process {
 
             KSHWriter out = (KSHWriter)this.getOut();
             KSHReader in = (KSHReader)this.getIn();
-            if(out.getPath().equals(in.getPath())){
+            if(out.getCanonicalPath().equals(in.getCanonicalPath())){
                 this.getErr().stdWriteln("Input file is output file");
                 this.getOut().stdCloseOut();
                 this.getIn().stdCloseIn();
