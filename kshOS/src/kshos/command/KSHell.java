@@ -73,7 +73,11 @@ public class KSHell extends Process {
      * Line processing using ANTLR generated lexer and parser.
      */
     public void processLine(String line) {
-        // parameter test
+        // line test
+        if ((line.contains("kshell") && !line.equals("kshell")) || (line.contains("exit") && !line.equals("exit"))) {
+            this.getErr().stdWriteln("Error: kshell and exit can not be piped!");
+            return;
+        }
         if (!line.equals("")) {
             commandHistory.add(line);
             commandIndex = commandHistory.size();
@@ -110,10 +114,6 @@ public class KSHell extends Process {
                 processSignal(0);
                 return;
         }
-        /* remove when createProcess() tested
-        // set command first letter to upper case
-        command = "" + (char) (command.charAt(0) - 32) + "" + command.substring(1);
-         */
         // create new process(es) and run it
         ProcessManager.instance().createProcess(this, userInterface, g);
     }
@@ -125,6 +125,7 @@ public class KSHell extends Process {
     public void initShell() {
         this.setIn(userInterface);
         this.setOut(userInterface);
+        this.setErr(userInterface);
         this.setWorkingDir(new File(""));
         commandIndex = -1;
         commandHistory = new ArrayList<String>();
