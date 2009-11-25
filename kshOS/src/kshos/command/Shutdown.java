@@ -1,6 +1,7 @@
 package kshos.command;
 
 import kshos.core.Core;
+import kshos.core.ProcessManager;
 import kshos.core.objects.Process;
 
 /**
@@ -15,25 +16,26 @@ public class Shutdown extends Process {
      * Process main function.
      */
     @Override
-    public void tick () {
+    public void tick() {
         if (getArgs().length > 0 && getArgs()[0].charAt(0) == '-') {
             if (getArgs()[0].charAt(1) == 'h') {
                 this.getOut().stdWriteln(Core.instance().getProperties().getProperty("SHUTDOWN_HLP"));
             } else {
                 this.getErr().stdWriteln("Bad parameter!");
             }
-            this.getParent().removeChild(this.getPID());
-            return;
+        } else {
+            // FIXME: fakt nevim :)
+            Process p = this;
+            // ends all running processes up tu shell
+            while (p.getParent() != null) {
+                p.processSignal(0);
+                p = p.getParent();
+            }
+            //p.processSignal(0);
+            //Core.instance().service(0, null);
         }
-        // FIXME: fakt nevim :)
-        Process p = this;
-        // ends all running processes up tu shell
-        while (p.getParent() != null) {
-            p.processSignal(0);
-            p = p.getParent();
-        }
-        //p.processSignal(0);
-        //Core.instance().service(0, null);
+        this.getParent().removeChild(this.getPID());
+        ProcessManager.instance().removeProcess(this.getPID());
     }
 
     /**
@@ -44,7 +46,7 @@ public class Shutdown extends Process {
     @Override
     public void processLine(String line) {
         this.getErr().stdAppend("Cannot process line!");
-        this.getParent().removeChild(this.getPID());
+        processSignal(0);
     }
 
     /**
@@ -62,10 +64,10 @@ public class Shutdown extends Process {
                     this.removeChild(this.getAllChilds().firstKey());
                 }
                 this.getParent().removeChild(this.getPID());
+                ProcessManager.instance().removeProcess(this.getPID());
                 break;
             default:
                 break;
         }
     }
-
 }
