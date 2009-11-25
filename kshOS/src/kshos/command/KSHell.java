@@ -145,7 +145,6 @@ public class KSHell extends Process {
                 // if parent is init then close
                 if (this.getParent().getPID() == 1) getUserInterface().close();
                 // else exit last shell
-                // TODO: exit last shell in ProcessManager.processList
                 else {
                     // put all children to new parent
                     while (this.getAllChilds().size() > 0) {

@@ -24,18 +24,10 @@ public class Shutdown extends Process {
                 this.getErr().stdWriteln("Bad parameter!");
             }
         } else {
-            // FIXME: fakt nevim :)
-            Process p = this;
-            // ends all running processes up tu shell
-            while (p.getParent() != null) {
-                p.processSignal(0);
-                p = p.getParent();
-            }
-            //p.processSignal(0);
-            //Core.instance().service(0, null);
+            ProcessManager.instance().getProcess(1).processSignal(0);
         }
-        this.getParent().removeChild(this.getPID());
-        ProcessManager.instance().removeProcess(this.getPID());
+        //this.getParent().removeChild(this.getPID());
+        //ProcessManager.instance().removeProcess(this.getPID());
     }
 
     /**

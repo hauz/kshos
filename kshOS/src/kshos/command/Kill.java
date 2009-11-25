@@ -40,7 +40,10 @@ public class Kill extends Process {
         if (ProcessManager.instance().getProcess(pid) == null) {
             this.getErr().stdWriteln("No such process with PID " + pid + "!");
         } else {
-            ProcessManager.instance().getProcess(pid).processSignal(0);  // TODO: running
+            // print line header before process exit
+            if (pid != 1) ProcessManager.instance().getProcess(pid).getOut().stdAppend(
+                    ProcessManager.instance().getProcess(pid).getOwner().getUserName() + "> ");
+            ProcessManager.instance().getProcess(pid).processSignal(0);
         }
         this.getParent().removeChild(this.getPID());
         ProcessManager.instance().removeProcess(this.getPID());
