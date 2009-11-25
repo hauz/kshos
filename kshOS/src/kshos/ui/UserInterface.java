@@ -123,14 +123,20 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
      * Closes the console, so there will be not possible to write into or read from it
      * All waiting thread for input are notified.
      */
-    public synchronized void close() {
+    public synchronized UserInterface close() {
         // exit users shell
         if (ProcessManager.instance().getLastShell(user) != null)
             ProcessManager.instance().removeAllUserProcesses(user);
+
         // logout user
         Core.instance().service(2, this.getTitle());
+
+        // make this window not visible
         this.textArea.setEditable(false);
+        this.setEnabled(false);
         this.setVisible(false);
+
+        return this;
     }
 
     /**

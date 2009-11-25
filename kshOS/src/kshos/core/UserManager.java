@@ -112,6 +112,15 @@ public class UserManager {
     }
 
     /**
+     * List of users which are actually loged in.
+     *
+     * @return users loged in
+     */
+    public ArrayList<User> getActiveUsers() {
+        return this.activeList;
+    }
+
+    /**
      * Return object User defined by user name.
      * 
      * @return User or null when not exist

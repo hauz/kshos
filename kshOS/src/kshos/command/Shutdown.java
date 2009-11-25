@@ -1,5 +1,6 @@
 package kshos.command;
 
+import kshos.ui.UIManager;
 import kshos.core.Core;
 import kshos.core.ProcessManager;
 import kshos.core.objects.Process;
@@ -24,7 +25,8 @@ public class Shutdown extends Process {
                 this.getErr().stdWriteln("Bad parameter!");
             }
         } else {
-            ProcessManager.instance().getProcess(1).processSignal(0);
+//            ProcessManager.instance().getProcess(1).processSignal(0);
+            Core.instance().service(0, null);
         }
         //this.getParent().removeChild(this.getPID());
         //ProcessManager.instance().removeProcess(this.getPID());
