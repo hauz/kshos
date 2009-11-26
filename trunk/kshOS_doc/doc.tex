@@ -98,7 +98,7 @@ ichar   ->  ICHAR
 Na první pohled se mùže zdát návrh gramatiky zbyteènì složitý, ale takto detailní rozložení je dále použito pøi návrhu lexikálního resp. syntaktického analyzéru. Oba analyzéry jsou generovány pomocí nástroje ANTLR 3.2, který podle návrhu gramatiky vytvoøí kód v Javì. Ten je navíc doplnìn obslužným kódem pro jednotlivá pravidla tak, aby práci se zpracovanou øádkou co nejvíce ulehèil (proto je návrh tak podrobný).
 Celý návrh gramatiky s plnými pravidly pro lexikální i syntaktický analyzátor lze nalézt v souboru s gramatikou (OSVM\_grammar.g).
 \subsubsection{Lexikální analyzér}
-Pro lexikální analyzér jsou definovány základní øídící znaky (roura, pøesmìrování, ad.) a množina povolených symbolù pro názvy pøíkazù resp. souborù (CHAR, STRING). Dále je definován i doplnìk obou množin ICHAR. Veškeré bíle znaky a znaky z množiny ICHAR jsou pøeskakovány. 
+Pro lexikální analyzér jsou definovány základní øídící znaky (roura, pøesmìrování, ad.) a množina povolených symbolù pro názvy pøíkazù resp. souborù (CHAR, STRING). Dále je definován i doplnìk obou množin ICHAR. Veškeré bíle znaky a znaky z množiny ICHAR jsou pøeskakovány.\\
 Použité množiny:
 \begin{itemize}
 \item CHAR \\('a'..'z' \textbar 'A'..'Z' \textbar '0'..'9' \textbar '/' \textbar '\_' \textbar '-' \textbar  '?' \textbar '.' \textbar '..' \textbar ':')
@@ -109,7 +109,11 @@ Použité množiny:
 Syntaktický analyzér rozdìlí øádek do struktury \textit{ArrayList}, který v sobì obsahuje další \textit{ArrayList\textless String\textgreater}. V nìm jsou uloženy jednotlivé argumenty pøíkazu a jako poslední položka je vždy název pøíkazu. Navíc ukládá cestu k vstupnímu resp. výstupnímu souboru do String promìnné \textit{in} resp. \textit{out} a poskytuje k nim pøístup pomocí metod \textit{getIn()} a \textit{getOut()}. V poslední øadì nastavuje vlajky \textit{bg} (pokud je pøíkaz spuštìn na pozadí) a \textit{invalid} (pokud øádka obsahuje nìjaký symbol z množiny ICHAR). Ty jsou po zpracování øádky pøístupné pøes metody \textit{isBackgrounded()} a \textit{containsInvalid()}.
 
 \subsection{Struktura VMM}
-\subsubsection{bla}
+Hlavní myšlenka tohoto software byla pøevzata z GNU/Linux. Z dùvodu absence zavadìèe jádra a dalších procedur, nutných ke startu "bìžného" operaèního systému, jsme si však mohli dopøát nìkolik zjednodušení.\\
+Pro zavedení jádra operaèního systému jsme využili jednoduše metodu \textit{void main()}. Takže ihned po spuštìní programu se nám zavede jádro. Jádro spustí (vytvoøí instance) potøebné manažery. V našem pøípadì jsou to, manažer uživatelù (\textit{UserManager.java}), manažer uživatelských rozhraní (\textit{UIManager.java}) a manažer nastavení (\textit{PropertyManager.java}).\\
+Po zavedení managerù je spuštìn \textit{INIT} proces. PID (Process IDentifier) je vždy rovno 1. Zde je vidìt analogie s GNU/Linux. V operaèním systému Linux se tento proces (\textit{INIT}), nastavený jako daemon process, používá k startování jiných procesù jádra. \textit{INIT} proces je koøenem stromu procesù, který za bìhu OS (Operating System) vytváøí. V naší implementaci je \textit{INIT} pouze prázdný process, který nic nedìlá. Ovšem jeho implementace umožòuje použití ke stejnému úèelu jako v Linuxu.\\
+Po zavedení a spuštìní \textit{INIT} procesu je spuštìno pøihlašovací okno. Zde je umožnìno pøihlášení uživatelù. Naše implementace neobsahuje ovìøení heslem. Po zadání uživatelského jména získá uživatel terminál, pomocí kterého lze komunikovat se systémem.
+
 
 \subsection{Vykonávání pøíkazù}
 Vykonávání pøíkazù je rozdìleno do nìkolika èástí. První je zpracování øádky v konzoli, to se provádí po potvrzení napsané øádky klávesou ENTER. Nejprve je metodou stdReadLn() naèten z konzole aktuální napsaný øádek. Pokud se jedná o pøíkaz konzole (\textit{clr}), pak se provede ihned. V ostatních pøípadech se pøíkaz pøedá aktuálnì spuštìnému procesu. Toto je druhá èást zpracování o kterou se stará metoda \textit{processLine()}, ta je abstraktní a musí ji tedy obsahovat všechny procesy. Implementována je ovšem jen u procesù, které se aktivnì mohou dostat ke konzoli. V našem pøípadì pouze cat, sort a kshell. První dva pøíkazy pouze ètou z konzole a zpracování takto naètených dat odpovídá popisu procesù (vypsání resp. øazení).
@@ -141,23 +145,17 @@ X:\app_path\>run.bat
 \end{verbatim}
 
 \subsection{Ovládání programu}
-Ovládání správce je intuitivní. Po spuštìní (viz pøedchozí èást) se objeví okno pøihlášení. Po zadání uživatelského jména a potvrzení dojde k pøihlášení uživatele k virtuálnímu stroji. Zde je možné používat základní pøíkazy shellu, vèetnì jejich argumentù a pøesmìrování vstupù resp. výstupù.
+Ovládání správce je intuitivní. Po spuštìní (viz pøedchozí èást) se objeví okno pøihlášení. Po zadání uživatelského jména (systémem akceptovaná uživatelská jména: hauz, k4chn1k, sysek, guest) a potvrzení dojde k pøihlášení uživatele k virtuálnímu stroji. Zde je možné používat základní pøíkazy shellu, vèetnì jejich argumentù a pøesmìrování vstupù resp. výstupù.
 Implementované pøíkazy: \textit{cat, cd, echo, exit, kill, kshell, ls, man, ps, pwd, shutdown, sort}.
 Obecná syntaxe:
 \begin{verbatim}
-cmd1 [file]* [\textless ifile] [\textbar cmd\_next]* [\textgreater ofile]
+cmd1 [file]* [< ifile] [| cmd\_next]* [> ofile]
 \end{verbatim}
-Výjimkou oproti zadaní je pøíkaz \textit{ps}. Ten lze použít s pøepínaèem \textit{-u}, èímž se zobrazí pouze uživatelovy procesy. Dále byl pøídán pøíkaz \textit{clr}, který smaže obsah konzole.
+Výjimkou oproti zadaní je pøíkaz \textit{ps}. Ten lze použít s pøepínaèem \textit{-u}, èímž se zobrazí pouze uživatelovy procesy. Dále byl pøidán pøíkaz \textit{clr}, který smaže obsah konzole.
 
 
 \section{Závìr}
 Zadání semestrální práce bylo splnìno v povinném rozsahu. Navíc byl pøidán pøepínaè \textit{-u} u pøíkazu \textit{ps} a pøíkaz konzole \textit{clr}.
-\\[3mm]
-do nasledujicich subsekci si napiste:\\
-Èím pøispìli jednotliví èlenové týmu\\
-silné slabe stranky, možná vylepšení\\
-Zhodnocení co vám semestrální práce dala a èím pøispìla ve vašem vzdìlání\\
-názor na zadání
 \subsection{Jiøí Novotný}
 Vytvoøil jsem tyto èásti kódu:
 \begin{itemize}
@@ -176,11 +174,8 @@ Zadání bylo zajímavé, bez výhrad.
 Mým hlavním úkolem v týmové práci bylo vytvoøení IO balíku.\\
 Díky výpomoci na dalších rùzných èástech projektu jsem se vìrnì seznámil s celou aplikací a øešil mnoho zajímavých situací. To vyžadovalo dobrou komunikaci se zbytkem týmu. Díky práci jsem se blíže seznámil s verzovacím systémem a mnohokrát ocenil jeho výhody. Práce pro mì byla velkým pøínosem díky nabitým vìdomostem a zkušenostem.
 \subsection{Miroslav Hauser}
+Práce byla velkým pøínosem. Studium by mìlo obsahovat více takovýchto týmových projektù. Dále nám práce umožnila nahlédnout, alespoò trošku,
+pod kapotu souèasných operaèních systémù. Tyto zkušenosti jsou k nezaplacení.\\[5mm]
 Dokumentace byla vygenerována pomocí nástroje \TeX.
-
-\section{Literatura}
-\begin{itemize}
-\item \textbf{autor} -- \textit{kniha}, vydavatelstvi, kde, rok
-\end{itemize}
 
 \end{document}
