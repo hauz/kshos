@@ -1,6 +1,7 @@
 package kshos.core;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -320,6 +321,16 @@ public class ProcessManager {
             return;
         }
 
+        // gets name of input file and output file
+        g.getCmdTable().get(0);
+        String in = g.getIn();
+        g.getCmdTable().get(g.getCmdTable().size() - 1);
+        String out = g.getOut();
+        if(!checkIO(in, out)){
+            parent.getErr().stdWriteln("Bad parameter!");
+            return;
+        }
+
         // create instance of new process
         URLClassLoader loader = new URLClassLoader(new URL[0]);
         // start
@@ -447,5 +458,23 @@ public class ProcessManager {
         } catch (InterruptedException ex) {
         ex.printStackTrace();
         }*/
+    }
+
+    /**
+     * Check if output is the same as input
+     */
+    private boolean checkIO(String input, String output){
+        if (input == null || output == null) return true;
+        File inputFile = new File(input);
+        File outputFile = new File(output);
+        try {
+            if(inputFile.getCanonicalPath().equals(
+                    outputFile.getCanonicalPath())){
+                return false;
+            }
+        } catch (IOException ex) {
+            return false;
+        }
+        return true;
     }
 }
