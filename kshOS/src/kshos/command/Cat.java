@@ -4,6 +4,7 @@ import kshos.core.Core;
 import kshos.core.ProcessManager;
 import kshos.core.objects.Process;
 import kshos.io.KSHReader;
+import kshos.io.Pipe;
 import kshos.ui.UserInterface;
 
 /**
@@ -89,6 +90,9 @@ public class Cat extends Process {
                     // moved EOL for file
                     file += pom + "\n";
             this.getOut().stdAppend(file);
+            close();
+        }
+        if ((getIn() instanceof UserInterface) && (getOut() instanceof Pipe)) {
             close();
         }
     }

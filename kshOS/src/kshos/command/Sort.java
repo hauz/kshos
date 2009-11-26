@@ -6,6 +6,7 @@ import kshos.core.Core;
 import kshos.core.ProcessManager;
 import kshos.core.objects.Process;
 import kshos.io.KSHReader;
+import kshos.io.Pipe;
 import kshos.ui.UserInterface;
 
 /**
@@ -107,6 +108,9 @@ public class Sort extends Process {
             }
             this.getOut().stdAppend(sort(lines.toArray()));
             if (getOut() instanceof UserInterface) this.getOut().stdWriteln("");
+            close();
+        }
+        if ((getIn() instanceof UserInterface) && (getOut() instanceof Pipe)) {
             close();
         }
     }
