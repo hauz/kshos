@@ -12,8 +12,8 @@ import kshos.core.objects.Process;
  * @version 0.03, 15.11.2009
  */
 public class Pipe implements StdIn, StdOut{
-    BufferedReader bufferedReader;
-    BufferedWriter bufferedWriter;
+    private BufferedReader bufferedReader;
+    private BufferedWriter bufferedWriter;
 
     /**
      * Create pipe between two KSHprocess
@@ -36,9 +36,8 @@ public class Pipe implements StdIn, StdOut{
     }
 
     /**
-     * Open or create file.
-     * Create file and buffered writer.
-     * @return if file open is succesfull
+     * Emty method from interface
+     * @return always return true
      */
     public boolean stdOpenOut() {
         return true;
@@ -96,9 +95,8 @@ public class Pipe implements StdIn, StdOut{
     }
 
     /**
-     * Open file.
-     * Create file and buffered reader.
-     * @return if file exists and open is succesfull
+     * Emty method from interface
+     * @return always return true
      */
     public boolean stdOpenIn() {
         return true;

@@ -117,20 +117,5 @@ public class KSHWriter extends Writer implements StdOut {
         finally {
             return;
         }
-    }
-
-   /**
-     * Getter
-     * @return canonical path of file
-     */
-    public String getCanonicalPath() {
-        String canonicalPath = "";
-        File file = new File(this.path);
-        try {
-            canonicalPath = file.getCanonicalPath();
-        } catch (IOException ex) {
-
-        }
-        return canonicalPath;
-    }
+    }   
 }
