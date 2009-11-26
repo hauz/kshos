@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 12:02:23 D:\\!OS\\gramatika\\OSVM_grammar.g 2009-11-07 14:43:19
+// $ANTLR 3.2 Sep 23, 2009 12:02:23 D:\\!OS\\gramatika\\OSVM_grammar.g 2009-11-26 18:31:20
 
 	package kshos.command.grammar;
 	
@@ -18,27 +18,13 @@ public class OSVM_grammarLexer extends Lexer {
     public static final int STIN=6;
     public static final int SP=5;
     public static final int STOUT=7;
-    public static final int CHAR=12;
+    public static final int CHAR=11;
     public static final int BG=9;
     public static final int PIPE=8;
-    public static final int ICHAR=10;
+    public static final int ICHAR=12;
     public static final int NL=4;
     public static final int EOF=-1;
-    public static final int STRING=11;
-
-        
-        /* Command check */
-        private boolean invalid = false;
-        
-        /** Check for invalid symbols.
-         *  @return false when command is valid
-         *          true when command contains bad symbol
-         */
-        public boolean containsInvalid() {
-            return invalid;
-        }
-        
-
+    public static final int STRING=10;
 
     // delegates
     // delegators
@@ -58,74 +44,81 @@ public class OSVM_grammarLexer extends Lexer {
         try {
             int _type = CHAR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:101:6: ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '/' | '_' | '-' | '?' | '.' | '..' ) )
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:101:8: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '/' | '_' | '-' | '?' | '.' | '..' )
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:107:6: ( ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '/' | '_' | '-' | '?' | '.' | '..' | ':' ) )
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:107:8: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '/' | '_' | '-' | '?' | '.' | '..' | ':' )
             {
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:101:8: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '/' | '_' | '-' | '?' | '.' | '..' )
-            int alt1=9;
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:107:8: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '/' | '_' | '-' | '?' | '.' | '..' | ':' )
+            int alt1=10;
             alt1 = dfa1.predict(input);
             switch (alt1) {
                 case 1 :
-                    // D:\\!OS\\gramatika\\OSVM_grammar.g:101:9: 'a' .. 'z'
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:107:9: 'a' .. 'z'
                     {
                     matchRange('a','z'); 
 
                     }
                     break;
                 case 2 :
-                    // D:\\!OS\\gramatika\\OSVM_grammar.g:101:20: 'A' .. 'Z'
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:107:20: 'A' .. 'Z'
                     {
                     matchRange('A','Z'); 
 
                     }
                     break;
                 case 3 :
-                    // D:\\!OS\\gramatika\\OSVM_grammar.g:101:31: '0' .. '9'
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:107:31: '0' .. '9'
                     {
                     matchRange('0','9'); 
 
                     }
                     break;
                 case 4 :
-                    // D:\\!OS\\gramatika\\OSVM_grammar.g:101:42: '/'
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:107:42: '/'
                     {
                     match('/'); 
 
                     }
                     break;
                 case 5 :
-                    // D:\\!OS\\gramatika\\OSVM_grammar.g:101:48: '_'
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:107:48: '_'
                     {
                     match('_'); 
 
                     }
                     break;
                 case 6 :
-                    // D:\\!OS\\gramatika\\OSVM_grammar.g:101:54: '-'
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:107:54: '-'
                     {
                     match('-'); 
 
                     }
                     break;
                 case 7 :
-                    // D:\\!OS\\gramatika\\OSVM_grammar.g:101:60: '?'
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:107:60: '?'
                     {
                     match('?'); 
 
                     }
                     break;
                 case 8 :
-                    // D:\\!OS\\gramatika\\OSVM_grammar.g:101:66: '.'
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:107:66: '.'
                     {
                     match('.'); 
 
                     }
                     break;
                 case 9 :
-                    // D:\\!OS\\gramatika\\OSVM_grammar.g:101:72: '..'
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:107:72: '..'
                     {
                     match(".."); 
 
+
+                    }
+                    break;
+                case 10 :
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:107:79: ':'
+                    {
+                    match(':'); 
 
                     }
                     break;
@@ -148,23 +141,23 @@ public class OSVM_grammarLexer extends Lexer {
         try {
             int _type = STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:102:8: ( ( CHAR )* )
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:102:10: ( CHAR )*
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:108:8: ( ( CHAR )* )
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:108:10: ( CHAR )*
             {
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:102:10: ( CHAR )*
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:108:10: ( CHAR )*
             loop2:
             do {
                 int alt2=2;
                 int LA2_0 = input.LA(1);
 
-                if ( ((LA2_0>='-' && LA2_0<='9')||LA2_0=='?'||(LA2_0>='A' && LA2_0<='Z')||LA2_0=='_'||(LA2_0>='a' && LA2_0<='z')) ) {
+                if ( ((LA2_0>='-' && LA2_0<=':')||LA2_0=='?'||(LA2_0>='A' && LA2_0<='Z')||LA2_0=='_'||(LA2_0>='a' && LA2_0<='z')) ) {
                     alt2=1;
                 }
 
 
                 switch (alt2) {
             	case 1 :
-            	    // D:\\!OS\\gramatika\\OSVM_grammar.g:102:10: CHAR
+            	    // D:\\!OS\\gramatika\\OSVM_grammar.g:108:10: CHAR
             	    {
             	    mCHAR(); 
 
@@ -192,8 +185,8 @@ public class OSVM_grammarLexer extends Lexer {
         try {
             int _type = ICHAR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:103:7: (~ ( SP | PIPE | STIN | STOUT | NL | BG ) )
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:103:9: ~ ( SP | PIPE | STIN | STOUT | NL | BG )
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:109:7: (~ ( SP | PIPE | STIN | STOUT | NL | BG ) )
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:109:9: ~ ( SP | PIPE | STIN | STOUT | NL | BG )
             {
             if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\u001F')||(input.LA(1)>='!' && input.LA(1)<='%')||(input.LA(1)>='\'' && input.LA(1)<=';')||input.LA(1)=='='||(input.LA(1)>='?' && input.LA(1)<='{')||(input.LA(1)>='}' && input.LA(1)<='\uFFFF') ) {
                 input.consume();
@@ -204,7 +197,7 @@ public class OSVM_grammarLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            _channel=HIDDEN; invalid = true;
+            _channel=HIDDEN;
 
             }
 
@@ -221,8 +214,8 @@ public class OSVM_grammarLexer extends Lexer {
         try {
             int _type = PIPE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:104:7: ( '\\|' )
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:104:9: '\\|'
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:110:7: ( '\\|' )
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:110:9: '\\|'
             {
             match('|'); 
 
@@ -241,8 +234,8 @@ public class OSVM_grammarLexer extends Lexer {
         try {
             int _type = STIN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:105:6: ( '<' )
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:105:8: '<'
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:111:6: ( '<' )
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:111:8: '<'
             {
             match('<'); 
 
@@ -261,8 +254,8 @@ public class OSVM_grammarLexer extends Lexer {
         try {
             int _type = STOUT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:106:7: ( '>' )
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:106:9: '>'
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:112:7: ( '>' )
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:112:9: '>'
             {
             match('>'); 
 
@@ -281,8 +274,8 @@ public class OSVM_grammarLexer extends Lexer {
         try {
             int _type = SP;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:107:4: ( ' ' )
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:107:6: ' '
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:113:4: ( ' ' )
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:113:6: ' '
             {
             match(' '); 
 
@@ -301,7 +294,7 @@ public class OSVM_grammarLexer extends Lexer {
         try {
             int _type = NL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:108:4: ( '\\r\\n' | '\\r' | '\\n' )
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:114:4: ( '\\r\\n' | '\\r' | '\\n' )
             int alt3=3;
             int LA3_0 = input.LA(1);
 
@@ -325,7 +318,7 @@ public class OSVM_grammarLexer extends Lexer {
             }
             switch (alt3) {
                 case 1 :
-                    // D:\\!OS\\gramatika\\OSVM_grammar.g:108:6: '\\r\\n'
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:114:6: '\\r\\n'
                     {
                     match("\r\n"); 
 
@@ -333,14 +326,14 @@ public class OSVM_grammarLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // D:\\!OS\\gramatika\\OSVM_grammar.g:108:15: '\\r'
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:114:15: '\\r'
                     {
                     match('\r'); 
 
                     }
                     break;
                 case 3 :
-                    // D:\\!OS\\gramatika\\OSVM_grammar.g:108:22: '\\n'
+                    // D:\\!OS\\gramatika\\OSVM_grammar.g:114:22: '\\n'
                     {
                     match('\n'); 
 
@@ -361,8 +354,8 @@ public class OSVM_grammarLexer extends Lexer {
         try {
             int _type = BG;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:109:4: ( '&' )
-            // D:\\!OS\\gramatika\\OSVM_grammar.g:109:6: '&'
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:115:4: ( '&' )
+            // D:\\!OS\\gramatika\\OSVM_grammar.g:115:6: '&'
             {
             match('&'); 
 
@@ -453,20 +446,20 @@ public class OSVM_grammarLexer extends Lexer {
     protected DFA1 dfa1 = new DFA1(this);
     protected DFA4 dfa4 = new DFA4(this);
     static final String DFA1_eotS =
-        "\10\uffff\1\12\2\uffff";
+        "\10\uffff\1\13\3\uffff";
     static final String DFA1_eofS =
-        "\13\uffff";
+        "\14\uffff";
     static final String DFA1_minS =
-        "\1\55\7\uffff\1\56\2\uffff";
+        "\1\55\7\uffff\1\56\3\uffff";
     static final String DFA1_maxS =
-        "\1\172\7\uffff\1\56\2\uffff";
+        "\1\172\7\uffff\1\56\3\uffff";
     static final String DFA1_acceptS =
-        "\1\uffff\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\uffff\1\11\1\10";
+        "\1\uffff\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\uffff\1\12\1\11\1\10";
     static final String DFA1_specialS =
-        "\13\uffff}>";
+        "\14\uffff}>";
     static final String[] DFA1_transitionS = {
-            "\1\6\1\10\1\4\12\3\5\uffff\1\7\1\uffff\32\2\4\uffff\1\5\1\uffff"+
-            "\32\1",
+            "\1\6\1\10\1\4\12\3\1\11\4\uffff\1\7\1\uffff\32\2\4\uffff\1"+
+            "\5\1\uffff\32\1",
             "",
             "",
             "",
@@ -474,7 +467,8 @@ public class OSVM_grammarLexer extends Lexer {
             "",
             "",
             "",
-            "\1\11",
+            "\1\12",
+            "",
             "",
             ""
     };
@@ -509,41 +503,43 @@ public class OSVM_grammarLexer extends Lexer {
             this.transition = DFA1_transition;
         }
         public String getDescription() {
-            return "101:8: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '/' | '_' | '-' | '?' | '.' | '..' )";
+            return "107:8: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '/' | '_' | '-' | '?' | '.' | '..' | ':' )";
         }
     }
     static final String DFA4_eotS =
-        "\1\11\10\21\11\uffff\1\21";
+        "\1\12\11\22\11\uffff\1\22";
     static final String DFA4_eofS =
-        "\23\uffff";
+        "\24\uffff";
     static final String DFA4_minS =
-        "\1\0\10\55\11\uffff\1\55";
+        "\1\0\11\55\11\uffff\1\55";
     static final String DFA4_maxS =
-        "\1\uffff\10\172\11\uffff\1\172";
+        "\1\uffff\11\172\11\uffff\1\172";
     static final String DFA4_acceptS =
-        "\11\uffff\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\1\1\uffff";
+        "\12\uffff\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\1\1\uffff";
     static final String DFA4_specialS =
-        "\1\0\22\uffff}>";
+        "\1\0\23\uffff}>";
     static final String[] DFA4_transitionS = {
-            "\12\12\1\17\2\12\1\17\22\12\1\16\5\12\1\20\6\12\1\6\1\10\1"+
-            "\4\12\3\2\12\1\14\1\12\1\15\1\7\1\12\32\2\4\12\1\5\1\12\32\1"+
-            "\1\12\1\13\uff83\12",
-            "\15\11\5\uffff\1\11\1\uffff\32\11\4\uffff\1\11\1\uffff\32"+
-            "\11",
-            "\15\11\5\uffff\1\11\1\uffff\32\11\4\uffff\1\11\1\uffff\32"+
-            "\11",
-            "\15\11\5\uffff\1\11\1\uffff\32\11\4\uffff\1\11\1\uffff\32"+
-            "\11",
-            "\15\11\5\uffff\1\11\1\uffff\32\11\4\uffff\1\11\1\uffff\32"+
-            "\11",
-            "\15\11\5\uffff\1\11\1\uffff\32\11\4\uffff\1\11\1\uffff\32"+
-            "\11",
-            "\15\11\5\uffff\1\11\1\uffff\32\11\4\uffff\1\11\1\uffff\32"+
-            "\11",
-            "\15\11\5\uffff\1\11\1\uffff\32\11\4\uffff\1\11\1\uffff\32"+
-            "\11",
-            "\1\11\1\22\13\11\5\uffff\1\11\1\uffff\32\11\4\uffff\1\11\1"+
-            "\uffff\32\11",
+            "\12\13\1\20\2\13\1\20\22\13\1\17\5\13\1\21\6\13\1\6\1\10\1"+
+            "\4\12\3\1\11\1\13\1\15\1\13\1\16\1\7\1\13\32\2\4\13\1\5\1\13"+
+            "\32\1\1\13\1\14\uff83\13",
+            "\16\12\4\uffff\1\12\1\uffff\32\12\4\uffff\1\12\1\uffff\32"+
+            "\12",
+            "\16\12\4\uffff\1\12\1\uffff\32\12\4\uffff\1\12\1\uffff\32"+
+            "\12",
+            "\16\12\4\uffff\1\12\1\uffff\32\12\4\uffff\1\12\1\uffff\32"+
+            "\12",
+            "\16\12\4\uffff\1\12\1\uffff\32\12\4\uffff\1\12\1\uffff\32"+
+            "\12",
+            "\16\12\4\uffff\1\12\1\uffff\32\12\4\uffff\1\12\1\uffff\32"+
+            "\12",
+            "\16\12\4\uffff\1\12\1\uffff\32\12\4\uffff\1\12\1\uffff\32"+
+            "\12",
+            "\16\12\4\uffff\1\12\1\uffff\32\12\4\uffff\1\12\1\uffff\32"+
+            "\12",
+            "\1\12\1\23\14\12\4\uffff\1\12\1\uffff\32\12\4\uffff\1\12\1"+
+            "\uffff\32\12",
+            "\16\12\4\uffff\1\12\1\uffff\32\12\4\uffff\1\12\1\uffff\32"+
+            "\12",
             "",
             "",
             "",
@@ -553,8 +549,8 @@ public class OSVM_grammarLexer extends Lexer {
             "",
             "",
             "",
-            "\15\11\5\uffff\1\11\1\uffff\32\11\4\uffff\1\11\1\uffff\32"+
-            "\11"
+            "\16\12\4\uffff\1\12\1\uffff\32\12\4\uffff\1\12\1\uffff\32"+
+            "\12"
     };
 
     static final short[] DFA4_eot = DFA.unpackEncodedString(DFA4_eotS);
@@ -613,21 +609,23 @@ public class OSVM_grammarLexer extends Lexer {
 
                         else if ( (LA4_0=='.') ) {s = 8;}
 
-                        else if ( ((LA4_0>='\u0000' && LA4_0<='\t')||(LA4_0>='\u000B' && LA4_0<='\f')||(LA4_0>='\u000E' && LA4_0<='\u001F')||(LA4_0>='!' && LA4_0<='%')||(LA4_0>='\'' && LA4_0<=',')||(LA4_0>=':' && LA4_0<=';')||LA4_0=='='||LA4_0=='@'||(LA4_0>='[' && LA4_0<='^')||LA4_0=='`'||LA4_0=='{'||(LA4_0>='}' && LA4_0<='\uFFFF')) ) {s = 10;}
+                        else if ( (LA4_0==':') ) {s = 9;}
 
-                        else if ( (LA4_0=='|') ) {s = 11;}
+                        else if ( ((LA4_0>='\u0000' && LA4_0<='\t')||(LA4_0>='\u000B' && LA4_0<='\f')||(LA4_0>='\u000E' && LA4_0<='\u001F')||(LA4_0>='!' && LA4_0<='%')||(LA4_0>='\'' && LA4_0<=',')||LA4_0==';'||LA4_0=='='||LA4_0=='@'||(LA4_0>='[' && LA4_0<='^')||LA4_0=='`'||LA4_0=='{'||(LA4_0>='}' && LA4_0<='\uFFFF')) ) {s = 11;}
 
-                        else if ( (LA4_0=='<') ) {s = 12;}
+                        else if ( (LA4_0=='|') ) {s = 12;}
 
-                        else if ( (LA4_0=='>') ) {s = 13;}
+                        else if ( (LA4_0=='<') ) {s = 13;}
 
-                        else if ( (LA4_0==' ') ) {s = 14;}
+                        else if ( (LA4_0=='>') ) {s = 14;}
 
-                        else if ( (LA4_0=='\n'||LA4_0=='\r') ) {s = 15;}
+                        else if ( (LA4_0==' ') ) {s = 15;}
 
-                        else if ( (LA4_0=='&') ) {s = 16;}
+                        else if ( (LA4_0=='\n'||LA4_0=='\r') ) {s = 16;}
 
-                        else s = 9;
+                        else if ( (LA4_0=='&') ) {s = 17;}
+
+                        else s = 10;
 
                         if ( s>=0 ) return s;
                         break;

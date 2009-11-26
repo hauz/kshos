@@ -102,9 +102,10 @@ public class KSHell extends Process {
             g.parse();
         } catch (RecognitionException e) {
             this.getErr().stdWriteln("Warning: Mismatched input!");
+            this.getErr().stdWriteln("Usage: cmd args < in [ | cmd next]* > out");
             return;
         }
-        if (lex.containsInvalid()) {            // test for invalid characters
+        if (g.containsInvalid()) {            // test for invalid characters
             this.getErr().stdWriteln("Warning: Command contains invalid symbols!");
         }
 
