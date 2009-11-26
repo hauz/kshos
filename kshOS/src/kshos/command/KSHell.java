@@ -157,6 +157,8 @@ public class KSHell extends Process {
                         this.getParent().addChild(this.getChild(this.getAllChilds().firstKey()));
                         this.removeChild(this.getAllChilds().firstKey());
                     }
+                    this.getIn().stdCloseIn();
+                    this.getOut().stdCloseOut();
                     this.getParent().removeChild(this.getPID());
                     ProcessManager.instance().removeProcess(this.getPID());
                 }

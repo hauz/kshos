@@ -15,6 +15,18 @@ import kshos.core.objects.MetaProcess;
 public class Ps extends Process {
 
     /**
+     * Close method.
+     * Closes input and output, removes process from process list
+     * and from parents children process tree.
+     */
+    private void close() {
+        this.getIn().stdCloseIn();
+        this.getOut().stdCloseOut();
+        this.getParent().removeChild(this.getPID());
+        ProcessManager.instance().removeProcess(this.getPID());
+    }
+
+    /**
      * Process main function.
      */
     @Override
@@ -40,8 +52,7 @@ public class Ps extends Process {
                 this.getOut().stdWriteln(list.get(i).toString());
             }
         }
-        this.getParent().removeChild(this.getPID());
-        ProcessManager.instance().removeProcess(this.getPID());
+        close();
     }
 
     /**
@@ -63,17 +74,13 @@ public class Ps extends Process {
     public void processSignal(int type) {
         switch (type) {
             case 0:
-                this.getOut().stdCloseOut();
                 // put all children to new parent
                 while (this.getAllChilds().size() > 0) {
                     this.getParent().addChild(this.getChild(this.getAllChilds().firstKey()));
                     this.removeChild(this.getAllChilds().firstKey());
                 }
-
-                this.getParent().removeChild(this.getPID());
-                ProcessManager.instance().removeProcess(this.getPID());
+                close();
                 break;
-
             default:
 
                 break;
