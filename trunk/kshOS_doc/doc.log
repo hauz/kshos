@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=cslatex 2009.11.23)  23 NOV 2009 19:34
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=cslatex 2009.11.23)  26 NOV 2009 17:57
 entering extended mode
 **doc
 (D:\NetBeansProjects\kshOS_doc\doc.tex
@@ -68,37 +68,42 @@ File: zculogo_bw.eps Graphic file (type eps)
  <zculogo_bw.eps> [1
 
 ]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 50.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 52.
 
 ("C:\Program Files (x86)\MiKTeX 2.8\tex\latex\base\omscmr.fd"
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 50.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 52.
  [1]
-Overfull \hbox (0.27098pt too wide) in paragraph at lines 68--71
-\IL2/cmr/m/n/12 Ta v sobì ob-sa-huje switch na jed-not-livé kódy stisk-lých klá
--ves (\IL2/cmr/m/it/12 get-Key-Code()\IL2/cmr/m/n/12 ).
+Overfull \hbox (2.29921pt too wide) in paragraph at lines 67--70
+\IL2/cmr/m/it/12 Code()\IL2/cmr/m/n/12 ). Vy-hod-no-co-vané klá-vesy jsou: \IL2
+/cmr/m/it/12 EN-TER, LEFT, RIGHT, UP, DOWN,
  []
 
 [2]
-LaTeX Font Info:    Try loading font information for IL2+cmtt on input line 89.
+LaTeX Font Info:    Try loading font information for IL2+cmtt on input line 85.
 
  ("C:\Program Files (x86)\MiKTeX 2.8\tex\latex\cslatex\il2cmtt.fd"
 File: il2cmtt.fd 1997/08/20 CSLaTeX font definitions
 ) [3]
-LaTeX Font Info:    Try loading font information for OML+cmr on input line 110.
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 106.
 
 
 ("C:\Program Files (x86)\MiKTeX 2.8\tex\latex\base\omlcmr.fd"
 File: omlcmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <12> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 110.
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 106.
 LaTeX Font Info:    Font shape `OML/cmr/m/it' in size <12> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 113.
- [4] [5] [6]
-[7] (D:\NetBeansProjects\kshOS_doc\doc.aux) ) 
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 109.
+ [4] [5]
+Overfull \hbox (60.77522pt too wide) in paragraph at lines 149--149
+[]\IL2/cmtt/m/n/12 cmd1 [file]* [\textless ifile] [\textbar cmd\_next]* [\textg
+reater ofile][] 
+ []
+
+[6] [7] (D:\NetBeansProjects\kshOS_doc\doc.aux) ) 
 Here is how much of TeX's memory you used:
  657 strings out of 495209
  8428 string characters out of 3180908
@@ -106,6 +111,6 @@ Here is how much of TeX's memory you used:
  4006 multiletter control sequences out of 15000+200000
  9458 words of font info for 26 fonts, out of 3000000 for 9000
  24 hyphenation exceptions out of 8191
- 25i,4n,22p,726b,200s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 25i,4n,22p,756b,200s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on doc.dvi (8 pages, 15884 bytes).
+Output written on doc.dvi (8 pages, 17888 bytes).

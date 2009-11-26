@@ -14,11 +14,13 @@
 \vspace{4cm}
 \begin{center}
 \bf
-\normalsize{Semestrální práce}
+\Large{Katedra informatiky a výpoèetní techniky}
 \\
-\Huge{KIV/OS}
-\\[1cm]
+\Large{Operaèní systémy}
+\\[2cm]
 \Huge{Správce virtuálních strojù}
+\\[5mm]
+\normalsize{mail: novotny@students.zcu.cz}
 \\[5mm]
 \normalsize{Jiøí Novotný A09N0032P\\Zdenìk Janda A09N0076P\\Miroslav Hauser A09N0037P}
 \\
@@ -28,7 +30,7 @@
 \setcounter{page}{1} 
 
 \section{Zadání}
-Navrhnìte a implementujte model správce virtuálních strojù. Shell tohoto správce bude obsahovat tyto pøíkazy: \textit{cat, cd, echo, exit, kill, kshell, ls, man, ps, pwd, shutdown, sort}. Shell bude dále uchovávat aktualní pracovní adresáø a historii použitých pøíkazù.
+Navrhnìte a implementujte model správce virtuálních strojù. Shell tohoto správce bude obsahovat tyto pøíkazy: \textit{cat, cd, echo, exit, kill, kshell, ls, man, ps, pwd, shutdown, sort}. Shell bude dále uchovávat aktuální pracovní adresáø a historii použitých pøíkazù.
 K ovládání správce použijte vhodné rozhraní uživatel/stroj.\\
 Doporuèený postup:
 \begin{enumerate}
@@ -54,9 +56,6 @@ Bìhem práce dodržujte tyto konvence:
 \end{itemize}
 \newpage
 
-\section{Analýza úlohy}
-
-
 \section{Popis implementace}
 \subsection{Konzole}
 Konzole se vytváøí jako objekt tøídy \textit{UserInterface}, která je oddìdìna od tøídy \textit{JFrame}. Tento frame obsahuje \textit{JTextAreu} jako jediný prvek. Jedná se o základní vstup a výstup správce virtuálních strojù.
@@ -65,21 +64,18 @@ Globální promìnné pøedstavují již zmínìnou \textit{JTextAreu}, dále hodnotu offs
 Namapování jednotlivých akcí je nejobsáhlejší èást vytváøení konzole a obsahuje jak reakce na klávesnici, tak na myš. Podrobnému popisu se vìnuje podkapitola o mapování akcí viz dále.
 Spuštìní shellu obstarává metoda \textit{createShell()}, která bude rozebrána v další èásti dokumentace.
 \subsubsection{Reakce na klávesnici}
-K namapování akcí klávesnice je použita metoda \textit{consoleKeyActions(keyEvt)}. Ta v sobì obsahuje switch na jednotlivé kódy stisklých kláves (\textit{getKeyCode()}). Vyhodnocované klávesy jsou: \textit{ENTER, LEFT, RIGHT, UP, DOWN, PAGE UP, PAGE DOWN, HOME, TAB a BACKSPACE}.
-Klávesa \textit{ENTER} umožnuje zpracování aktuální øádky zadané do konzole a už shellem nebo právì bìžící aplikací. Šipky slouží k práci s historii pøíkazù a pohybu v zadaném textu. Klávesa \textit{HOME} je pozmìnìna tak, aby v pøípadì bìhu shellu skákala pouze na konec vypsaneho textu (za line header), tedy na hodnotu \textit{TAOff}. V ostatních pøípadech skáèe až na zaèátek aktualního øádku. Klávesy \textit{PAGE UP} a \textit{PAGE DOWN} jsou zakázány úplnì, aby nebylo možné skoèit do již zpracované oblasti konzole. Klávesa \textit{TAB} doplòuje rozepsaný pøíkaz resp. cestu v zadávaném øádku a klávesa \textit{BACKSPACE} má opìt pøidáno omezení, aby nebylo možné mazat zpracované øádky konzole.
-Poslední akcí klávesnice je tzv. KeyStroke, tedy kombinace více kláves (klávesová zkratka). Je implementována reakce pouze \textbf{CTRL+D} urèená k zaslání signálu odebrání konzole a ukonèení aktualního procesu.
+K namapování akcí klávesnice je použita metoda \textit{consoleKeyActions(keyEvt)}. Ta v sobì obsahuje switch na jednotlivé kódy stisknutých kláves (\textit{getKeyCode()}). Vyhodnocované klávesy jsou: \textit{ENTER, LEFT, RIGHT, UP, DOWN, PAGE UP, PAGE DOWN, HOME, TAB a BACKSPACE}.
+Klávesa \textit{ENTER} umožòuje zpracování aktuální øádky zadané do konzole a už shellem nebo právì bìžící aplikací. Šipky slouží k práci s historii pøíkazù a pohybu v zadaném textu. Klávesa \textit{HOME} je pozmìnìna tak, aby v pøípadì bìhu shellu skákala pouze na konec vypsaného textu (za line header), tedy na hodnotu \textit{TAOff}. V ostatních pøípadech skáèe až na zaèátek aktuálního øádku. Klávesy \textit{PAGE UP} a \textit{PAGE DOWN} jsou zakázány úplnì, aby nebylo možné skoèit do již zpracované oblasti konzole. Klávesa \textit{TAB} doplòuje rozepsaný pøíkaz resp. cestu v zadávaném øádku a klávesa \textit{BACKSPACE} má opìt pøidáno omezení, aby nebylo možné mazat zpracované øádky konzole.
+Poslední akcí klávesnice je tzv. KeyStroke, tedy kombinace více kláves (klávesová zkratka). Je implementována reakce pouze \textbf{CTRL+D} urèená k zaslání signálu odebrání konzole a ukonèení aktuálního procesu.
 
 \subsubsection{Reakce na myš}
-Odchytává se ve dvou pøípadech:
-\begin{enumerate}
-\item \textbf{Kliknutí na X okna} - Pøi kliknutí na zavírací X konzole se volá metoda UserInterface.close(), která nejprve odhlásí uživatele a poté bezpeènì ukonèí všechny procesy a konzoli.
-\item \textbf{Kliknutí nebo oznaèení textu v konzoli} - Pokud se uživatel pokusí kliknout jinam než na konec konzole (aktuální øádek) nebo v pøípadì oznaèení textu je potøeba zamezit zmìnì pozice kurzoru a tím i možnosti psaní mimo aktuální øádek. Oba problémy jsou øešeny metodou \textit{mouseReleased(MouseEvent evt)}. Tedy kdykoli je v konzoli uvolnìno tlaèítko myší (a po kliknutí nebo po oznaèení) je kurzor nastaven na aktuální øádek (na konec textu konzole, který dán hodnotou offsetu \textit{TAOff}).
-\end{enumerate}
+Kliknutí nebo oznaèení textu v konzoli - Pokud se uživatel pokusí kliknout jinam než na konec konzole (aktuální øádek) nebo v pøípadì oznaèení textu je potøeba zamezit zmìnì pozice kurzoru a tím i možnosti psaní mimo aktuální øádek. Oba problémy jsou øešeny metodou \textit{mouseReleased(MouseEvent evt)}. Tedy kdykoli je v konzoli uvolnìno tlaèítko myší (a po kliknutí nebo po oznaèení) je kurzor nastaven na aktuální øádek (na konec textu konzole, který dán hodnotou offsetu \textit{TAOff}).
 
 \subsection{Gramatika}
 \subsubsection{Návrh}
 Návrh gramatiky byl odvozen od LINUXu. Pro zápis návrhu jsou použity tyto regulární výrazy:
 \begin{itemize}
+\item 'x' - znak x
 \item (x)? - žádný nebo jeden výskyt
 \item (x)* - žádný nebo nìkolik výskytù
 \item xyz - pravidlo
@@ -99,10 +95,10 @@ bg      ->  '&'
 par     ->  CHAR | STRING | ichar
 ichar   ->  ICHAR
 \end{verbatim}
-Na první pohled se mùže zdát návrch gramatiky zbyteènì složitý, ale takto detailní rozložení je dále použito pøi návrhu lexikálního resp. syntaktického analyzéru. Oba analýzéry jsou generovány pomocí nástroje ANTLR 3.2, který podle návrhu gramatiky vytvoøí kód v Javì. Ten je navíc doplnìn obslužným kódem pro jednotlivá pravidla tak, aby práci se zpracovanou øádkou co nejvíce ulehèil (proto je návrh tak podrobný).
+Na první pohled se mùže zdát návrh gramatiky zbyteènì složitý, ale takto detailní rozložení je dále použito pøi návrhu lexikálního resp. syntaktického analyzéru. Oba analyzéry jsou generovány pomocí nástroje ANTLR 3.2, který podle návrhu gramatiky vytvoøí kód v Javì. Ten je navíc doplnìn obslužným kódem pro jednotlivá pravidla tak, aby práci se zpracovanou øádkou co nejvíce ulehèil (proto je návrh tak podrobný).
 Celý návrh gramatiky s plnými pravidly pro lexikální i syntaktický analyzátor lze nalézt v souboru s gramatikou (OSVM\_grammar.g).
 \subsubsection{Lexikální analyzér}
-Pro lexikální analyzér jsou definovány základní øídící znaky (roura, pøesmìrování, ad.) a mnoužina povolených symbolù pro názvy pøíkazù resp. souborù (CHAR, STRING). Dále je definován i doplnìk obou množin ICHAR.  Veškeré bíle znaky a znaky z množiny ICHAR jsou pøeskakovány. 
+Pro lexikální analyzér jsou definovány základní øídící znaky (roura, pøesmìrování, ad.) a množina povolených symbolù pro názvy pøíkazù resp. souborù (CHAR, STRING). Dále je definován i doplnìk obou množin ICHAR. Veškeré bíle znaky a znaky z množiny ICHAR jsou pøeskakovány. 
 Použité množiny:
 \begin{itemize}
 \item CHAR \\('a'..'z' \textbar 'A'..'Z' \textbar '0'..'9' \textbar '/' \textbar '\_' \textbar '-' \textbar  '?' \textbar '.' \textbar '..' \textbar ':')
@@ -116,14 +112,22 @@ Syntaktický analyzér rozdìlí øádek do struktury \textit{ArrayList}, který v sobì
 \subsubsection{bla}
 
 \subsection{Vykonávání pøíkazù}
-\subsubsection{bla}
+Vykonávání pøíkazù je rozdìleno do nìkolika èástí. První je zpracování øádky v konzoli, to se provádí po potvrzení napsané øádky klávesou ENTER. Nejprve je metodou stdReadLn() naèten z konzole aktuální napsaný øádek. Pokud se jedná o pøíkaz konzole (\textit{clr}), pak se provede ihned. V ostatních pøípadech se pøíkaz pøedá aktuálnì spuštìnému procesu. Toto je druhá èást zpracování o kterou se stará metoda \textit{processLine()}, ta je abstraktní a musí ji tedy obsahovat všechny procesy. Implementována je ovšem jen u procesù, které se aktivnì mohou dostat ke konzoli. V našem pøípadì pouze cat, sort a kshell. První dva pøíkazy pouze ètou z konzole a zpracování takto naètených dat odpovídá popisu procesù (vypsání resp. øazení).
+\subsubsection{kshell}
+kshell se zpracovanou øádkou dále pracuje. Nejprve kontroluj zda není øádka prázdná a zda pokud obsahuje pøíkazy \textit{kshell} nebo \textit{exit}, tak neobsahuje nic dalšího. Po provedení tìchto kontrol se pomocí generovaného parseru øádka rozdìlí na jednotlivé pøíkazy (vèetnì argumentù a pøesmìrování). Pokud øádka obsahovala nìjaké neplatné symboly (z množiny ICHAR viz výše), pak je uživatel upozornìn a znaky jsou pøeskoèeny, ale zpracování pokraèuje dál pøedáním potøebných informací metodì \textit{createProcess()}.
 
 \subsection{Pøesmìrování a roury}
-\subsubsection{bla}
+\subsubsection{Roury}
+Na implementaci rour byly využity Javovské tøídy \textit{PipedWriter} a \textit{PipedReader}. Použití tìchto tøíd je jednoduché a spolehlivé øešení. Instanci tøídy \textit{PipedReader} pøiøadíme instanci tøídy \textit{PipedWriter}. Tyto instance jsou pak pøiøazeny k pøíslušnému \textit{BufferedReaderu/Writeru}, který je používán vlákny pro ètení z roury respektive pro zápis do roury. 
+
+\subsubsection{Propojení na souborový systém}
+Aby se implementace souborového systém co nejvíce podobala modelu rour, byly vytvoøeny tøídy \textit{KSHWriter} a \textit{KSHReader}, které jsou oddìdìné od tøíd \textit{Writer} a \textit{Reader} stejnì jako \textit{PipedWriter/Reader}. Oddìdìní vyžaduje implementaci základních metod. Ta byla provedena pomocí tøíd \textit{FileWriter/Reader}. K vlastnímu ètení a zápisu jsou pak využity tøídy \textit{BufferedWriter/Reader} stejnì jako u rour. Pomocí nich byli vytvoøeny metody pro otevøení/zavøení souboru a základní metody pro ètení a zápis souborù.
+
+\subsubsection{Standardní vstup a výstup}
+Vytvoøením \textit{StdOut} a \textit{StdIn} interfacù bylo procesùm umožnìno využívat souborového i konsolového vstupu/výstupu bez nutnosti používat rozdílné metody. Rozhraní obsahují metody pro otevøení a zavøení vstupu nebo výstupu a základní metody pro ètení a zápis. Konsolový user interface a roura implementují obì tato rozhraní. \textit{KSHWriter} a \textit{KSHReader} implementují jim pøíslušná rozhraní. K standardnímu vstupu a výstupu byl ještì doplnìn interface pro chybový výstup.
 
 \subsection{Pøíkazy}
-\subsubsection{bla}
-
+Každý pøíkaz je reprezentován svou tøídou vyjma pøíkazù \textit{exit} (pøíkaz shellu) a \textit{clr} (pøíkaz konzole). Tyto pøíkazy jsou oddìdìny od naší tøídy Process, proto obsahují metodu pro zpracování øádky a signálu, výchozí metodu pro spuštìní a pøípadnì metody pro zpøehlednìní kódu. Na zaèátku všech spustitelných pøíkazù je provedena kontrola parametrù. Zde se v našem pøípadì kontroluje pouze \textit{-h} (u \textit{ps} ještì \textit{-u}). Poté už následuje funkèní kód definovaný zadáním.
 
 \section{Uživatelská pøíruèka}
 \subsection{Pøeklad}
@@ -138,52 +142,30 @@ X:\app_path\>run.bat
 
 \subsection{Ovládání programu}
 Ovládání správce je intuitivní. Po spuštìní (viz pøedchozí èást) se objeví okno pøihlášení. Po zadání uživatelského jména a potvrzení dojde k pøihlášení uživatele k virtuálnímu stroji. Zde je možné používat základní pøíkazy shellu, vèetnì jejich argumentù a pøesmìrování vstupù resp. výstupù.
-Implementované pøíkazy: \textit{cat, cd, echo, exit, kill, kshell, ls, man, ps, pwd, shutdown, sort}. Více k jednolivým pøíkazùm v následující èásti.
-\subsubsection{cat}
-Použití: \textit{cat [file]* [\textless ifile] [\textgreater ofile]}\\
-Umožòuje vypsání žádného, jednoho nebo více souborù podle použití.
-Pokud se spustí cat bez argumenù nebo vstupu, pak používá vstup z konzole. Bez pøesmìrování výstupu vypisuje zadané øádky, v opaèném pøípadì je zapisuje do zadaného souboru a je možné ho využít jako jednoduchý textový editor. Ukonèení se provádí odebráním konzole procesu pomocí zkratky \textit{CTRL+D} Pokud se spustí s argumenty, pak za sebe vypíše jednotlivé soubory v zadaném poøadí. Poslední vypsaný je soubor z pøesmìrovaného vstupu. Cat nelze použít \textit{cat file \textgreater file} nebo \textit{cat \textless file \textgreater file}, kde je stejný vstupní a výstupní soubor.
-\subsubsection{cd}
-Použití: \textit{cd ..} nebo \textit{cd rel\_path} nebo \textit{cd abs\_path}\\
-Umožòuje zmìnit pracovní adresáø.
-\subsubsection{echo}
-Použití: \textit{echo [arg]*}\\
-Vypíše øádek odpovídající zadaným argumentùm.
-\subsubsection{exit}
-Použití: \textit{exit}\\
-Ukonèí stávající shell. Pokud se jedná o poslední bìžící shell, pak provede odhlášení uživatele a ukonèení konzole.
-\subsubsection{kill}
-Použití: \textit{kill pid}\\
-Ukonèí proces se zadaným PID.
-\subsubsection{kshell}
-Použití: \textit{kshell}\\
-Spustí další shell.
-\subsubsection{ls}
-Použití: \textit{ls} nebo \textit{ls rel\_path} nebo \textit{ls abs\_path}\\
-Vypíše aktualní resp. zadaný adresáø. Lze použít zástupný pøíkaz \textit{dir}.
-\subsubsection{man}
-Použití: \textit{man}\\
-Vypíše struènou nápovedu ke správci strojù, která zahrnuje i popis jednotlivých pøíkazù.
-\subsubsection{ps}
-Použití: \textit{ps} nebo \textit{ps -u}\\
-Vypíše všechny resp. uživatelovy bìžící procesy.
-\subsubsection{pwd}
-Použití: \textit{pwd}\\
-Vypíše aktuální pracovní adresáø.
-\subsubsection{shutdown}
-Použití: \textit{shutdown}\\
-Ukonèí celý správce virtuálních strojù.
-\subsubsection{sort}
-Použití: \textit{sort [file]* [\textless ifile] [\textgreater ofile]}\\
-Umožòuje seøazení øádkù vstupu. Pokud je spuštìn bez argumentù (s i bez pøesmìrování výstupu), pak naèítá øádky z konzole. Po odebrání konzole (pomocí zkratky \textit{CTRL+D}) vypíše na výstup seøazenou posloupnost zadaných øádkù. Pøi spuštìní s argumenty postupnì naète všechny øádky všech zadaných souborù (vèetnì souboru z pøesmìrovaného vstupu) a poté vypíše jejich seøazenou posloupnost na výstup.
+Implementované pøíkazy: \textit{cat, cd, echo, exit, kill, kshell, ls, man, ps, pwd, shutdown, sort}.
+Obecná syntaxe:
+\begin{verbatim}
+cmd1 [file]* [\textless ifile] [\textbar cmd\_next]* [\textgreater ofile]
+\end{verbatim}
+Výjimkou oproti zadaní je pøíkaz \textit{ps}. Ten lze použít s pøepínaèem \textit{-u}, èímž se zobrazí pouze uživatelovy procesy. Dále byl pøídán pøíkaz \textit{clr}, který smaže obsah konzole.
 
 
 \section{Závìr}
+Zadání semestrální práce bylo splnìno v povinném rozsahu. Navíc byl pøidán pøepínaè \textit{-u} u pøíkazu \textit{ps} a pøíkaz konzole \textit{clr}.
+\\[3mm]
+do nasledujicich subsekci si napiste:\\
+Èím pøispìli jednotliví èlenové týmu\\
+silné slabe stranky, možná vylepšení\\
+Zhodnocení co vám semestrální práce dala a èím pøispìla ve vašem vzdìlání\\
+názor na zadání
+\subsection{Jiøí Novotný}
+\subsection{Zdenìk Janda}
+\subsection{Miroslav Hauser}
 Dokumentace byla vygenerována pomocí nástroje \TeX.
 
 \section{Literatura}
 \begin{itemize}
-\item \textbf{autor} -- \textit{kniha}, Cambridge University Press, Cambridge, 2003
+\item \textbf{autor} -- \textit{kniha}, vydavatelstvi, kde, rok
 \end{itemize}
 
 \end{document}
