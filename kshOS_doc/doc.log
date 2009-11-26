@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=cslatex 2009.11.23)  26 NOV 2009 17:57
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=cslatex 2009.11.23)  26 NOV 2009 22:05
 entering extended mode
 **doc
 (D:\NetBeansProjects\kshOS_doc\doc.tex
@@ -113,4 +113,4 @@ Here is how much of TeX's memory you used:
  24 hyphenation exceptions out of 8191
  25i,4n,22p,756b,200s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on doc.dvi (8 pages, 17888 bytes).
+Output written on doc.dvi (8 pages, 19144 bytes).
