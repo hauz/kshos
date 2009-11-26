@@ -13,20 +13,9 @@ import kshos.core.objects.Process;
 public class Man extends Process {
 
     /**
-     * Help text.
-     */
-    private static final String MAN = "MAN page for kshOS Virtual Machine Manager\n" +
-            "Usage: command [ params ] [ < file_input ] [ | command params ] [ > file_output ]" +
-            "\nImplemanted commands:\n" +
-            "man - this help\n" +
-            "cd param - change directory to param\n" +
-            "pwd - prints current directory\n" +
-            "ls [param] - list current/param folder\n" +
-            "echo [params] - prints params\n" +
-            "cat [params] - reads params specified files, merge this files";
-
-    /**
      * Process main function.
+     *
+     * Updated by hauz - 25.11.2009
      */
     @Override
     public void tick () {
@@ -36,7 +25,7 @@ public class Man extends Process {
             } else {
                 this.getErr().stdWriteln("Bad parameter!");
             }
-        } else this.getOut().stdAppend(MAN);
+        } else this.getOut().stdAppend(Core.instance().getProperties().getProperty("MAN_MSG"));
 
         this.getOut().stdCloseOut();
         this.getParent().removeChild(this.getPID());
