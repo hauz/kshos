@@ -54,9 +54,18 @@ public class Ls extends Process {
                     return;
                 }
             }
+            String fileList = "";
             for (int i = 0; i < thisDir.list().length; i++) {
-                this.getOut().stdAppend(thisDir.list()[i] + "\n");
+                // print directory first
+                if (thisDir.listFiles()[i].isDirectory()) {
+                    this.getOut().stdWriteln("D\t" + thisDir.list()[i]);
+                } // store files
+                else {
+                    fileList += "F\t" + thisDir.list()[i] + "\n";
+                }
             }
+            // print files
+            this.getOut().stdAppend(fileList);
         }
         close();
     }
