@@ -64,9 +64,9 @@ public class UIManager {
      * Closes all consoles.
      */
     public void closeAllConsoles() {
+
         for (UserInterface ui: interfaces) {
-            closeConsole(ui);
-            ui = null;  // remove reference
+            ui.close();
         }
 
         this.interfaces.removeAll(interfaces);
