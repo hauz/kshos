@@ -322,9 +322,7 @@ public class ProcessManager {
         }
 
         // gets name of input file and output file
-        g.getCmdTable().get(0);
         String in = g.getIn();
-        g.getCmdTable().get(g.getCmdTable().size() - 1);
         String out = g.getOut();
         if(!checkIO(in, out)){
             parent.getErr().stdWriteln("Bad parameter!");
