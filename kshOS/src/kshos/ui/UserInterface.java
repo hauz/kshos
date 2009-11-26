@@ -98,6 +98,7 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
                 else {
                     // if last line wasn't entered
                     if (textArea.getText().length() != TAOff) {
+                        // send enter if last writted line wasnt entered
                         consoleKeyActions(new KeyEvent(textArea, 0, (long) 0, 0, KeyEvent.VK_ENTER, (char) 0));
                     }
                     // send singal to first child
@@ -291,12 +292,12 @@ public class UserInterface extends JFrame implements StdIn, StdOut,StdErr {
                 }
                 break;
             // </editor-fold>
-            // <editor-fold defaultstate="collapsed" desc="HOME">
+            // <editor-fold defaultstate="collapsed" desc="PAGE DOWN">
             case KeyEvent.VK_PAGE_DOWN:
                 keyEvent.consume();
                 break;
             // </editor-fold>
-            // <editor-fold defaultstate="collapsed" desc="HOME">
+            // <editor-fold defaultstate="collapsed" desc="PAGE UP">
             case KeyEvent.VK_PAGE_UP:
                 keyEvent.consume();
                 break;
