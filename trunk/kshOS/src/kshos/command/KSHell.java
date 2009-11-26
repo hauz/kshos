@@ -73,15 +73,22 @@ public class KSHell extends Process {
      * Line processing using ANTLR generated lexer and parser.
      */
     public void processLine(String line) {
-        // line test
-        if ((line.contains("kshell") && !line.equals("kshell")) || (line.contains("exit") && !line.equals("exit"))) {
-            this.getErr().stdWriteln("Error: kshell and exit can not be piped!");
-            return;
-        }
+        // line tests
         if (!line.equals("")) {
             commandHistory.add(line);
             commandIndex = commandHistory.size();
         } else {
+            return;
+        }
+        if (line.contains("kshell")) {
+            if (line.equals("kshell"))
+                ProcessManager.instance().createShell(getUserInterface(), this.getPID());
+            else this.getErr().stdWriteln("Error: kshell can not be piped!");
+            return;
+        }
+        if (line.contains("exit")) {
+            if (line.equals("exit")) processSignal(0);
+            else this.getErr().stdWriteln("Error: exit can not be piped!");
             return;
         }
 
@@ -94,26 +101,13 @@ public class KSHell extends Process {
         try {
             g.parse();
         } catch (RecognitionException e) {
-            e.printStackTrace();
             this.getErr().stdWriteln("Warning: Mismatched input!");
+            return;
         }
         if (lex.containsInvalid()) {            // test for invalid characters
             this.getErr().stdWriteln("Warning: Command contains invalid symbols!");
         }
 
-        int pr, pa;
-        pr = g.getCmdTable().size() - 1;
-        pa = g.getCmdTable().get(pr).size() - 1;
-        // command is last command on console line
-        String command = g.getCmdTable().get(pr).get(pa);
-
-        if (command.equals("kshell")) {
-            ProcessManager.instance().createShell(getUserInterface(), this.getPID());
-            return;
-        } else if (command.equals("exit")) {
-                processSignal(0);
-                return;
-        }
         // create new process(es) and run it
         ProcessManager.instance().createProcess(this, userInterface, g);
     }
@@ -132,7 +126,7 @@ public class KSHell extends Process {
     }
 
     @Override
-    public void tick () {
+    public void tick() {
         initShell();
     }
 
@@ -147,9 +141,9 @@ public class KSHell extends Process {
                 this.getOut().stdWriteln("Good bye :-)");
                 // if parent is init then close
                 if (this.getParent().getPID() == 1 &&
-                        ProcessManager.instance().getLastShell(getUserInterface().getUser()).equals(this))
-                        getUserInterface().close();
-                // else exit last shell
+                        ProcessManager.instance().getLastShell(getUserInterface().getUser()).equals(this)) {
+                    getUserInterface().close();
+                } // else exit last shell
                 else {
                     // put all children to new parent
                     while (this.getAllChilds().size() > 0) {
