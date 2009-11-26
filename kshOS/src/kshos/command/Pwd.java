@@ -36,7 +36,7 @@ public class Pwd extends Process {
                 this.getErr().stdWriteln("Bad parameter!");
             }
         } else {
-            this.getOut().stdWriteln("Working directory: " + this.getWorkingDir());
+            this.getOut().stdWriteln("" + this.getWorkingDir());
         }
         close();
     }
