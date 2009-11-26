@@ -53,7 +53,7 @@ public class Kill extends Process {
             this.getErr().stdWriteln("No such process with PID " + pid + "!");
         } else {
             // print line header before process exit
-            if (pid != 1) ProcessManager.instance().getProcess(pid).getOut().stdAppend(
+            if (pid != 1) ProcessManager.instance().getProcess(pid).getErr().stdAppend("Process killed!\n" +
                     ProcessManager.instance().getProcess(pid).getOwner().getUserName() + "> ");
             ProcessManager.instance().getProcess(pid).processSignal(0);
         }
