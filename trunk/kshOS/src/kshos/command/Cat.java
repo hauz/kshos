@@ -5,6 +5,7 @@ import kshos.core.ProcessManager;
 import kshos.core.objects.Process;
 import kshos.io.KSHReader;
 import kshos.io.KSHWriter;
+import kshos.ui.UserInterface;
 
 /**
  * CAT command.
@@ -20,6 +21,18 @@ public class Cat extends Process {
     private String file = "";
 
     /**
+     * Close method.
+     * Closes input and output, removes process from process list
+     * and from parents children process tree.
+     */
+    private void close() {
+        this.getIn().stdCloseIn();
+        this.getOut().stdCloseOut();
+        this.getParent().removeChild(this.getPID());
+        ProcessManager.instance().removeProcess(this.getPID());
+    }
+
+    /**
      * File input.
      * Combines text from all specified (as command arguments) input files
      * to global var 'file'.
@@ -30,7 +43,7 @@ public class Cat extends Process {
         String pom = "";
 
         for (int i = 0; i < fileCnt; i++) {
-            read = new KSHReader(getArgs()[i], getParent().getWorkingDir());
+            read = new KSHReader(getArgs()[i], this.getWorkingDir());
             if(read.stdOpenIn()){
                 while ((pom = read.stdReadln()) != null)
                     // moved EOL for file
@@ -40,7 +53,6 @@ public class Cat extends Process {
             else{
                 this.getErr().stdWriteln("Cannot read " + getArgs()[i]);
             }
-            
         }
     }
 
@@ -57,9 +69,7 @@ public class Cat extends Process {
 
             // print error message and return
             this.getErr().stdWriteln("Bad parameter!");
-            this.getParent().removeChild(this.getPID());
-            ProcessManager.instance().removeProcess(this.getPID());
-
+            close();
             return;
         }
         // when has arguments
@@ -71,27 +81,25 @@ public class Cat extends Process {
                 } else {
                     this.getErr().stdWriteln("Bad parameter!");
                 }
-                this.getParent().removeChild(this.getPID());
-                ProcessManager.instance().removeProcess(this.getPID());
+                close();
                 return;
             }
             fileIn(len);
-            this.getOut().stdWriteln(file);
-            this.getOut().stdCloseOut();
+            this.getOut().stdAppend(file);
+            if (getOut() instanceof UserInterface) this.getOut().stdWriteln("");
+            if (getIn() instanceof UserInterface) this.getOut().stdCloseOut();
             this.getParent().removeChild(this.getPID());
             ProcessManager.instance().removeProcess(this.getPID());
         }
         // when gets another then console input 'cat < smth'
-        if (getIn().toString().indexOf("UserInterface") < 0) { 
+        if (!(getIn() instanceof UserInterface)) {
             String pom = "";
             file = "";
             while ((pom = getIn().stdReadln()) != null)
                     // moved EOL for file
                     file += pom + "\n";
             this.getOut().stdAppend(file);
-            this.getOut().stdCloseOut();
-            this.getParent().removeChild(this.getPID());
-            ProcessManager.instance().removeProcess(this.getPID());
+            close();
         }
     }
 
@@ -113,14 +121,13 @@ public class Cat extends Process {
     public void processSignal(int type) {
         switch (type) {
             case 0:
-                this.getOut().stdCloseOut();
                 // put all children to new parent
                 while (this.getAllChilds().size() > 0) {
+                    this.getChild(this.getAllChilds().firstKey()).setParent(this.getParent());
                     this.getParent().addChild(this.getChild(this.getAllChilds().firstKey()));
                     this.removeChild(this.getAllChilds().firstKey());
                 }
-                this.getParent().removeChild(this.getPID());
-                ProcessManager.instance().removeProcess(this.getPID());
+                close();
                 break;
             default:
                 break;
@@ -138,15 +145,13 @@ public class Cat extends Process {
             return false;
         }
 
-        if (this.getIn().toString().indexOf("UserInterface") < 0 &&
-              this.getOut().toString().indexOf("UserInterface") < 0){
+        if (!(this.getIn() instanceof UserInterface) &&
+              !(this.getOut() instanceof UserInterface)){
 
             KSHWriter out = (KSHWriter)this.getOut();
             KSHReader in = (KSHReader)this.getIn();
             if(out.getCanonicalPath().equals(in.getCanonicalPath())){
                 this.getErr().stdWriteln("Input file is output file");
-                this.getOut().stdCloseOut();
-                this.getIn().stdCloseIn();
                 this.processSignal(0);
                 return false;
             }

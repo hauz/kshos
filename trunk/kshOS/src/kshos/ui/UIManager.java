@@ -73,15 +73,6 @@ public class UIManager {
     }
 
     /**
-     * Removes the console from the interfaces list.
-     *
-     * @param console
-     */
-    public void removeConsole(UserInterface console) {
-        this.interfaces.remove(console);
-    }
-
-    /**
      * Closes user interface.
      *
      * @param console

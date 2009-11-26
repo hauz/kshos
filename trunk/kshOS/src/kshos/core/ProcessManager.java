@@ -1,5 +1,6 @@
 package kshos.core;
 
+import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -336,7 +337,7 @@ public class ProcessManager {
             try {
                 cmds[i] = (Process) loader.loadClass("kshos.command." + command).newInstance();
             } catch (Exception ex) {
-                parent.getOut().stdWriteln("Invalid command!");
+                parent.getErr().stdWriteln("Invalid command!");
                 return;
             }
             cmds[i].setArgs(g.getCmdTable().get(i)); // set process parameters
@@ -344,6 +345,7 @@ public class ProcessManager {
             incPID();                            // count new PID
             cmds[i].setOwner(ui.getUser());                 // set process owner (user)
             cmds[i].setName(command.toLowerCase());  // set process name
+            cmds[i].setWorkingDir(new File(parent.getWorkingDir())); // set working directory
             cmds[i].setErr(ui);                      // set error input
             cmds[i].getErr().stdOpenOut();
             if (i == pr) {
@@ -363,7 +365,7 @@ public class ProcessManager {
             } else {
                 cmds[i].setParent(cmds[i + 1]);
                 cmds[i + 1].addChild(cmds[i]);
-                // TODO: pipes
+                new Pipe(cmds[i], cmds[i + 1]);
             }
             if (i == 0) {
                 // first command on line gets input <
@@ -381,24 +383,23 @@ public class ProcessManager {
             processList.add(cmds[i]);
         }
 
-        // TODO: run all processes in right order
-        // run last
-        cmds[pr].start();
+        // run all processes in right order
+        for (int i = 0; i < pr + 1; i++) {
+            cmds[i].start();
+        }
         try {
             cmds[pr].join();
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
-        // TODO: start join
 
 
-
-        /*
+        /* remove after testing
         Process cmd = null;
         try {
         cmd = (Process) loader.loadClass("kshos.command." + command).newInstance();
         } catch (Exception ex) {
-        parent.getOut().stdWriteln("Invalid command!");
+        parent.getErr().stdWriteln("Invalid command!");
         return;
         }
 

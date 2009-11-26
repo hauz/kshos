@@ -15,6 +15,18 @@ import kshos.core.objects.Process;
 public class Ls extends Process {
 
     /**
+     * Close method.
+     * Closes input and output, removes process from process list
+     * and from parents children process tree.
+     */
+    private void close() {
+        this.getIn().stdCloseIn();
+        this.getOut().stdCloseOut();
+        this.getParent().removeChild(this.getPID());
+        ProcessManager.instance().removeProcess(this.getPID());
+    }
+
+    /**
      * Process main function.
      */
     @Override
@@ -28,18 +40,17 @@ public class Ls extends Process {
         } else {
             File thisDir = null;
             if (getArgs().length == 0) {
-                thisDir = new File(getParent().getWorkingDir());
+                thisDir = new File(this.getWorkingDir());
             } else {
                 String path = getArgs()[getArgs().length - 1];
                 if (path.charAt(0) == '/') {
                     thisDir = new File(path);
                 } else {
-                    thisDir = new File(getParent().getWorkingDir() + File.separator + path);
+                    thisDir = new File(this.getWorkingDir() + File.separator + path);
                 }
                 if (!thisDir.exists()) {
                     this.getErr().stdAppend("No such directory!");
-                    this.getParent().removeChild(this.getPID());
-                    ProcessManager.instance().removeProcess(this.getPID());
+                    close();
                     return;
                 }
             }
@@ -47,9 +58,7 @@ public class Ls extends Process {
                 this.getOut().stdAppend(thisDir.list()[i] + "\n");
             }
         }
-        this.getOut().stdCloseOut();
-        this.getParent().removeChild(this.getPID());
-        ProcessManager.instance().removeProcess(this.getPID());
+        close();
     }
 
     /**
@@ -71,14 +80,13 @@ public class Ls extends Process {
     public void processSignal(int type) {
         switch (type) {
             case 0:
-                this.getOut().stdCloseOut();
                 // put all children to new parent
                 while (this.getAllChilds().size() > 0) {
+                    this.getChild(this.getAllChilds().firstKey()).setParent(this.getParent());
                     this.getParent().addChild(this.getChild(this.getAllChilds().firstKey()));
                     this.removeChild(this.getAllChilds().firstKey());
                 }
-                this.getParent().removeChild(this.getPID());
-                ProcessManager.instance().removeProcess(this.getPID());
+                close();
                 break;
             default:
                 break;

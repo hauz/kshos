@@ -13,6 +13,18 @@ import kshos.core.ProcessManager;
 public class Kill extends Process {
 
     /**
+     * Close method.
+     * Closes input and output, removes process from process list
+     * and from parents children process tree.
+     */
+    private void close() {
+        this.getIn().stdCloseIn();
+        this.getOut().stdCloseOut();
+        this.getParent().removeChild(this.getPID());
+        ProcessManager.instance().removeProcess(this.getPID());
+    }
+
+    /**
      * Process main function.
      */
     @Override
@@ -24,15 +36,15 @@ public class Kill extends Process {
             } else {
                 this.getErr().stdWriteln("Bad parameter!");
             }
-            this.getParent().removeChild(this.getPID());
+            close();
             return;
         } else {
             try {
                 pid = Integer.parseInt(this.getArgs()[0]);
             } catch (NumberFormatException a) {
                 this.getErr().stdWriteln("Invalid PID!");
-                this.getParent().removeChild(this.getPID());
-                ProcessManager.instance().removeProcess(this.getPID());
+                pid = -1;
+                close();
                 return;
             }
         }
@@ -45,8 +57,7 @@ public class Kill extends Process {
                     ProcessManager.instance().getProcess(pid).getOwner().getUserName() + "> ");
             ProcessManager.instance().getProcess(pid).processSignal(0);
         }
-        this.getParent().removeChild(this.getPID());
-        ProcessManager.instance().removeProcess(this.getPID());
+        close();
     }
 
     /**
@@ -68,14 +79,13 @@ public class Kill extends Process {
     public void processSignal(int type) {
         switch (type) {
             case 0:
-                this.getOut().stdCloseOut();
                 // put all children to new parent
                 while (this.getAllChilds().size() > 0) {
+                    this.getChild(this.getAllChilds().firstKey()).setParent(this.getParent());
                     this.getParent().addChild(this.getChild(this.getAllChilds().firstKey()));
                     this.removeChild(this.getAllChilds().firstKey());
                 }
-                this.getParent().removeChild(this.getPID());
-                ProcessManager.instance().removeProcess(this.getPID());
+                close();
                 break;
             default:
                 break;

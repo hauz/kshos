@@ -2,6 +2,8 @@ package kshos.io;
 
 
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import kshos.core.objects.Process;
 
 
@@ -21,13 +23,18 @@ public class Pipe implements StdIn, StdOut{
      * @param to KSHprocess which is output of pipe
      * @throws java.io.IOException
      */
-    Pipe(Process from, Process to) throws IOException{
-         PipedWriter pipedWriter = new PipedWriter();
-         PipedReader pipedReader = new PipedReader(pipedWriter);
-         bufferedReader = new BufferedReader(pipedReader);
-         bufferedWriter = new BufferedWriter(pipedWriter);
-         from.setOut(this);
-         to.setIn(this);
+    public Pipe(Process from, Process to) {
+        PipedReader pipedReader = null;
+        try {
+            PipedWriter pipedWriter = new PipedWriter();
+            pipedReader = new PipedReader(pipedWriter);
+            bufferedReader = new BufferedReader(pipedReader);
+            bufferedWriter = new BufferedWriter(pipedWriter);
+            from.setOut(this);
+            to.setIn(this);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**

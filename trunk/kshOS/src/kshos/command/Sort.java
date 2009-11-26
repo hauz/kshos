@@ -6,6 +6,7 @@ import kshos.core.Core;
 import kshos.core.ProcessManager;
 import kshos.core.objects.Process;
 import kshos.io.KSHReader;
+import kshos.ui.UserInterface;
 
 /**
  * SORT command.
@@ -19,6 +20,19 @@ public class Sort extends Process {
      * Global arraylist 'lines'.
      */
     private ArrayList<String> lines = new ArrayList<String>();
+
+    /**
+     * Close method.
+     * Closes input and output, removes process from process list
+     * and from parents children process tree.
+     */
+    private void close() {
+        this.getIn().stdCloseIn();
+        this.getOut().stdCloseOut();
+        this.getParent().removeChild(this.getPID());
+        ProcessManager.instance().removeProcess(this.getPID());
+    }
+
 
     /**
      * Sort function.
@@ -50,7 +64,7 @@ public class Sort extends Process {
         KSHReader read = null;
 
         for (int i = 0; i < fileCnt; i++) {
-            read = new KSHReader(getArgs()[i], getParent().getWorkingDir());
+            read = new KSHReader(getArgs()[i], this.getWorkingDir());
             if (read.stdOpenIn()) {
                 while ((line = read.stdReadln()) != null) {
                     lines.add(line);
@@ -75,26 +89,25 @@ public class Sort extends Process {
                 } else {
                     this.getErr().stdWriteln("Bad parameter!");
                 }
-                this.getParent().removeChild(this.getPID());
-                ProcessManager.instance().removeProcess(this.getPID());
+                close();
                 return;
             }
             fileIn(len);
-            this.getOut().stdAppend(sort(lines.toArray()) + "\n");
-            this.getOut().stdCloseOut();
+            this.getOut().stdAppend(sort(lines.toArray()));
+            if (getOut() instanceof UserInterface) this.getOut().stdWriteln("");
+            if (getIn() instanceof UserInterface) this.getOut().stdCloseOut();
             this.getParent().removeChild(this.getPID());
             ProcessManager.instance().removeProcess(this.getPID());
         }
-        if (getIn().toString().indexOf("UserInterface") < 0) {
+        if (!(getIn() instanceof UserInterface)) {
             String pom = "";
             lines = new ArrayList<String>();
             while ((pom = getIn().stdReadln()) != null) {
                 lines.add(pom);
             }
-            this.getOut().stdAppend(sort(lines.toArray()) + "\n");
-            this.getOut().stdCloseOut();
-            this.getParent().removeChild(this.getPID());
-            ProcessManager.instance().removeProcess(this.getPID());
+            this.getOut().stdAppend(sort(lines.toArray()));
+            if (getOut() instanceof UserInterface) this.getOut().stdWriteln("");
+            close();
         }
     }
 
@@ -117,14 +130,13 @@ public class Sort extends Process {
         switch (type) {
             case 0:
                 this.getOut().stdAppend(sort(lines.toArray()));
-                this.getOut().stdCloseOut();
                 // put all children to new parent
                 while (this.getAllChilds().size() > 0) {
+                    this.getChild(this.getAllChilds().firstKey()).setParent(this.getParent());
                     this.getParent().addChild(this.getChild(this.getAllChilds().firstKey()));
                     this.removeChild(this.getAllChilds().firstKey());
                 }
-                this.getParent().removeChild(this.getPID());
-                ProcessManager.instance().removeProcess(this.getPID());
+                close();
                 break;
             default:
                 break;
