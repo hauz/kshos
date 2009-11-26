@@ -108,7 +108,6 @@ public class UserManager {
         allowedList.add(new User("k4chn1k"));
         allowedList.add(new User("sysek"));
         allowedList.add(new User("guest"));
-        allowedList.add(new User("a"));
     }
 
     /**
