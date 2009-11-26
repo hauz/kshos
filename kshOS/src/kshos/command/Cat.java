@@ -4,7 +4,6 @@ import kshos.core.Core;
 import kshos.core.ProcessManager;
 import kshos.core.objects.Process;
 import kshos.io.KSHReader;
-import kshos.io.KSHWriter;
 import kshos.ui.UserInterface;
 
 /**
@@ -63,15 +62,6 @@ public class Cat extends Process {
     public void tick () {
         int len = getArgs().length;
         
-        // hauz 25.11.2009
-        // check proper input and output
-        if(!checkIO()) {
-
-            // print error message and return
-            this.getErr().stdWriteln("Bad parameter!");
-            close();
-            return;
-        }
         // when has arguments
         if (len != 0) {
             // if has params
@@ -132,31 +122,5 @@ public class Cat extends Process {
             default:
                 break;
         }
-    }
-
-    /**
-     * Check if output is the same as input
-     */
-    private boolean checkIO(){
-
-        // hauz 25.11.2009
-        // parameter test
-        if ((this.getIn() == null) || (this.getOut() == null)) {
-            return false;
-        }
-
-        if (!(this.getIn() instanceof UserInterface) &&
-              !(this.getOut() instanceof UserInterface)){
-
-            KSHWriter out = (KSHWriter)this.getOut();
-            KSHReader in = (KSHReader)this.getIn();
-            if(out.getCanonicalPath().equals(in.getCanonicalPath())){
-                this.getErr().stdWriteln("Input file is output file");
-                this.processSignal(0);
-                return false;
-            }
-            return true;
-        }
-        return true;
-    }
+    }  
 }
