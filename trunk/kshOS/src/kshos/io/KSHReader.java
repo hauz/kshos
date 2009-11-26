@@ -65,7 +65,9 @@ public class KSHReader extends Reader implements StdIn {
      */
     public String stdReadln() {
         try {
-            return  bufferedReader.readLine();
+            String line = null;
+            if (bufferedReader != null) line = bufferedReader.readLine();
+            return  line;
         } catch (IOException ex) {
             System.err.println(ex);
             return null;
@@ -79,7 +81,7 @@ public class KSHReader extends Reader implements StdIn {
      */
     public void stdCloseIn() {
         try {
-            bufferedReader.close();
+            if(bufferedReader != null) bufferedReader.close();
         } catch (IOException ex) {
             System.err.println(ex);
         }
