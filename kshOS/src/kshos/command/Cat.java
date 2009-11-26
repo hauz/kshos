@@ -50,13 +50,24 @@ public class Cat extends Process {
     @Override
     public void tick () {
         int len = getArgs().length;
-        if(!checkIO()) return;
+        
+        // hauz 25.11.2009
+        // check proper input and output
+        if(!checkIO()) {
+
+            // print error message and return
+            this.getErr().stdWriteln("Bad parameter!");
+            this.getParent().removeChild(this.getPID());
+            ProcessManager.instance().removeProcess(this.getPID());
+
+            return;
+        }
         // when has arguments
         if (len != 0) {
             // if has params
             if (getArgs()[0].charAt(0) == '-') {
                 if (getArgs()[0].charAt(1) == 'h') {
-                    this.getOut().stdWriteln(Core.instance().getProperties().getProperty("LOGIN_HLP"));
+                    this.getOut().stdWriteln(Core.instance().getProperties().getProperty("CAT_HLP"));
                 } else {
                     this.getErr().stdWriteln("Bad parameter!");
                 }
@@ -120,6 +131,13 @@ public class Cat extends Process {
      * Check if output is the same as input
      */
     private boolean checkIO(){
+
+        // hauz 25.11.2009
+        // parameter test
+        if ((this.getIn() == null) || (this.getOut() == null)) {
+            return false;
+        }
+
         if (this.getIn().toString().indexOf("UserInterface") < 0 &&
               this.getOut().toString().indexOf("UserInterface") < 0){
 
