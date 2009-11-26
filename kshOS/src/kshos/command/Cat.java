@@ -25,8 +25,8 @@ public class Cat extends Process {
      * and from parents children process tree.
      */
     private void close() {
-        this.getIn().stdCloseIn();
-        this.getOut().stdCloseOut();
+        if (this.getIn() != null) this.getIn().stdCloseIn();
+        if (this.getOut() != null) this.getOut().stdCloseOut();
         this.getParent().removeChild(this.getPID());
         ProcessManager.instance().removeProcess(this.getPID());
     }

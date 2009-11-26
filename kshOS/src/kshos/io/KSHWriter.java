@@ -68,8 +68,10 @@ public class KSHWriter extends Writer implements StdOut {
      */
      public void stdWriteln(String s) {
         try {
-            bufferedWriter.write(s);
-            bufferedWriter.newLine();
+            if(bufferedWriter != null){
+                bufferedWriter.write(s);
+                bufferedWriter.newLine();
+            }
         } catch (IOException ex) {
             System.err.println(ex);
         }
@@ -83,7 +85,7 @@ public class KSHWriter extends Writer implements StdOut {
      */
     public void stdCloseOut() {
         try {
-            bufferedWriter.close();
+            if(bufferedWriter != null) bufferedWriter.close();
         } catch (IOException ex) {
             System.err.println(ex);
         }
@@ -97,7 +99,7 @@ public class KSHWriter extends Writer implements StdOut {
      */
     public void stdFlush() {
         try {
-            bufferedWriter.flush();
+            if(bufferedWriter != null) bufferedWriter.flush();
         } catch (IOException ex) {
             System.err.println(ex);
         }
@@ -110,7 +112,7 @@ public class KSHWriter extends Writer implements StdOut {
      */
     public void stdAppend(String s) {
         try {
-            bufferedWriter.append(s);
+            if(bufferedWriter != null) bufferedWriter.append(s);
         } catch (IOException ex) {
             System.err.println(ex);
         }
